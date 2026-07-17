@@ -11,8 +11,8 @@ export function Footer() {
         
         {/* Column 1: Brand details */}
         <div className="flex flex-col gap-5">
-          {/* Refreshing logo backing plate to keep wordmark legible on dark background */}
-          <div className="relative h-16 w-48 sm:h-20 sm:w-56 bg-white px-4 py-2 rounded-lg flex items-center justify-center shadow-md">
+          {/* Refreshing logo backing plate - scaled up and confident */}
+          <div className="relative h-20 w-60 sm:h-22 sm:w-64 bg-white px-4 py-2.5 rounded-lg flex items-center justify-center shadow-md">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
@@ -27,24 +27,24 @@ export function Footer() {
             Celebrating forty years of spiritual renewal, academic excellence, and student fellowship.
           </p>
           <div className="flex items-center gap-4 mt-2 text-zinc-400">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
               </svg>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
               <svg className="h-4 w-4 stroke-current fill-none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
               </svg>
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.5 12 3.5 12 3.5s-7.518 0-9.388.553a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.553 9.388.553 9.388.553s7.518 0 9.388-.553a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
@@ -56,11 +56,11 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">EXPLORE</span>
           <div className="flex flex-col gap-2.5 font-sans text-xs">
-            <Link href="/about" className="hover:text-primary text-zinc-300 transition-colors">About Refreshing</Link>
-            <Link href="/programme" className="hover:text-primary text-zinc-300 transition-colors">Daily Programme</Link>
-            <Link href="/ministers" className="hover:text-primary text-zinc-300 transition-colors">Featured Ministers</Link>
-            <Link href="/gallery" className="hover:text-primary text-zinc-300 transition-colors">Photo Gallery</Link>
-            <Link href="/resources" className="hover:text-primary text-zinc-300 transition-colors">Resource Library</Link>
+            <Link href="/about" className="hover:text-primary text-zinc-300 transition-colors active-press">About Refreshing</Link>
+            <Link href="/programme" className="hover:text-primary text-zinc-300 transition-colors active-press">Daily Programme</Link>
+            <Link href="/ministers" className="hover:text-primary text-zinc-300 transition-colors active-press">Featured Ministers</Link>
+            <Link href="/gallery" className="hover:text-primary text-zinc-300 transition-colors active-press">Photo Gallery</Link>
+            <Link href="/resources" className="hover:text-primary text-zinc-300 transition-colors active-press">Resource Library</Link>
           </div>
         </div>
 
@@ -68,18 +68,18 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">INFORMATION</span>
           <div className="flex flex-col gap-2.5 font-sans text-xs">
-            <Link href="/faq" className="hover:text-primary text-zinc-300 transition-colors">Frequently Asked Questions</Link>
-            <Link href="/contact" className="hover:text-primary text-zinc-300 transition-colors">Venue & Directions</Link>
-            <Link href="/admin/login" className="hover:text-primary text-zinc-300 transition-colors">Administrative Login</Link>
+            <Link href="/faq" className="hover:text-primary text-zinc-300 transition-colors active-press">Frequently Asked Questions</Link>
+            <Link href="/contact" className="hover:text-primary text-zinc-300 transition-colors active-press">Venue & Directions</Link>
+            <Link href="/admin/login" className="hover:text-primary text-zinc-300 transition-colors active-press">Administrative Login</Link>
           </div>
         </div>
 
-        {/* Column 4: Organized By Seal details */}
+        {/* Column 4: Organized By Seal details - BSF Seal enlarged considerably */}
         <div className="flex flex-col gap-4">
           <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">ORGANIZED BY</span>
-          <div className="flex flex-col gap-4">
-            {/* BSF logo backing plate to keep green seal legible and sharp */}
-            <div className="relative h-20 w-20 bg-white p-2 rounded-lg flex items-center justify-center shadow-md">
+          <div className="flex flex-col gap-4 items-start">
+            {/* BSF logo backing plate - scaled up significantly to stand out confidently */}
+            <div className="relative h-28 w-28 sm:h-32 sm:w-32 bg-white p-3.5 rounded-lg flex items-center justify-center shadow-lg hover:scale-[1.02] transition-transform duration-300">
               <div className="relative w-full h-full">
                 <Image
                   src="/bsf-logo.png"

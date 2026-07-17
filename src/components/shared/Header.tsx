@@ -48,7 +48,7 @@ export function Header() {
 
   const editions = ["2026", "2025", "2024"];
 
-  const headerHeightClass = "h-20";
+  const headerHeightClass = "lg:h-24 h-20";
   const headerBackgroundClass = isScrolled
     ? "fixed top-0 left-0 right-0 z-50 w-full bg-white/95 border-b border-black/5 backdrop-blur-xs shadow-xs"
     : "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent";
@@ -73,9 +73,9 @@ export function Header() {
     <header className={`flex items-center transition-all duration-300 ${headerBackgroundClass} ${headerHeightClass}`}>
       <div className="w-full max-w-7xl mx-auto px-6 md:px-16 flex items-center justify-between">
         
-        {/* Left: Branding with local light backing plate to keep wordmark legible on dark hero */}
-        <Link href="/" className="flex items-center">
-          <div className="relative h-14 w-40 sm:h-16 sm:w-48 bg-white px-3 py-1.5 rounded-lg flex items-center justify-center shadow-sm hover:scale-[1.02] transition-transform duration-300">
+        {/* Left: Branding with local light backing plate to keep wordmark legible on dark hero (enlarged & spaced) */}
+        <Link href="/" className="flex items-center active-press">
+          <div className="relative h-14 w-40 sm:h-16 sm:w-48 lg:h-18 lg:w-56 bg-white px-4 py-2.5 rounded-lg flex items-center justify-center shadow-sm hover:scale-[1.02] transition-transform duration-300">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
@@ -89,14 +89,14 @@ export function Header() {
         </Link>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-6">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`font-sans text-[15px] font-medium tracking-wide ${isActive ? activeLinkClass : defaultLinkClass}`}
+                className={`font-sans text-[15px] font-medium tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
               >
                 {link.label}
               </Link>
@@ -105,25 +105,25 @@ export function Header() {
         </nav>
 
         {/* Right: Actions */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4 xl:gap-6">
           {/* Edition Switcher Dropdown */}
           <div className="relative">
             <button
               onClick={() => setEditionDropdownOpen(!editionDropdownOpen)}
-              className={`flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-all rounded-lg ${switcherBorderClass}`}
+              className={`flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-all rounded-lg active-press ${switcherBorderClass}`}
             >
               <span>2026</span>
               <ChevronDown className="h-3 w-3" />
             </button>
             {editionDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-28 bg-white border border-black/10 shadow-2xl overflow-hidden z-50 rounded-lg">
+              <div className="absolute right-0 mt-2 w-28 bg-white border border-black/10 shadow-2xl overflow-hidden z-50 rounded-lg animate-fade-in">
                 {editions.map((ed) => (
                   <button
                     key={ed}
                     onClick={() => {
                       setEditionDropdownOpen(false);
                     }}
-                    className="w-full text-left font-sans text-xs text-[#0B0907] px-4 py-2 hover:bg-black/5 transition-colors"
+                    className="w-full text-left font-sans text-xs text-[#0B0907] px-4 py-2 hover:bg-black/5 transition-colors active-press"
                   >
                     Edition {ed}
                   </button>
@@ -133,7 +133,7 @@ export function Header() {
           </div>
 
           {/* Search Trigger */}
-          <Link href="/search" className={iconColorClass}>
+          <Link href="/search" className={`active-press ${iconColorClass}`}>
             <Search className="h-5 w-5" />
           </Link>
 
@@ -142,7 +142,7 @@ export function Header() {
             href="https://forms.gle/DSW4CVMXWK61BHT96"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-xs font-semibold px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full"
+            className="font-sans text-xs font-semibold px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"
           >
             Register
           </a>
@@ -150,12 +150,12 @@ export function Header() {
 
         {/* Mobile menu trigger */}
         <div className="lg:hidden flex items-center gap-4">
-          <Link href="/search" className={iconColorClass}>
+          <Link href="/search" className={`active-press ${iconColorClass}`}>
             <Search className="h-5 w-5" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={iconColorClass}
+            className={`active-press ${iconColorClass}`}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -173,7 +173,7 @@ export function Header() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`font-sans text-lg font-semibold border-b border-black/5 pb-2 ${isActive ? "text-[#C25627]" : "text-[#0B0907]"}`}
+                  className={`font-sans text-lg font-semibold border-b border-black/5 pb-2 active-press ${isActive ? "text-[#C25627]" : "text-[#0B0907]"}`}
                 >
                   {link.label}
                 </Link>
@@ -181,7 +181,7 @@ export function Header() {
             })}
           </nav>
           
-          <div className="flex flex-col gap-4 mt-auto">
+          <div className="flex flex-col gap-4 mt-auto font-sans">
             {/* Edition Switcher inside mobile drawer */}
             <div className="flex items-center justify-between px-2 py-3 border-y border-black/5">
               <span className="font-sans text-sm font-medium text-[#0B0907]/60">Select Edition</span>
@@ -196,7 +196,7 @@ export function Header() {
               href="https://forms.gle/DSW4CVMXWK61BHT96"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center font-sans font-semibold py-3 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full"
+              className="w-full text-center font-sans font-semibold py-3 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"
             >
               Register for the Program
             </a>
