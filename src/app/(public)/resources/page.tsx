@@ -15,12 +15,12 @@ export default function ResourcesPage() {
   });
 
   return (
-    <div className="w-full flex flex-col bg-[#0B0907] text-[#FCFAF6] antialiased overflow-hidden selection:bg-primary/20">
+    <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: RESOURCES HERO (Opening the library - Centered & Space aligned)
+          SCENE 1: RESOURCES HERO (Opening the library - Centered & Balanced Height)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -31,7 +31,6 @@ export default function ResourcesPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/25 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute inset-0 texture-halftone opacity-25 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
@@ -48,23 +47,23 @@ export default function ResourcesPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: SEARCH & FILTER BAR (Rounded inputs and filter pills)
+          SCENE 2: SEARCH & FILTER BAR (Light background, sharp inputs & tabs, no rounded corners)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full bg-[#15130F] border-b border-white/5 py-8 px-6 md:px-16 overflow-hidden z-20">
+      <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-8 px-6 md:px-16 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
           
-          {/* Outlined Search Field - Rounded-xl */}
+          {/* Outlined Search Field - Sharp corners */}
           <div className="relative flex-1 max-w-md">
             <input
               type="text"
               placeholder="Search resource titles or details..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border border-white/10 focus:border-primary-light py-3 px-5 text-sm text-[#FCFAF6] outline-none transition-colors rounded-xl font-sans"
+              className="w-full bg-white border border-black/10 focus:border-[#C25627] py-3 px-5 text-sm text-[#0B0907] outline-none transition-colors font-sans rounded-none shadow-xs"
             />
           </div>
 
-          {/* Filter Pills - Rounded-full */}
+          {/* Filter Pills - Sharp corners */}
           <div className="flex flex-wrap gap-2.5">
             {categories.map((cat) => {
               const isActive = cat === activeCategory;
@@ -72,10 +71,10 @@ export default function ResourcesPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`font-sans text-xs font-semibold px-5 py-2.5 transition-all duration-300 rounded-full ${
+                  className={`font-sans text-xs font-semibold px-5 py-2.5 transition-all duration-300 ${
                     isActive 
-                      ? "bg-primary text-[#0B0907] font-bold shadow-lg" 
-                      : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+                      ? "bg-[#C25627] text-white font-bold shadow-md" 
+                      : "bg-black/5 text-[#0B0907]/60 hover:text-[#0B0907] hover:bg-black/10"
                   }`}
                 >
                   {cat}
@@ -88,14 +87,13 @@ export default function ResourcesPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: RESOURCE LISTING (Asymmetrical editorial card display - Rounded cards & button)
+          SCENE 3: RESOURCE LISTING (Light background, sharp cards, no glow)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#0B0907] overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#E05320]/5 rounded-full blur-[160px] pointer-events-none" />
+      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           {filteredResources.length === 0 ? (
-            <div className="py-24 text-center font-serif text-2xl italic text-white/30">
+            <div className="py-24 text-center font-serif text-2xl italic text-zinc-400">
               No digital files match your search criteria.
             </div>
           ) : (
@@ -103,34 +101,34 @@ export default function ResourcesPage() {
               {filteredResources.map((res, idx) => (
                 <div
                   key={idx}
-                  className="p-8 border border-white/10 bg-[#15130F]/45 flex flex-col justify-between min-h-[300px] rounded-2xl shadow-xl transition-all duration-300 hover:border-primary/20 hover:scale-[1.02] text-left"
+                  className="p-8 border border-black/5 bg-white flex flex-col justify-between min-h-[300px] shadow-md transition-all duration-300 hover:border-[#C25627]/20 hover:scale-[1.02] text-left"
                 >
                   <div>
                     {/* Header */}
-                    <div className="flex items-center justify-between gap-4 font-mono text-[9px] text-white/40 tracking-wider">
-                      <span>{res.category.toUpperCase()}</span>
-                      <span className="bg-white/5 px-2 py-0.5 rounded-sm">{res.format}</span>
+                    <div className="flex items-center justify-between gap-4 font-mono text-[9px] text-[#C25627] tracking-wider uppercase font-semibold">
+                      <span>{res.category}</span>
+                      <span className="bg-black/5 px-2 py-0.5">{res.format}</span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-serif text-2xl font-light text-white uppercase mt-4 leading-tight">
+                    <h3 className="font-serif text-2xl font-light text-[#0B0907] uppercase mt-4 leading-tight">
                       {res.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="font-sans text-white/50 text-xs font-light leading-relaxed mt-4">
+                    <p className="font-sans text-zinc-600 text-xs font-light leading-relaxed mt-4">
                       {res.description}
                     </p>
                   </div>
 
                   {/* Footer metadata */}
-                  <div className="flex items-center justify-between border-t border-white/5 pt-6 mt-8">
-                    <span className="font-mono text-[10px] text-[#DDB94E] tracking-widest">{res.size}</span>
+                  <div className="flex items-center justify-between border-t border-black/5 pt-6 mt-8">
+                    <span className="font-mono text-[10px] text-[#C25627] tracking-widest font-semibold">{res.size}</span>
                     <a
                       href={res.downloadUrl}
-                      className="group inline-flex items-center gap-1.5 font-sans text-[10px] font-bold tracking-widest text-primary-light hover:text-white transition-all uppercase rounded-full"
+                      className="group inline-flex items-center gap-1.5 font-sans text-[10px] font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] transition-all uppercase"
                     >
-                      <span className="border-b border-primary-light/30 group-hover:border-white pb-0.5">
+                      <span className="border-b border-black/20 group-hover:border-[#C25627] pb-0.5">
                         DOWNLOAD FILE
                       </span>
                       <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>

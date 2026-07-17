@@ -6,12 +6,12 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="w-full flex flex-col bg-[#0B0907] text-[#FCFAF6] antialiased overflow-hidden selection:bg-primary/20">
+    <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: ABOUT HERO (Opening the archives - Normalized & Centered Height)
+          SCENE 1: ABOUT HERO (Opening the archives - Centered & Balanced Height)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -22,9 +22,7 @@ export default function AboutPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#E05320]/15 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-10 w-[400px] h-[400px] bg-[#6B1D2A]/20 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute inset-0 texture-halftone opacity-20 pointer-events-none" />
-
+        
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             REFRESHING HISTORICAL ARCHIVES
@@ -46,7 +44,7 @@ export default function AboutPage() {
         
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
-          {/* Left: Historic photo overlapping elements */}
+          {/* Left: Historic photo overlapping elements (Polaroid margins kept rounded, tape kept) */}
           <div className="lg:col-span-6 relative flex justify-center lg:justify-start">
             <div className="relative w-full max-w-md aspect-[3/4] border border-black/10 shadow-2xl bg-white overflow-hidden rotate-[-2deg] transition-transform duration-500 hover:rotate-0 rounded-2xl p-2.5">
               <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
@@ -64,7 +62,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right: History narrative */}
-          <div className="lg:col-span-6 flex flex-col items-start gap-6 text-left">
+          <div className="lg:col-span-6 flex flex-col items-start gap-6 text-left text-[#0B0907]">
             <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase">
               OUR SPARK
             </span>
@@ -76,8 +74,9 @@ export default function AboutPage() {
             <p className="font-sans text-[#7A7062] text-sm leading-relaxed font-light">
               Lagos State Baptist Student Fellowship (LSBSF) was established to organize, coordinate, and empower campus student fellowships across Lagos State higher institutions. What began as a scattered network of campus prayers ignited into a unified movement.
             </p>
+            {/* Copy pass: delegates -> students */}
             <p className="font-sans text-[#7A7062] text-sm leading-relaxed font-light">
-              Refreshing represents the central furnace of this fellowship. Annually, delegates from Lagos East, Lagos West, and Lagos Central associations gather to receive training, study the scriptures in discipleship cohorts, and experience fresh outpourings of revival.
+              Refreshing represents the central furnace of this fellowship. Annually, students from Lagos East, Lagos West, and Lagos Central associations gather to receive training, study the scriptures in discipleship cohorts, and experience fresh outpourings of revival.
             </p>
             <p className="font-sans text-[#7A7062] text-sm leading-relaxed font-light">
               As we step into 2026, marking the 40th anniversary, the theme is &ldquo;The Greater Glory&rdquo;. We look back with gratitude, but we look forward with anticipation. The glory of the campus testimonies to come will exceed the milestones of the past.
@@ -88,34 +87,33 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: MOVEMENT PILLARS (Flyer layout style - High Contrast Cards)
+          SCENE 3: MOVEMENT PILLARS (Extended warmth, Light background, high contrast card blocks, sharp corners, no glow)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#0B0907] overflow-hidden border-t border-white/5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#6B1D2A]/15 rounded-full blur-[160px] pointer-events-none" />
+      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center">
           
           <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#E05320] uppercase block mb-3">
             WHAT DEFINES LSBSF
           </span>
-          <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight text-white uppercase leading-none mb-16 text-center">
-            THE FOUR <span className="text-gradient-gold font-normal font-serif">Pillars</span>
+          <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight text-[#0B0907] uppercase leading-none mb-16 text-center">
+            THE FOUR <span className="text-[#C25627] font-normal font-serif">Pillars</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full text-left">
             {pillars.map((pil, idx) => (
               <div
                 key={idx}
-                className="p-8 border border-white/10 bg-[#1A1813] flex flex-col justify-between min-h-[250px] rounded-2xl shadow-xl transition-transform hover:scale-103 duration-300"
+                className="p-8 border border-black/10 bg-white flex flex-col justify-between min-h-[250px] shadow-md transition-transform hover:scale-[1.02] duration-300"
               >
-                <div className="font-serif text-5xl font-bold text-[#DDB94E] select-none">
+                <div className="font-serif text-5xl font-bold text-[#C25627] select-none">
                   0{idx + 1}
                 </div>
                 <div className="mt-8">
-                  <h4 className="font-serif text-xl font-normal text-white uppercase mb-3">
+                  <h4 className="font-serif text-xl font-normal text-[#0B0907] uppercase mb-3">
                     {pil.title}
                   </h4>
-                  <p className="font-sans text-zinc-200 text-xs leading-relaxed font-light">
+                  <p className="font-sans text-zinc-600 text-xs leading-relaxed font-light">
                     {pil.description}
                   </p>
                 </div>
@@ -127,25 +125,25 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 4: JOIN THE MISSION (CTA stub - Rounded CTA buttons)
+          SCENE 4: JOIN THE MISSION (CTA stub - Dark card registration overlay, no free copy)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#1A0E12] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#6B1D2A]/20 to-[#2B0C3F]/15 pointer-events-none" />
+      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
-        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
+        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
           <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             STAY CONNECTED TO THE REVIVAL
           </span>
           <h2 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none">
             Be Part of <span className="font-serif italic font-extralight text-primary-light">History</span>
           </h2>
+          {/* Copy pass: ready to coordinate -> ready to serve */}
           <p className="font-sans text-white/60 text-sm leading-relaxed max-w-lg font-light">
-            Whether you are a campus student ready to coordinate, an alumnus eager to support, or a guest seeking encounter, LSBSF fellowships welcome you.
+            Whether you are a campus student ready to serve, an alumnus eager to support, or a guest seeking encounter, LSBSF fellowships welcome you.
           </p>
           <div className="flex flex-wrap gap-4 justify-center mt-4">
             <Link
               href="/programme"
-              className="px-6 py-3 border border-white/20 hover:border-white/40 text-white font-sans font-semibold text-[11px] tracking-wider uppercase bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-full"
+              className="px-6 py-3 border border-white/20 hover:border-white/40 text-white font-sans font-semibold text-[11px] tracking-wider uppercase bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
               Explore Schedule
             </Link>
@@ -153,7 +151,7 @@ export default function AboutPage() {
               href="https://forms.gle/DSW4CVMXWK61BHT96"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[11px] tracking-wider uppercase transition-all duration-300 rounded-full"
+              className="px-8 py-3.5 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[11px] tracking-wider uppercase transition-all duration-300"
             >
               Register for the Program
             </a>

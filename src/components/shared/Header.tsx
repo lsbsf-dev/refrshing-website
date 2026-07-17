@@ -49,24 +49,42 @@ export function Header() {
   const editions = ["2026", "2025", "2024"];
 
   const headerHeightClass = "h-20";
-  const headerBackgroundClass = "fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-black/5";
-  const activeLinkClass = "text-[#C25627] border-b border-[#C25627] font-semibold";
-  const defaultLinkClass = "text-[#0B0907] hover:text-[#C25627] transition-all py-1";
+  const headerBackgroundClass = isScrolled
+    ? "fixed top-0 left-0 right-0 z-50 w-full bg-white/95 border-b border-black/5 backdrop-blur-xs shadow-xs"
+    : "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent";
+
+  const activeLinkClass = isScrolled
+    ? "text-[#C25627] border-b border-[#C25627] font-semibold"
+    : "text-[#DDB94E] border-b border-[#DDB94E] font-semibold";
+
+  const defaultLinkClass = isScrolled
+    ? "text-[#0B0907] hover:text-[#C25627] transition-colors py-1"
+    : "text-white/80 hover:text-white transition-colors py-1";
+
+  const iconColorClass = isScrolled
+    ? "text-[#0B0907] hover:text-[#C25627] transition-colors"
+    : "text-white/90 hover:text-white transition-colors";
+
+  const switcherBorderClass = isScrolled
+    ? "border-black/10 text-[#0B0907] hover:bg-black/5"
+    : "border-white/20 text-white hover:bg-white/5";
 
   return (
     <header className={`flex items-center transition-all duration-300 ${headerBackgroundClass} ${headerHeightClass}`}>
       <div className="w-full max-w-7xl mx-auto px-6 md:px-16 flex items-center justify-between">
         
-        {/* Left: Branding using official refreshing-logo.png - Made larger */}
+        {/* Left: Branding with local light backing plate to keep wordmark legible on dark hero */}
         <Link href="/" className="flex items-center">
-          <div className="relative h-16 w-48 sm:h-20 sm:w-56 transition-all">
-            <Image
-              src="/refreshing-logo.png"
-              alt="Refreshing 2026 Logo"
-              fill
-              className="object-contain"
-              priority
-            />
+          <div className="relative h-14 w-40 sm:h-16 sm:w-48 bg-white px-3 py-1.5 rounded-lg flex items-center justify-center shadow-sm hover:scale-[1.02] transition-transform duration-300">
+            <div className="relative w-full h-full">
+              <Image
+                src="/refreshing-logo.png"
+                alt="Refreshing 2026 Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
           </div>
         </Link>
 
@@ -92,13 +110,13 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setEditionDropdownOpen(!editionDropdownOpen)}
-              className="flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-colors border-black/10 hover:bg-black/5 text-[#0B0907] rounded-lg"
+              className={`flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-all rounded-lg ${switcherBorderClass}`}
             >
               <span>2026</span>
               <ChevronDown className="h-3 w-3" />
             </button>
             {editionDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-28 bg-white border border-black/10 shadow-2xl overflow-hidden z-50">
+              <div className="absolute right-0 mt-2 w-28 bg-white border border-black/10 shadow-2xl overflow-hidden z-50 rounded-lg">
                 {editions.map((ed) => (
                   <button
                     key={ed}
@@ -115,7 +133,7 @@ export function Header() {
           </div>
 
           {/* Search Trigger */}
-          <Link href="/search" className="hover:text-[#C25627] transition-colors text-[#0B0907]">
+          <Link href="/search" className={iconColorClass}>
             <Search className="h-5 w-5" />
           </Link>
 
@@ -132,12 +150,12 @@ export function Header() {
 
         {/* Mobile menu trigger */}
         <div className="lg:hidden flex items-center gap-4">
-          <Link href="/search" className="hover:text-[#C25627] transition-colors text-[#0B0907]">
+          <Link href="/search" className={iconColorClass}>
             <Search className="h-5 w-5" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="hover:text-[#C25627] transition-colors text-[#0B0907]"
+            className={iconColorClass}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -167,7 +185,7 @@ export function Header() {
             {/* Edition Switcher inside mobile drawer */}
             <div className="flex items-center justify-between px-2 py-3 border-y border-black/5">
               <span className="font-sans text-sm font-medium text-[#0B0907]/60">Select Edition</span>
-              <select className="font-sans text-xs font-semibold bg-transparent border border-black/10 px-3 py-1.5 text-[#0B0907] outline-none">
+              <select className="font-sans text-xs font-semibold bg-transparent border border-black/10 px-3 py-1.5 text-[#0B0907] outline-none rounded-md">
                 {editions.map((ed) => (
                   <option key={ed} value={ed} className="bg-white text-[#0B0907]">Edition {ed}</option>
                 ))}

@@ -12,12 +12,12 @@ export default function GalleryPage() {
     : galleryList.filter(img => img.category === activeCategory);
 
   return (
-    <div className="w-full flex flex-col bg-[#0B0907] text-[#FCFAF6] antialiased overflow-hidden selection:bg-primary/20">
+    <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: GALLERY HERO (Opening the visual vault - Centered & Space aligned)
+          SCENE 1: GALLERY HERO (Opening the visual vault - Centered & Balanced Height)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -28,7 +28,6 @@ export default function GalleryPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="absolute top-1/2 left-1/4 w-[600px] h-[300px] bg-[#6B1D2A]/15 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute inset-0 texture-halftone opacity-25 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
@@ -45,18 +44,18 @@ export default function GalleryPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: FILTERS (Category Toggles - Rounded pills)
+          SCENE 2: FILTERS (Category Toggles - Light background, sharp buttons)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full bg-[#15130F] border-b border-white/5 py-6 px-6 md:px-16 overflow-hidden z-20">
+      <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-6 px-6 md:px-16 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto gap-4 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`flex-shrink-0 font-sans text-xs font-bold tracking-widest uppercase py-2.5 px-6 border transition-all duration-300 rounded-full ${
+              className={`flex-shrink-0 font-sans text-xs font-bold tracking-widest uppercase py-2.5 px-6 border transition-all duration-300 ${
                 activeCategory === cat 
-                  ? "border-primary text-primary-light bg-primary/5 shadow-md" 
-                  : "border-white/10 text-white/50 hover:text-white"
+                  ? "border-primary text-[#0B0907] bg-white shadow-sm font-semibold" 
+                  : "border-black/10 text-zinc-500 hover:text-[#0B0907]"
               }`}
             >
               {cat}
@@ -66,10 +65,9 @@ export default function GalleryPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: STAGGERED MASONRY GRID (All 14 Images - Rounded Cards & Hover scaling)
+          SCENE 3: STAGGERED MASONRY GRID (All 14 Images - Light background, sharp cards, no glow)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#0B0907] overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#2B0C3F]/10 rounded-full blur-[160px] pointer-events-none" />
+      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Staggered masonry layout columns */}
@@ -79,30 +77,30 @@ export default function GalleryPage() {
               <button
                 key={idx}
                 onClick={() => setLightboxImage(img.src)}
-                className="break-inside-avoid w-full flex flex-col text-left group border border-white/10 overflow-hidden bg-[#15130F] transition-all duration-500 hover:border-primary/30 relative rounded-2xl shadow-xl hover:scale-[1.01]"
+                className="break-inside-avoid w-full flex flex-col text-left group border border-black/5 overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/30 relative shadow-md hover:scale-[1.01]"
               >
-                {/* Photo container with rounded-t-2xl */}
-                <div className={`relative w-full overflow-hidden rounded-t-2xl ${img.aspectClass}`}>
+                {/* Photo container */}
+                <div className={`relative w-full overflow-hidden ${img.aspectClass}`}>
                   <Image
                     src={img.src}
                     alt={img.title}
                     fill
-                    className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04] rounded-t-2xl"
+                    className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-transparent to-transparent opacity-65 pointer-events-none rounded-t-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-65 pointer-events-none" />
                   
                   {/* Category tag */}
-                  <span className="absolute top-4 right-4 font-mono text-[9px] font-bold tracking-widest text-[#E05320] bg-[#E05320]/15 border border-[#E05320]/25 px-2 py-0.5 uppercase rounded-sm z-10">
+                  <span className="absolute top-4 right-4 font-mono text-[9px] font-bold tracking-widest text-[#E05320] bg-[#E05320]/15 border border-[#E05320]/25 px-2 py-0.5 uppercase z-10">
                     {img.category}
                   </span>
                 </div>
 
                 {/* Description details */}
                 <div className="p-6">
-                  <span className="font-mono text-[9px] text-[#DDB94E] tracking-widest block uppercase">
+                  <span className="font-mono text-[9px] text-[#C25627] tracking-widest block uppercase font-semibold">
                     {img.edition} EDITION
                   </span>
-                  <h3 className="font-serif text-lg font-normal text-white mt-1 uppercase leading-snug">
+                  <h3 className="font-serif text-lg font-normal text-[#0B0907] mt-1 uppercase leading-snug">
                     {img.title}
                   </h3>
                 </div>
@@ -121,7 +119,7 @@ export default function GalleryPage() {
           onClick={() => setLightboxImage(null)}
           className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-pointer animate-fade-in"
         >
-          <button className="absolute top-6 right-6 text-white hover:text-primary-light font-sans text-xs tracking-widest uppercase">
+          <button className="absolute top-6 right-6 text-white hover:text-[#C25627] font-sans text-xs tracking-widest uppercase">
             [ CLOSE PREVIEW ]
           </button>
           <div className="relative w-full max-w-5xl h-[80vh]">

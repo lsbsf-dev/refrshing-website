@@ -12,12 +12,12 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-[#0B0907] text-[#FCFAF6] antialiased overflow-hidden selection:bg-primary/20">
+    <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: CONTACT HERO (Opening communication - Centered & Space aligned)
+          SCENE 1: CONTACT HERO (Opening communication - Centered & Balanced Height)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -28,7 +28,6 @@ export default function ContactPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute inset-0 texture-halftone opacity-25 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
@@ -45,7 +44,7 @@ export default function ContactPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: COORDINATING CHANNELS (Grid details - Removed Top Transition Shadow)
+          SCENE 2: COORDINATING CHANNELS (Grid details - Removed Top Transition Shadow, sharp corners)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] texture-paper overflow-hidden">
         
@@ -59,24 +58,24 @@ export default function ContactPage() {
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight leading-none uppercase text-[#0B0907]">
                 FELLOWSHIP <br />
-                <span className="font-serif italic font-extralight text-primary-dark">chapters</span>
+                <span className="font-serif italic font-extralight text-primary-dark font-serif">chapters</span>
               </h2>
               <div className="h-[1px] w-20 bg-[#E05320] my-4" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
               {contactList.map((chap, idx) => (
-                <div key={idx} className="flex flex-col gap-2 p-5 bg-[#0B0907]/5 rounded-xl border border-black/5 hover:border-[#C25627]/10 transition-colors">
+                <div key={idx} className="flex flex-col gap-2 p-5 bg-white border border-black/5 shadow-sm hover:border-[#C25627]/10 transition-colors">
                   <h4 className="font-sans text-xs font-bold text-[#0B0907] uppercase tracking-wider">
                     {chap.chapter}
                   </h4>
-                  <span className="font-sans text-xs text-[#7A7062] font-light leading-relaxed">
+                  <span className="font-sans text-xs text-zinc-500 font-light leading-relaxed">
                     Leader: {chap.leader}
                   </span>
                   <a href={`tel:${chap.phone}`} className="font-mono text-xs text-primary-dark hover:underline mt-1 font-semibold">
                     {chap.phone}
                   </a>
-                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-[#7A7062] hover:text-[#0B0907] transition-colors break-all">
+                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-zinc-500 hover:text-[#0B0907] transition-colors break-all">
                     {chap.email}
                   </a>
                 </div>
@@ -96,9 +95,9 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right: Email Form - Rounded container & button */}
+          {/* Right: Email Form - Sharp corners */}
           <div className="lg:col-span-6 w-full">
-            <div className="p-8 md:p-12 border border-black/10 bg-[#FAF6EE] relative rounded-2xl shadow-xl">
+            <div className="p-8 md:p-12 border border-black/10 bg-white relative shadow-xl">
               <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-6 text-left">
                 SUBMIT AN ENQUIRY
               </span>
@@ -141,7 +140,7 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer rounded-full"
+                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer"
                   >
                     Send message
                   </button>
