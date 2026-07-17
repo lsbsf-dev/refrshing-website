@@ -15,7 +15,7 @@ export default function ContactPage() {
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: CONTACT HERO (Opening communication - Centered & Balanced Height)
+          SCENE 1: CONTACT HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
       <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -30,21 +30,21 @@ export default function ContactPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/20 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             REFRESHING ENQUIRY CHANNELS
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
             CONTACT <br />
             <span className="text-gradient-gold font-normal font-serif">PORTAL</span>
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2">
+          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2 animate-hero-item delay-300">
             Connect with BSF coordinators across Lagos East, West, and Central student chapters.
           </p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: COORDINATING CHANNELS (Grid details - Removed Top Transition Shadow, sharp corners)
+          SCENE 2: COORDINATING CHANNELS (Grid details - sharp corners, tactile response)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] texture-paper overflow-hidden">
         
@@ -65,17 +65,17 @@ export default function ContactPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
               {contactList.map((chap, idx) => (
-                <div key={idx} className="flex flex-col gap-2 p-5 bg-white border border-black/5 shadow-sm hover:border-[#C25627]/10 transition-colors">
+                <div key={idx} className="flex flex-col gap-2 p-5 bg-white border border-black/5 shadow-sm hover:border-[#C25627]/10 transition-colors active-press cursor-pointer">
                   <h4 className="font-sans text-xs font-bold text-[#0B0907] uppercase tracking-wider">
                     {chap.chapter}
                   </h4>
                   <span className="font-sans text-xs text-zinc-500 font-light leading-relaxed">
                     Leader: {chap.leader}
                   </span>
-                  <a href={`tel:${chap.phone}`} className="font-mono text-xs text-primary-dark hover:underline mt-1 font-semibold">
+                  <a href={`tel:${chap.phone}`} className="font-mono text-xs text-primary-dark hover:underline mt-1 font-semibold active-press inline-block">
                     {chap.phone}
                   </a>
-                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-zinc-500 hover:text-[#0B0907] transition-colors break-all">
+                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-zinc-500 hover:text-[#0B0907] transition-colors break-all active-press inline-block">
                     {chap.email}
                   </a>
                 </div>
@@ -95,7 +95,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right: Email Form - Sharp corners */}
+          {/* Right: Email Form */}
           <div className="lg:col-span-6 w-full">
             <div className="p-8 md:p-12 border border-black/10 bg-white relative shadow-xl">
               <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-6 text-left">
@@ -140,7 +140,7 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer"
+                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer active-press"
                   >
                     Send message
                   </button>

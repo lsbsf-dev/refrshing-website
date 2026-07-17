@@ -18,7 +18,7 @@ export default function ResourcesPage() {
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: RESOURCES HERO (Opening the library - Centered & Balanced Height)
+          SCENE 1: RESOURCES HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
       <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -33,26 +33,26 @@ export default function ResourcesPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/25 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             DIGITAL BOOKLETS & FILES
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
             THE <br />
             <span className="text-gradient-sunset font-normal font-serif">LIBRARY</span>
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2">
+          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2 animate-hero-item delay-300">
             Search and download devotionals, Bible Study outlines, and anniversary publications.
           </p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: SEARCH & FILTER BAR (Light background, sharp inputs & tabs, no rounded corners)
+          SCENE 2: SEARCH & FILTER BAR (Light background, sharp inputs & tabs)
           ═══════════════════════════════════════ */}
       <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-8 px-6 md:px-16 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
           
-          {/* Outlined Search Field - Sharp corners */}
+          {/* Outlined Search Field */}
           <div className="relative flex-1 max-w-md">
             <input
               type="text"
@@ -63,7 +63,7 @@ export default function ResourcesPage() {
             />
           </div>
 
-          {/* Filter Pills - Sharp corners */}
+          {/* Filter Pills - Tactile active states */}
           <div className="flex flex-wrap gap-2.5">
             {categories.map((cat) => {
               const isActive = cat === activeCategory;
@@ -71,7 +71,7 @@ export default function ResourcesPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`font-sans text-xs font-semibold px-5 py-2.5 transition-all duration-300 ${
+                  className={`font-sans text-xs font-semibold px-5 py-2.5 transition-all duration-300 active-press ${
                     isActive 
                       ? "bg-[#C25627] text-white font-bold shadow-md" 
                       : "bg-black/5 text-[#0B0907]/60 hover:text-[#0B0907] hover:bg-black/10"
@@ -87,7 +87,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: RESOURCE LISTING (Light background, sharp cards, no glow)
+          SCENE 3: RESOURCE LISTING (Light background, tactile cards)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         
@@ -101,7 +101,7 @@ export default function ResourcesPage() {
               {filteredResources.map((res, idx) => (
                 <div
                   key={idx}
-                  className="p-8 border border-black/5 bg-white flex flex-col justify-between min-h-[300px] shadow-md transition-all duration-300 hover:border-[#C25627]/20 hover:scale-[1.02] text-left"
+                  className="p-8 border border-black/5 bg-white flex flex-col justify-between min-h-[300px] shadow-md transition-all duration-300 hover:border-[#C25627]/20 hover:scale-[1.02] text-left active-press cursor-pointer"
                 >
                   <div>
                     {/* Header */}
@@ -126,7 +126,7 @@ export default function ResourcesPage() {
                     <span className="font-mono text-[10px] text-[#C25627] tracking-widest font-semibold">{res.size}</span>
                     <a
                       href={res.downloadUrl}
-                      className="group inline-flex items-center gap-1.5 font-sans text-[10px] font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] transition-all uppercase"
+                      className="group inline-flex items-center gap-1.5 font-sans text-[10px] font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] transition-all uppercase active-press"
                     >
                       <span className="border-b border-black/20 group-hover:border-[#C25627] pb-0.5">
                         DOWNLOAD FILE

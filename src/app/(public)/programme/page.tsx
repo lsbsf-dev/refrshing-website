@@ -10,7 +10,7 @@ export default function ProgrammePage() {
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: PROGRAMME HERO (Unfolding the timeline - Centered & Space aligned)
+          SCENE 1: PROGRAMME HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
       <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -25,21 +25,21 @@ export default function ProgrammePage() {
         <div className="absolute top-1/2 left-1/3 w-[600px] h-[400px] bg-[#6B1D2A]/20 rounded-full blur-[160px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             FIVE DAYS IN HIS SANCTUARY
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
             DAILY <br />
             <span className="text-gradient-gold font-normal font-serif">JOURNEY</span>
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2">
+          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2 animate-hero-item delay-300">
             An unfolding vertical roadmap from covenant devotion to global deployment.
           </p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: TABS SELECTOR (Day Navigation - Light background, sharp buttons, no rounded corners)
+          SCENE 2: TABS SELECTOR (Day Navigation - Light background, sharp buttons, tactile active states)
           ═══════════════════════════════════════ */}
       <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-6 px-6 md:px-16 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto gap-4 md:gap-8 scrollbar-none">
@@ -49,7 +49,7 @@ export default function ProgrammePage() {
               <button
                 key={idx}
                 onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border transition-all duration-300 ${
+                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border transition-all duration-300 active-press ${
                   isActive 
                     ? "border-primary text-[#0B0907] bg-white shadow-sm font-semibold" 
                     : "border-transparent text-zinc-400 hover:text-zinc-700"
@@ -68,7 +68,7 @@ export default function ProgrammePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: THE TIMELINE JOURNEY (Light background, sharp markers, no glow)
+          SCENE 3: THE TIMELINE JOURNEY (Light background, sharp markers, tactile program rows)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         
@@ -90,7 +90,7 @@ export default function ProgrammePage() {
           <div className="relative pl-6 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
             
             {daysData[activeDay].sessions.map((sess, idx) => (
-              <div key={idx} className="relative group">
+              <div key={idx} className="relative group active-press cursor-pointer">
                 
                 {/* Visual node marker - Sharp square */}
                 <div className="absolute -left-[31px] md:-left-[55px] top-1.5 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10 group-hover:scale-125 transition-transform duration-300">
@@ -131,7 +131,7 @@ export default function ProgrammePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 4: REGISTRATION CTA - Dark card contrast overlay, no free copy, sharp button
+          SCENE 4: REGISTRATION CTA - Dark card, sharp active button
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
@@ -149,7 +149,7 @@ export default function ProgrammePage() {
             href="https://forms.gle/DSW4CVMXWK61BHT96"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4"
+            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 active-press"
           >
             Register for the Program
           </a>

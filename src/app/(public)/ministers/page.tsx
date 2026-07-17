@@ -2,14 +2,13 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function MinistersPage() {
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: MINISTERS HERO (Opening the stage - Centered & Balanced Height)
+          SCENE 1: MINISTERS HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
       <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -24,29 +23,29 @@ export default function MinistersPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/20 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             REFRESHING 2026 VOICES
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
             THE <br />
             <span className="text-gradient-sunset font-normal font-serif">MINISTERS</span>
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2">
+          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2 animate-hero-item delay-300">
             Meet the leaders and teachers fanning the revival flame for the 40th anniversary.
           </p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: SPEAKER 1 — PASTOR SEGUN (Featured Artist - Light background, sharp corners, no glow)
+          SCENE 2: SPEAKER 1 — PASTOR SEGUN (Featured Speaker - Light background, sharp corners, no glow)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-b border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
-          {/* Left: Asymmetric Full Aspect Image - Sharp corners */}
+          {/* Left: Asymmetric Full Aspect Image - Sharp corners, tactile feedback */}
           <div className="lg:col-span-6 relative flex justify-center">
-            <div className="relative w-full aspect-[3/4] overflow-hidden border border-black/10 bg-[#15130F] shadow-2xl group">
+            <div className="relative w-full aspect-[3/4] overflow-hidden border border-black/10 bg-[#15130F] shadow-2xl group active-press cursor-pointer">
               <Image
                 src="/pictures/Image 6.jpg"
                 alt="Pastor Segun Babalola"
@@ -89,7 +88,7 @@ export default function MinistersPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: SPEAKER 2 — DR. HELEN (Featured Artist - Light background, sharp corners, no glow)
+          SCENE 3: SPEAKER 2 — DR. HELEN (Featured Speaker - Light background, sharp corners, no glow)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-b border-black/5">
         
@@ -116,9 +115,9 @@ export default function MinistersPage() {
             </p>
           </div>
 
-          {/* Right: Asymmetric Portrait (Wide 4/3 Aspect, Sharp corners) */}
+          {/* Right: Asymmetric Portrait (Wide 4/3 Aspect, Sharp corners, tactile feedback) */}
           <div className="lg:col-span-6 relative flex justify-center order-1 lg:order-2">
-            <div className="relative w-full aspect-[4/3] overflow-hidden border border-black/10 bg-[#0B0907] shadow-2xl group">
+            <div className="relative w-full aspect-[4/3] overflow-hidden border border-black/10 bg-[#0B0907] shadow-2xl group active-press cursor-pointer">
               <Image
                 src="/pictures/Image 11.jpg"
                 alt="Dr. Helen Adeyemi"
@@ -140,7 +139,7 @@ export default function MinistersPage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          REGISTRATION CTA - Dark card contrast overlay, no free copy, sharp button
+          REGISTRATION CTA - Dark card contrast overlay, sharp active button
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
@@ -158,7 +157,7 @@ export default function MinistersPage() {
             href="https://forms.gle/DSW4CVMXWK61BHT96"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4"
+            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 active-press"
           >
             Register for the Program
           </a>
