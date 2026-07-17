@@ -11,8 +11,8 @@ export function Footer() {
         
         {/* Column 1: Brand details */}
         <div className="flex flex-col gap-5">
-          {/* Refreshing logo backing plate - scaled up and confident */}
-          <div className="relative h-20 w-60 sm:h-22 sm:w-64 bg-white px-4 py-2.5 rounded-lg flex items-center justify-center shadow-md">
+          {/* Refreshing logo backing plate - square shaped to match BSF logo and keep visual symmetry */}
+          <div className="relative h-28 w-28 sm:h-32 sm:w-32 bg-white p-3 rounded-lg flex items-center justify-center shadow-md hover:scale-[1.02] transition-transform duration-300">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
