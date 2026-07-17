@@ -58,11 +58,11 @@ export default function PublicHomepage() {
     <div ref={pageRef} className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
       {/* ═══════════════════════════════════════
-          SCENE 1: HERO (Explosive - Dynamic Scale & Hierarchy)
+          SCENE 1: HERO (Explosive - Dynamic Scale & Entrance)
           ═══════════════════════════════════════ */}
       <section className="relative w-full h-[100dvh] min-h-[650px] flex flex-col justify-between overflow-hidden bg-[#0B0907] text-[#FCFAF6] pt-24 pb-8">
         
-        {/* Increased worship background opacity so details are highly visible */}
+        {/* Worship background opacity */}
         <div className="absolute inset-0 w-full h-full opacity-55 pointer-events-none z-0">
           <Image
             src="/pictures/Image 3.jpg"
@@ -95,7 +95,7 @@ export default function PublicHomepage() {
             />
           </div>
 
-          {/* 2. Medium (Supporting Details, overlapped behind dominant) */}
+          {/* 2. Medium (Supporting Details) */}
           <div className="relative aspect-[4/3] w-48 border border-white/10 shadow-xl -translate-x-24 -translate-y-12 rotate-[-6deg] overflow-hidden bg-white/5 z-10">
             <Image
               src="/pictures/Image 11.jpg"
@@ -105,7 +105,7 @@ export default function PublicHomepage() {
             />
           </div>
 
-          {/* 3. Tiny Accent (Detail slice breaking boundary) */}
+          {/* 3. Tiny Accent */}
           <div className="relative aspect-square w-28 border border-white/10 shadow-lg -translate-x-12 -translate-y-20 rotate-[12deg] overflow-hidden bg-white/5 z-0 opacity-75">
             <Image
               src="/pictures/Image 9.jpg"
@@ -117,29 +117,29 @@ export default function PublicHomepage() {
 
         </div>
 
-        {/* Hero Content - Clean Display Typography (Increased headline by 10%) */}
+        {/* Hero Content - Clean Display Typography (Staggered load sequences) */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-16 flex-1 flex flex-col justify-center items-start gap-4">
           
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             LAGOS STATE BAPTIST STUDENT FELLOWSHIP PRESENTS
           </span>
 
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none">
-            <span className="text-gradient-gold block">
+          <h1 className="font-serif text-5xl sm:text-7xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
+            <span className="text-gradient-gold block font-serif">
               THE GREATER
             </span>
-            <span className="text-gradient-gold block">
+            <span className="text-gradient-gold block font-serif">
               GLORY
             </span>
           </h1>
 
-          <div className="max-w-xl border-l-2 border-[#C25627] pl-4 sm:pl-6 my-2">
+          <div className="max-w-xl border-l-2 border-[#C25627] pl-4 sm:pl-6 my-2 animate-hero-item delay-300">
             <p className="font-serif text-sm sm:text-base md:text-lg italic text-white/95 leading-relaxed font-light">
               &ldquo;The glory of this present house will be greater than the glory of the former house,&rdquo; says the Lord Almighty.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 mt-1 font-mono text-[9px] tracking-widest text-[#DDB94E] uppercase">
+          <div className="flex flex-wrap items-center gap-3 mt-1 font-mono text-[9px] tracking-widest text-[#DDB94E] uppercase animate-hero-item delay-400">
             <span>AUGUST 10–14, 2026</span>
             <span>·</span>
             <span>BAPTIST ACADEMY, OBANIKORO, LAGOS</span>
@@ -150,7 +150,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 2: THEME (Calm - Scripture Art Card - Mixed Layout - No Glow)
+          SCENE 2: THEME (Scripture Art Card)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-32 px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -190,7 +190,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: 40 YEARS (Nostalgic - Unforgettable Full-Bleed Exhibition Wall - Tape details preserved)
+          SCENE 3: 40 YEARS (Nostalgic Album - polaroid rounded frames, tape kept)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-40 bg-gradient-to-b from-[#0B0907] via-[#1D1013] to-[#0B0907] text-[#FCFAF6] texture-paper overflow-hidden border-t border-white/5 min-h-[90vh] flex items-center">
         
@@ -204,12 +204,12 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {/* Left: Exhibition Gallery Wall (2 Overlapping Real Photos, Enlarged - Polaroid corners rounded, tape kept) */}
+            {/* Left: Exhibition Gallery Wall (2 Overlapping polaroids) */}
             <div className="lg:col-span-7 relative flex justify-center z-10 w-full">
               <div data-reveal className="relative w-full max-w-xl h-[420px] sm:h-[550px]">
                 
-                {/* Photo 1: Image 14 (Historic seed, enlarged - polaroid margins kept rounded-2xl) */}
-                <div className="absolute left-0 top-0 w-[60%] aspect-[3/4] z-10 border border-black/15 shadow-2xl rotate-[-3deg] transition-transform duration-500 hover:rotate-0 bg-white p-2.5 rounded-2xl overflow-hidden">
+                {/* Photo 1: Image 14 (Historic seed, polaroid) */}
+                <div className="absolute left-0 top-0 w-[60%] aspect-[3/4] z-10 border border-black/15 shadow-2xl rotate-[-3deg] transition-transform duration-500 hover:rotate-0 bg-white p-2.5 rounded-2xl overflow-hidden active-press">
                   <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
                     <Image
                       src="/pictures/Image 14.jpg"
@@ -224,8 +224,8 @@ export default function PublicHomepage() {
                   <div className="absolute -top-3 left-[30%] w-12 h-4 archival-tape" />
                 </div>
 
-                {/* Photo 2: Image 10 (Modern outpour, enlarged - polaroid margins kept rounded-2xl) */}
-                <div className="absolute right-0 top-16 w-[60%] aspect-[3/4] z-20 border-4 border-[#FAF6EE] shadow-2xl rotate-[3deg] transition-transform duration-500 hover:rotate-0 bg-[#FAF6EE] p-2.5 rounded-2xl overflow-hidden">
+                {/* Photo 2: Image 10 (Modern outpour, polaroid) */}
+                <div className="absolute right-0 top-16 w-[60%] aspect-[3/4] z-20 border-4 border-[#FAF6EE] shadow-2xl rotate-[3deg] transition-transform duration-500 hover:rotate-0 bg-[#FAF6EE] p-2.5 rounded-2xl overflow-hidden active-press">
                   <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
                     <Image
                       src="/pictures/Image 10.jpg"
@@ -258,7 +258,7 @@ export default function PublicHomepage() {
               </p>
               <Link
                 href="/about"
-                className="group inline-flex items-center gap-2 font-sans text-[11px] font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2"
+                className="group inline-flex items-center gap-2 font-sans text-[11px] font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2 active-press"
               >
                 <span className="border-b border-[#DDB94E] group-hover:border-white pb-0.5">
                   THE MOVEMENT HISTORY
@@ -284,18 +284,18 @@ export default function PublicHomepage() {
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#0B0907] uppercase leading-none">
               FEATURED <br />
-              <span className="text-[#C25627] font-normal">MINISTERS</span>
+              <span className="text-[#C25627] font-normal font-serif">MINISTERS</span>
             </h2>
             <div className="w-20 h-[1px] bg-[#C25627] mt-6" />
           </div>
 
-          {/* Magazine Cover Editorial Layout using Real Photos - Sharp corners */}
+          {/* Magazine Cover Editorial Layout - Sharp corners */}
           <div className="flex flex-col gap-28">
             
-            {/* Minister 1: Pastor Segun Babalola (Cropped 15% from bottom, Sharp corners) */}
+            {/* Minister 1: Pastor Segun Babalola */}
             <div data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Photo Frame (Large portrait, offset, rotated, sharp corners) */}
-              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[-2deg] transition-transform duration-500 hover:rotate-0">
+              {/* Photo Frame (Sharp corners) */}
+              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[-2deg] transition-transform duration-500 hover:rotate-0 active-press">
                 <Image
                   src="/pictures/Image 6.jpg"
                   alt="Pastor Segun Babalola"
@@ -352,8 +352,8 @@ export default function PublicHomepage() {
                 </p>
               </div>
 
-              {/* Photo Frame (Large portrait, offset, rotated, sharp corners) */}
-              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[2deg] transition-transform duration-500 hover:rotate-0 order-1 lg:order-2">
+              {/* Photo Frame (Sharp corners) */}
+              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[2deg] transition-transform duration-500 hover:rotate-0 order-1 lg:order-2 active-press">
                 <Image
                   src="/pictures/Image 11.jpg"
                   alt="Dr. Helen Adeyemi"
@@ -379,7 +379,7 @@ export default function PublicHomepage() {
           <div data-reveal className="flex justify-center mt-20">
             <Link
               href="/ministers"
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10"
+              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
             >
               <span>EXPLORE ALL SPEAKERS</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -415,7 +415,7 @@ export default function PublicHomepage() {
 
             <Link
               href="/programme"
-              className="group inline-flex items-center gap-2 font-sans text-[12px] font-extrabold tracking-wider text-[#C25627] hover:text-[#0B0907] transition-all duration-300 mt-4"
+              className="group inline-flex items-center gap-2 font-sans text-[12px] font-extrabold tracking-wider text-[#C25627] hover:text-[#0B0907] transition-all duration-300 mt-4 active-press"
             >
               <span className="border-b border-[#C25627] group-hover:border-black pb-0.5">
                 VIEW PROGRAMME DETAILS
@@ -424,13 +424,13 @@ export default function PublicHomepage() {
             </Link>
           </div>
 
-          {/* Unfolded Roadmap on Warm Ivory Background - sharp tags */}
+          {/* Unfolded Roadmap on Warm Ivory Background - sharp tags with active scale rows */}
           <div className="lg:col-span-7 flex flex-col w-full">
             {dailyRoadmap.map((item, idx) => (
               <div
                 key={idx}
                 data-reveal
-                className="group flex flex-col sm:flex-row items-start gap-6 py-8 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left"
+                className="group flex flex-col sm:flex-row items-start gap-6 py-8 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left active-press cursor-pointer"
               >
                 <div className="flex-shrink-0 w-auto min-w-[125px] sm:min-w-[145px]">
                   <span className="font-mono text-xs font-bold text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/25 px-3 py-1 uppercase whitespace-nowrap">
@@ -453,7 +453,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 6: MOMENTS OF ENCOUNTER (Contrast - Large Worship spreads - Dramatic Dark Interlude - sharp image cards)
+          SCENE 6: MOMENTS OF ENCOUNTER (Contrast - Dramatic Worship Spreads)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-32 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] light-smokey-glow pointer-events-none" />
@@ -467,10 +467,10 @@ export default function PublicHomepage() {
             MOMENTS OF <span className="text-gradient-gold font-normal">ENCOUNTER</span>
           </h2>
 
-          {/* Large scale photography spreads with minimal text - Sharp corners */}
+          {/* Large photography spreads - Sharp corners */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch w-full">
             
-            <div data-reveal className="md:col-span-8 relative aspect-video w-full overflow-hidden border border-white/10 group bg-white/5 h-[240px] sm:h-[350px] md:h-auto">
+            <div data-reveal className="md:col-span-8 relative aspect-video w-full overflow-hidden border border-white/10 group bg-white/5 h-[240px] sm:h-[350px] md:h-auto active-press cursor-pointer">
               <Image
                 src="/pictures/Image 1.jpg"
                 alt="Intensive worship moment"
@@ -486,7 +486,7 @@ export default function PublicHomepage() {
               </div>
             </div>
 
-            <div data-reveal className="md:col-span-4 relative aspect-[3/4] md:aspect-auto w-full overflow-hidden border border-white/10 group bg-white/5 h-[240px] sm:h-[350px] md:h-auto">
+            <div data-reveal className="md:col-span-4 relative aspect-[3/4] md:aspect-auto w-full overflow-hidden border border-white/10 group bg-white/5 h-[240px] sm:h-[350px] md:h-auto active-press cursor-pointer">
               <Image
                 src="/pictures/Image 12.jpg"
                 alt="Worship crowd congregation"
@@ -508,7 +508,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 7: GALLERY PREVIEW (Asymmetrical editorial photo collage - Warm Light Ivory, no glow, sharp images)
+          SCENE 7: GALLERY PREVIEW (Collage - Warm Light Ivory, no glow, sharp images)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-32 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
@@ -521,11 +521,11 @@ export default function PublicHomepage() {
             IMMERSE <span className="text-[#C25627] font-normal font-serif">YOURSELF</span>
           </h2>
 
-          {/* Overlapping collage layout, sharp image cards */}
+          {/* Overlapping collage layout, sharp active image cards */}
           <div className="flex flex-col md:grid md:grid-cols-12 gap-8 w-full items-center">
             
             {/* Image 5: Landscape */}
-            <div data-reveal className="w-full md:col-span-4 relative aspect-video overflow-hidden border border-black/10 group bg-white md:rotate-[-2deg] transition-transform duration-500 hover:rotate-0 h-[180px] sm:h-[260px] md:h-auto shadow-md">
+            <div data-reveal className="w-full md:col-span-4 relative aspect-video overflow-hidden border border-black/10 group bg-white md:rotate-[-2deg] transition-transform duration-500 hover:rotate-0 h-[180px] sm:h-[260px] md:h-auto shadow-md active-press cursor-pointer">
               <Image
                 src="/pictures/Image 5.jpg"
                 alt="Fellowship grid"
@@ -535,7 +535,7 @@ export default function PublicHomepage() {
             </div>
 
             {/* Image 8: Square */}
-            <div data-reveal className="w-full md:col-span-5 relative aspect-square overflow-hidden border border-black/10 group md:-translate-y-8 z-10 bg-white md:rotate-[1deg] transition-transform duration-500 hover:rotate-0 h-[220px] sm:h-[300px] md:h-auto shadow-lg">
+            <div data-reveal className="w-full md:col-span-5 relative aspect-square overflow-hidden border border-black/10 group md:-translate-y-8 z-10 bg-white md:rotate-[1deg] transition-transform duration-500 hover:rotate-0 h-[220px] sm:h-[300px] md:h-auto shadow-lg active-press cursor-pointer">
               <Image
                 src="/pictures/Image 8.jpg"
                 alt="Worship details"
@@ -546,7 +546,7 @@ export default function PublicHomepage() {
 
             {/* Image 9 & 12 offset stacks */}
             <div className="w-full md:col-span-3 flex flex-col gap-6">
-              <div data-reveal className="relative aspect-[4/3] w-full overflow-hidden border border-black/10 group bg-white md:rotate-[3deg] transition-transform duration-500 hover:rotate-0 h-[160px] sm:h-[220px] md:h-auto shadow-md">
+              <div data-reveal className="relative aspect-[4/3] w-full overflow-hidden border border-black/10 group bg-white md:rotate-[3deg] transition-transform duration-500 hover:rotate-0 h-[160px] sm:h-[220px] md:h-auto shadow-md active-press cursor-pointer">
                 <Image
                   src="/pictures/Image 9.jpg"
                   alt="Worship congregation scale"
@@ -554,7 +554,7 @@ export default function PublicHomepage() {
                   className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
                 />
               </div>
-              <div data-reveal className="relative aspect-[3/4] w-[90%] border border-black/10 group bg-white md:rotate-[-4deg] transition-transform duration-500 hover:rotate-0 self-center h-[200px] sm:h-[280px] md:h-auto shadow-md">
+              <div data-reveal className="relative aspect-[3/4] w-[90%] border border-black/10 group bg-white md:rotate-[-4deg] transition-transform duration-500 hover:rotate-0 self-center h-[200px] sm:h-[280px] md:h-auto shadow-md active-press cursor-pointer">
                 <Image
                   src="/pictures/Image 12.jpg"
                   alt="Altar prayers scale"
@@ -569,7 +569,7 @@ export default function PublicHomepage() {
           <div data-reveal className="mt-16">
             <Link
               href="/gallery"
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10"
+              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
             >
               <span>ACCESS THE FULL GALLERY</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -580,7 +580,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 8: COMMUNITY SECTION (Fellowship display enlarged - Warm Light Ivory, no glow, sharp images)
+          SCENE 8: COMMUNITY SECTION (Fellowship display - Warm Light Ivory, no glow, sharp images)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-32 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16">
@@ -605,7 +605,7 @@ export default function PublicHomepage() {
             <div data-reveal className="lg:col-span-7 relative flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-0 h-auto sm:h-[450px] w-full">
               
               {/* Image 5: Fellowship */}
-              <div className="relative sm:absolute sm:left-0 w-full sm:w-[68%] aspect-video border border-black/10 z-10 shadow-2xl sm:rotate-[-2deg] overflow-hidden bg-white h-[220px] sm:h-auto">
+              <div className="relative sm:absolute sm:left-0 w-full sm:w-[68%] aspect-video border border-black/10 z-10 shadow-2xl sm:rotate-[-2deg] overflow-hidden bg-white h-[220px] sm:h-auto active-press cursor-pointer">
                 <Image
                   src="/pictures/Image 5.jpg"
                   alt="Student fellowship"
@@ -618,7 +618,7 @@ export default function PublicHomepage() {
               </div>
 
               {/* Image 13: Friends gathering */}
-              <div className="relative sm:absolute sm:right-0 w-full sm:w-[68%] aspect-video border border-black/10 z-20 shadow-2xl sm:translate-y-16 sm:rotate-[3deg] overflow-hidden bg-white h-[220px] sm:h-auto">
+              <div className="relative sm:absolute sm:right-0 w-full sm:w-[68%] aspect-video border border-black/10 z-20 shadow-2xl sm:translate-y-16 sm:rotate-[3deg] overflow-hidden bg-white h-[220px] sm:h-auto active-press cursor-pointer">
                 <Image
                   src="/pictures/Image 13.jpg"
                   alt="Friends gathering"
@@ -637,7 +637,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 9: TESTIMONIES (Warm Light Ivory background, no glow, sharp card outlines, copy pass)
+          SCENE 9: TESTIMONIES (Warm Light Ivory background, sharp outlines)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
@@ -655,7 +655,7 @@ export default function PublicHomepage() {
               <div
                 key={idx}
                 data-reveal
-                className="p-8 border border-black/10 bg-white flex flex-col justify-between min-h-[220px] shadow-sm"
+                className="p-8 border border-black/10 bg-white flex flex-col justify-between min-h-[220px] shadow-sm active-press cursor-pointer"
               >
                 <p className="font-serif text-base italic font-light text-zinc-700 leading-relaxed mb-6">
                   &ldquo;{test.quote}&rdquo;
@@ -676,14 +676,14 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 10: REGISTRATION CTA (Voucher Slip contrast card resting on Warm Light Ivory, no free copy, no glow)
+          SCENE 10: REGISTRATION CTA (Voucher Slip contrast card resting on Warm Light Ivory)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-40 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-2xl mx-auto">
           
           {/* Registration Voucher slip remains a rich dark card for contrast, with rounded-3xl corners */}
-          <div data-reveal className="w-full border border-dashed border-[#DDB94E]/40 bg-[#15130F] text-white p-8 sm:p-12 md:p-16 flex flex-col items-center gap-6 text-center shadow-2xl relative rounded-3xl">
+          <div data-reveal className="w-full border border-dashed border-[#DDB94E]/40 bg-[#15130F] text-white p-8 sm:p-12 md:p-16 flex flex-col items-center gap-6 text-center shadow-2xl relative rounded-3xl active-press">
             
             {/* Stamps */}
             <span className="absolute top-4 left-6 font-mono text-[8px] text-white/20 uppercase tracking-widest hidden sm:block">
@@ -701,7 +701,6 @@ export default function PublicHomepage() {
               Arise & <span className="font-serif italic font-extralight text-[#DDB94E]">Shine</span>
             </h2>
 
-            {/* Removed free conference copy references */}
             <p className="font-sans text-white/70 text-xs sm:text-sm leading-relaxed max-w-md font-light">
               Bring your expectations, your heart, and your fellowship. Registration is required for hostel placements.
             </p>
@@ -713,7 +712,7 @@ export default function PublicHomepage() {
                 href="https://forms.gle/DSW4CVMXWK61BHT96"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full sm:w-auto px-12 py-5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 text-center"
+                className="inline-block w-full sm:w-auto px-12 py-5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 text-center active-press"
               >
                 Register for the Program
               </a>
@@ -729,7 +728,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 11: CHAPTERS (Warm Light Paper Background, sharp card grids, no glow)
+          SCENE 11: CHAPTERS (Warm Light Paper Background, sharp card grids)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-20 px-6 md:px-16 bg-[#F2EDE3] text-[#0B0907] border-t border-black/5 overflow-hidden">
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 text-left">
@@ -751,7 +750,7 @@ export default function PublicHomepage() {
             {chapters.map((chap, idx) => (
               <div
                 key={idx}
-                className="p-6 border border-black/5 bg-white flex flex-col justify-between shadow-xs"
+                className="p-6 border border-black/5 bg-white flex flex-col justify-between shadow-xs active-press cursor-pointer"
               >
                 <h4 className="font-sans text-xs font-bold text-[#0B0907] uppercase tracking-wider">
                   {chap.name}
@@ -770,7 +769,7 @@ export default function PublicHomepage() {
   );
 }
 
-/* ─── Testimonies Data (Copy pass - Lagos Central Representative) ─── */
+/* ─── Testimonies Data ─── */
 const testimonies = [
   {
     quote: "Refreshing 2024 was where my devotion was restored. In the midst of corporate worship, the fire fell and everything changed.",
