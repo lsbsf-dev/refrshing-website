@@ -98,8 +98,8 @@ export default function MinisterSlugPage({ params }: { params: Promise<{ slug: s
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907]">
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          <div className="lg:col-span-5 relative">
-            <div className="relative w-full aspect-[3/4] border border-black/10 shadow-2xl bg-white overflow-hidden p-2.5">
+          <div className="lg:col-span-5 relative flex justify-center lg:justify-start">
+            <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] border border-black/10 shadow-2xl bg-white overflow-hidden p-2.5">
               <div className="relative w-full h-full overflow-hidden">
                 <Image
                   src={minister.photoUrl || "/pictures/Image 6.jpg"}

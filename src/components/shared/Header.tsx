@@ -113,7 +113,7 @@ export function Header() {
         {/* Right: Actions */}
         <div className="hidden lg:flex items-center gap-4 xl:gap-6">
           {/* Edition Switcher Dropdown */}
-          <div className="relative">
+          <div className="relative" onMouseLeave={() => setEditionDropdownOpen(false)}>
             <button
               onClick={() => setEditionDropdownOpen(!editionDropdownOpen)}
               className={`flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-all rounded-lg active-press ${switcherBorderClass}`}

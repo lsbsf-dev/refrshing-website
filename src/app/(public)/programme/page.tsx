@@ -5,7 +5,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -63,6 +63,19 @@ const daysConfig: DayConfig[] = [
 
 export default function ProgrammePage() {
   const [activeDay, setActiveDay] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const dayParam = params.get("day");
+      if (dayParam) {
+        const dayIdx = parseInt(dayParam, 10);
+        if (!isNaN(dayIdx) && dayIdx >= 0 && dayIdx < 5) {
+          setActiveDay(dayIdx);
+        }
+      }
+    }
+  }, []);
 
   const { data: allSessions = [], isLoading, error } = useQuery({
     queryKey: ["sessions", ACTIVE_EVENT_ID],

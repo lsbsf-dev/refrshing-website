@@ -4,6 +4,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { REGISTRATION_URL } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { getMinisters } from "@/lib/firebase/ministers";
+import { getSessions } from "@/lib/firebase/programme";
+import { ACTIVE_EVENT_ID } from "@/lib/constants";
+import seedMinisters from "@/lib/firebase/seedMinisters.json";
+import seedSessions from "@/lib/firebase/seedSessions.json";
+import { Minister } from "@/types/minister";
+import { Session } from "@/types/programme";
 
 /* ─────────────────────────────────────────────
    Scroll reveal hook for staggered visuals
@@ -38,6 +46,62 @@ function useReveal() {
 export default function PublicHomepage() {
   const pageRef = useReveal();
   const [daysLeft, setDaysLeft] = useState(26);
+
+  const { data: ministers = [] } = useQuery({
+    queryKey: ["ministers", ACTIVE_EVENT_ID],
+    queryFn: () => getMinisters(ACTIVE_EVENT_ID),
+    staleTime: 6 * 60 * 60 * 1000,
+    initialData: () => (seedMinisters as Minister[]).filter(
+      (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
+    ),
+  });
+
+  const { data: allSessions = [] } = useQuery({
+    queryKey: ["sessions", ACTIVE_EVENT_ID],
+    queryFn: () => getSessions(ACTIVE_EVENT_ID),
+    staleTime: 30 * 60 * 1000,
+    initialData: () => (seedSessions as Session[]).filter(
+      (s) => s.eventId === ACTIVE_EVENT_ID && s.status === "published"
+    ),
+  });
+
+  const daysConfig = [
+    {
+      label: "DAY 01",
+      name: "Monday",
+      date: "August 10, 2026",
+      title: "The Altar Commenced",
+      summary: "Opening alignment sessions for fellowship leaders, orientation, and setting the revival fire."
+    },
+    {
+      label: "DAY 02",
+      name: "Tuesday",
+      date: "August 11, 2026",
+      title: "The Word Exposed",
+      summary: "Intensive training, seminar sessions, and theological foundations for fellowship leaders."
+    },
+    {
+      label: "DAY 03",
+      name: "Wednesday",
+      date: "August 12, 2026",
+      title: "General Gathering Arrival",
+      summary: "Arrival of the main delegate body. Corporate gatherings commence with the evening revival fire."
+    },
+    {
+      label: "DAY 04",
+      name: "Thursday",
+      date: "August 13, 2026",
+      title: "Word Feast & Communion",
+      summary: "A heavy concentration of scripture, breakout panels, and corporate communion table."
+    },
+    {
+      label: "DAY 05",
+      name: "Friday",
+      date: "August 14, 2026",
+      title: "Commissioning & Departure",
+      summary: "Final commissioning: sending forth of delegates to campus chapters, and check-out."
+    }
+  ];
 
   useEffect(() => {
     const target = new Date("2026-08-10T08:00:00Z").getTime();
@@ -153,7 +217,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 2: THEME (Scripture Art Card)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-32 px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
+      <section className="relative w-full py-20 px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div data-reveal className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
@@ -193,7 +257,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 3: 40 YEARS (Nostalgic Album - polaroid rounded frames, tape kept)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-40 bg-gradient-to-b from-[#0B0907] via-[#1D1013] to-[#0B0907] text-[#FCFAF6] texture-paper overflow-hidden border-t border-white/5 min-h-[90vh] flex items-center">
+      <section className="relative w-full py-24 bg-gradient-to-b from-[#0B0907] via-[#1D1013] to-[#0B0907] text-[#FCFAF6] texture-paper overflow-hidden border-t border-white/5 min-h-[90vh] flex items-center">
         
         {/* Giant background year watermark */}
         <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none overflow-hidden z-0">
@@ -275,7 +339,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 4: FEATURED MINISTERS (Clean Warm Ivory background, no image overlay, no glow)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-36 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-20 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto">
           
@@ -292,89 +356,55 @@ export default function PublicHomepage() {
 
           {/* Magazine Cover Editorial Layout - Sharp corners */}
           <div className="flex flex-col gap-28">
-            
-            {/* Minister 1: Pastor Segun Babalola */}
-            <div data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Photo Frame (Sharp corners) */}
-              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[-2deg] transition-transform duration-500 hover:rotate-0 active-press">
-                <Image
-                  src="/pictures/Image 6.jpg"
-                  alt="Pastor Segun Babalola"
-                  fill
-                  className="object-cover object-top scale-120 -translate-y-6 transition-transform duration-[1500ms] hover:scale-[1.22]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-                
-                {/* Overlapping Name Tag in Photo Frame */}
-                <div className="absolute bottom-6 left-6 text-left">
-                  <span className="font-sans text-[9px] font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
-                    KEYNOTE SPEAKER
-                  </span>
-                  <h3 className="font-serif text-3xl font-normal text-white mt-3 uppercase">
-                    Pastor Segun Babalola
-                  </h3>
+            {ministers.slice(0, 3).map((min, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <div key={min.id} data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                  {/* Photo Frame */}
+                  <Link
+                    href={`/ministers/${min.slug}`}
+                    className={`lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white transition-all duration-500 hover:rotate-0 active-press block ${
+                      isEven ? "rotate-[-2deg]" : "rotate-[2deg] lg:order-2"
+                    }`}
+                  >
+                    <Image
+                      src={min.photoUrl || "/pictures/Image 6.jpg"}
+                      alt={min.name}
+                      fill
+                      className="object-cover object-top scale-120 -translate-y-4 transition-transform duration-[1500ms] hover:scale-[1.22]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+                    <div className="absolute bottom-6 left-6 text-left">
+                      <span className="font-sans text-[9px] font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
+                        {min.affiliation || "SPEAKER"}
+                      </span>
+                      <h3 className="font-serif text-3xl font-normal text-white mt-3 uppercase">
+                        {min.name}
+                      </h3>
+                    </div>
+                  </Link>
+
+                  {/* Biography */}
+                  <div className={`lg:col-span-6 flex flex-col items-start gap-4 text-left ${!isEven ? "lg:order-1" : ""}`}>
+                    <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
+                      {min.affiliation}
+                    </span>
+                    <div className="font-sans text-[#4A4032] text-sm leading-relaxed font-light space-y-3">
+                      {min.biography.split("\n\n").slice(0, 2).map((paragraph, pIdx) => (
+                        <p key={pIdx}>{paragraph}</p>
+                      ))}
+                    </div>
+                    <div className="h-[1px] w-full bg-black/10 my-2" />
+                    <Link
+                      href={`/ministers/${min.slug}`}
+                      className="font-serif text-lg italic text-[#C25627] font-light border-l-2 border-[#C25627]/40 pl-4 hover:text-[#0B0907] transition-colors"
+                    >
+                      &ldquo;View full profile and assigned schedule sessions.&rdquo;
+                    </Link>
+                  </div>
                 </div>
-              </div>
-
-              {/* Biography */}
-              <div className="lg:col-span-6 flex flex-col items-start gap-4 text-left">
-                <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
-                  LAGOS BAPTIST ASSOCIATION SUPERINTENDENT
-                </span>
-                <p className="font-sans text-[#4A4032] text-sm leading-relaxed font-light">
-                  Serving as the Superintendent of the Lagos Baptist Association, Pastor Segun Babalola has provided spiritual leadership and theological direction to student leaders across Lagos State higher institution chapters for over three decades.
-                </p>
-                <p className="font-sans text-[#4A4032] text-sm leading-relaxed font-light">
-                  Known for deep expository charges, his focus is fanning revival flames on campus levels.
-                </p>
-                <div className="h-[1px] w-full bg-black/10 my-2" />
-                <p className="font-serif text-lg italic text-[#C25627] font-light border-l-2 border-[#C25627]/40 pl-4">
-                  &ldquo;The expectation of this year demands consecration and alignment.&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* Minister 2: Dr. Helen Adeyemi */}
-            <div data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Biography (Asymmetric flip) */}
-              <div className="lg:col-span-6 flex flex-col items-start gap-4 text-left order-2 lg:order-1">
-                <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
-                  LSBSF ALUMNI PARTNERSHIPS
-                </span>
-                <p className="font-sans text-[#4A4032] text-sm leading-relaxed font-light">
-                  Dr. Helen Adeyemi acts as the LSBSF Alumni Coordinator, overseeing partnership networks, mentoring schemes, and support structures across Lagos East, West, and Central chapters.
-                </p>
-                <p className="font-sans text-[#4A4032] text-sm leading-relaxed font-light">
-                  Her teaching ministry centers on professional career paths, stewardship, and preserving covenant foundations in campus and career sectors.
-                </p>
-                <div className="h-[1px] w-full bg-black/10 my-2" />
-                <p className="font-serif text-lg italic text-[#C25627] font-light border-l-2 border-[#C25627]/40 pl-4">
-                  &ldquo;The spheres of school and career are the altars of campus deployment.&rdquo;
-                </p>
-              </div>
-
-              {/* Photo Frame (Sharp corners) */}
-              <div className="lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white rotate-[2deg] transition-transform duration-500 hover:rotate-0 order-1 lg:order-2 active-press">
-                <Image
-                  src="/pictures/Image 11.jpg"
-                  alt="Dr. Helen Adeyemi"
-                  fill
-                  className="object-cover object-top scale-120 -translate-y-4 transition-transform duration-[1500ms] hover:scale-[1.22]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-                
-                {/* Overlapping Name Tag in Photo Frame */}
-                <div className="absolute bottom-6 left-6 text-left">
-                  <span className="font-sans text-[9px] font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
-                    SEMINAR LEADER
-                  </span>
-                  <h3 className="font-serif text-3xl font-normal text-white mt-3 uppercase">
-                    Dr. Helen Adeyemi
-                  </h3>
-                </div>
-              </div>
-            </div>
-
+              );
+            })}
           </div>
 
           <div data-reveal className="flex justify-center mt-20">
@@ -393,7 +423,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 5: PROGRAMME JOURNEY (Structured Roadmap - Warm Ivory Light background, no glow, no texture)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-32 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-20 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
@@ -427,26 +457,27 @@ export default function PublicHomepage() {
 
           {/* Unfolded Roadmap on Warm Ivory Background - sharp tags with active scale rows */}
           <div className="lg:col-span-7 flex flex-col w-full">
-            {dailyRoadmap.map((item, idx) => (
-              <div
+            {daysConfig.map((item, idx) => (
+              <Link
                 key={idx}
+                href={`/programme?day=${idx}`}
                 data-reveal
-                className="group flex flex-col sm:flex-row items-start gap-6 py-8 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left active-press cursor-pointer"
+                className="group flex flex-col sm:flex-row items-start gap-6 py-6 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left active-press cursor-pointer block"
               >
                 <div className="flex-shrink-0 w-auto min-w-[125px] sm:min-w-[145px]">
                   <span className="font-mono text-xs font-bold text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/25 px-3 py-1 uppercase whitespace-nowrap">
-                    {item.date}
+                    {item.name.slice(0,3).toUpperCase()} · {item.date.split(",")[0].replace("August ", "AUG ")}
                   </span>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-serif text-xl font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300 uppercase">
-                    {item.day} · {item.title}
+                    {item.label} · {item.title}
                   </h3>
                   <p className="font-sans text-[#7A7062] text-xs font-light mt-2 leading-relaxed">
-                    {item.description}
+                    {item.summary}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -456,7 +487,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 6: MOMENTS OF ENCOUNTER (Contrast - Dramatic Worship Spreads)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-32 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
+      <section className="relative w-full py-20 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] light-smokey-glow pointer-events-none" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 flex flex-col items-start text-left">
@@ -679,7 +710,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 10: REGISTRATION CTA (Voucher Slip contrast card resting on Warm Light Ivory)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-40 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-2xl mx-auto">
           
