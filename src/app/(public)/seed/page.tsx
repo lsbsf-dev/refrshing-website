@@ -11,9 +11,23 @@ export default function SeedPage() {
   const [message, setMessage] = useState("");
   const [currentStep, setCurrentStep] = useState("");
 
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "";
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "";
-  const isMock = !apiKey || apiKey.includes("mock") || apiKey.includes("Dummy");
+  const keys = {
+    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+    NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+  };
+
+  const isMock = 
+    !keys.NEXT_PUBLIC_FIREBASE_API_KEY || 
+    keys.NEXT_PUBLIC_FIREBASE_API_KEY.includes("mock") || 
+    keys.NEXT_PUBLIC_FIREBASE_API_KEY.includes("Dummy");
+
+  const missingKeys = Object.entries(keys)
+    .filter(([_, val]) => !val)
+    .map(([key]) => key);
 
   const handleSeed = async () => {
     setLoading(true);
@@ -22,7 +36,12 @@ export default function SeedPage() {
     try {
       if (isMock) {
         throw new Error(
-          "Firebase credentials are not set or are using mock values. Please update .env.local with your real keys and restart your Next.js server."
+          "Firebase credentials are using mock/dummy keys. Seeding is disabled until real keys are supplied."
+        );
+      }
+      if (missingKeys.length > 0) {
+        throw new Error(
+          `Cannot seed. The following configuration keys are missing: ${missingKeys.join(", ")}`
         );
       }
 
@@ -65,7 +84,7 @@ export default function SeedPage() {
       }
 
       setCurrentStep("");
-      setMessage("Success! Seeding completed successfully. All data is live.");
+      setMessage("Success! Seeding completed successfully. All schedule and speaker profiles are live.");
     } catch (err: any) {
       console.error(err);
       setMessage(`Error: ${err.message || err}`);
@@ -78,35 +97,40 @@ export default function SeedPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8">
       <div className="max-w-md w-full bg-slate-800 p-6 rounded-lg shadow-xl border border-slate-700">
-        <h1 className="text-2xl font-bold mb-2 text-center">Database Seeder</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Database Seeder</h1>
         
-        {isMock && (
-          <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400 text-xs text-left">
-            <span className="font-bold block mb-1">⚠️ Firebase Mock Mode Active</span>
-            The app is currently using mock credentials. To seed a real database:
-            <ol className="list-decimal list-inside mt-1.5 space-y-1 font-mono">
-              <li>Open your <code>.env.local</code> file</li>
-              <li>Replace mock values with your real Firebase keys</li>
-              <li>Restart your development server (<code>Ctrl+C</code> then <code>npm run dev</code>)</li>
-            </ol>
+        {/* Verification Checklist */}
+        <div className="mb-6 bg-slate-900/50 p-4 border border-slate-700 rounded text-left">
+          <span className="font-semibold text-xs block mb-2 text-slate-300">Firebase Configuration Status:</span>
+          <div className="space-y-1.5 font-mono text-[11px]">
+            {Object.entries(keys).map(([key, val]) => {
+              const isConfigured = !!val && !val.includes("mock") && !val.includes("Dummy");
+              return (
+                <div key={key} className="flex items-center justify-between">
+                  <span className="text-slate-400">{key.replace("NEXT_PUBLIC_FIREBASE_", "")}:</span>
+                  <span className={isConfigured ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>
+                    {isConfigured ? "✅ Configured" : "❌ Missing"}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-        )}
+          
+          {isMock && (
+            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400 text-[10px] leading-relaxed">
+              <strong>⚠️ Mock Mode Active:</strong> Ensure your <code>.env.local</code> has real values and you have restarted your server (or triggered a new build/redeploy on Netlify).
+            </div>
+          )}
+        </div>
 
-        {!isMock && (
-          <div className="mb-6 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded text-emerald-400 text-xs text-left">
-            <span className="font-bold block">Connected to Firebase Project:</span>
-            <span className="font-mono">{projectId}</span>
-          </div>
-        )}
-
-        <p className="text-sm text-slate-400 mb-6 text-center">
-          Click the button below to seed the Firestore database with the official Refreshing '26 schedule and speaker profile datasets.
+        <p className="text-xs text-slate-400 mb-6 text-center">
+          Click below to seed your database with the official Refreshing '26 schedule.
         </p>
 
         <button
           onClick={handleSeed}
-          disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-700 text-white font-medium py-2.5 px-4 rounded-md transition duration-200 cursor-pointer"
+          disabled={loading || isMock || missingKeys.length > 0}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-700 disabled:text-slate-400 text-white font-medium py-2.5 px-4 rounded-md transition duration-200 cursor-pointer"
         >
           {loading ? "Seeding..." : "Seed Database"}
         </button>
@@ -118,7 +142,7 @@ export default function SeedPage() {
         )}
 
         {message && (
-          <div className="mt-4 p-3 bg-slate-900 border border-slate-750 rounded text-sm text-center">
+          <div className="mt-4 p-3 bg-slate-900 border border-slate-750 rounded text-xs text-center text-rose-300 font-medium">
             {message}
           </div>
         )}
