@@ -2,13 +2,29 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { submitEnquiry } from "@/lib/firebase/enquiries";
 
 export default function ContactPage() {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      await submitEnquiry({ name, email, message });
+      setFormSubmitted(true);
+    } catch (err: any) {
+      console.error(err);
+      setSubmitError(err.message || "Failed to submit enquiry. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -113,6 +129,9 @@ export default function ContactPage() {
                     <input
                       type="text"
                       required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      disabled={submitting}
                       className="w-full bg-transparent border-b border-black/15 focus:border-primary-dark py-2 text-sm text-[#0B0907] outline-none transition-colors"
                       placeholder="e.g. Bro. Samuel Ade"
                     />
@@ -123,6 +142,9 @@ export default function ContactPage() {
                     <input
                       type="email"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={submitting}
                       className="w-full bg-transparent border-b border-black/15 focus:border-primary-dark py-2 text-sm text-[#0B0907] outline-none transition-colors"
                       placeholder="e.g. samuel@gmail.com"
                     />
@@ -133,16 +155,26 @@ export default function ContactPage() {
                     <textarea
                       required
                       rows={4}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      disabled={submitting}
                       className="w-full bg-transparent border-b border-black/15 focus:border-primary-dark py-2 text-sm text-[#0B0907] outline-none transition-colors resize-none"
                       placeholder="Specify chapter details or hostel enquiries..."
                     />
                   </div>
 
+                  {submitError && (
+                    <span className="font-sans text-xs text-rose-500 font-medium">
+                      {submitError}
+                    </span>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer active-press"
+                    disabled={submitting}
+                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark disabled:bg-zinc-300 disabled:text-zinc-600 text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer active-press"
                   >
-                    Send message
+                    {submitting ? "Sending..." : "Send message"}
                   </button>
                 </form>
               )}
