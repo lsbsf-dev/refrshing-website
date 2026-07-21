@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to check if a document is published
+    function isPublished() {
+      return resource.data.status == 'published';
+    }
+
+    // Helper to validate email format
+    function isValidEmail(email) {
+      return email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // Public conference read-only collections
+    match /events/{eventId} {
+      allow read: if true;
+    }
+    match /ministers/{ministerId} {
+      allow read: if isPublished();
+    }
+    match /sessions/{sessionId} {
+      allow read: if isPublished();
+    }
+    match /galleryAlbums/{albumId} {
+      allow read: if isPublished();
+    }
+    match /photos/{photoId} {
+      allow read: if true;
+    }
+    match /resources/{resourceId} {
+      allow read: if isPublished();
+    }
+    match /announcements/{announcementId} {
+      allow read: if isPublished();
+    }
+    match /faqs/{faqId} {
+      allow read: if true;
+    }
+
+    // User submissions write-only rules
+    match /enquiries/{enquiryId} {
+      allow create: if request.resource.data.name.size() >= 2
+                    && isValidEmail(request.resource.data.email)
+                    && request.resource.data.message.size() >= 10;
+    }
+    match /newsletter/{subscriberId} {
+      allow create: if isValidEmail(request.resource.data.email);
+    }
+  }
+}

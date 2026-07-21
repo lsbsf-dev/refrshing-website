@@ -1,17 +1,96 @@
+/**
+ * Programme Page Component
+ * Queries and lists scheduled sessions for each day.
+ */
+
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getSessions } from "@/lib/firebase/programme";
+import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+
+interface DayConfig {
+  label: string;
+  name: string;
+  date: string;
+  title: string;
+  summary: string;
+}
+
+const daysConfig: DayConfig[] = [
+  {
+    label: "DAY 01",
+    name: "Monday",
+    date: "August 10, 2026",
+    title: "The Altar Commenced",
+    summary: "Opening alignment sessions for fellowship leaders, orientation, and setting the revival fire."
+  },
+  {
+    label: "DAY 02",
+    name: "Tuesday",
+    date: "August 11, 2026",
+    title: "The Word Exposed",
+    summary: "Intensive training, seminar sessions, and theological foundations for fellowship leaders."
+  },
+  {
+    label: "DAY 03",
+    name: "Wednesday",
+    date: "August 12, 2026",
+    title: "General Gathering Arrival",
+    summary: "Arrival of the main delegate body. Corporate gatherings commence with the evening revival fire."
+  },
+  {
+    label: "DAY 04",
+    name: "Thursday",
+    date: "August 13, 2026",
+    title: "Word Feast & Communion",
+    summary: "A heavy concentration of scripture, breakout panels, and corporate communion table."
+  },
+  {
+    label: "DAY 05",
+    name: "Friday",
+    date: "August 14, 2026",
+    title: "Commissioning & Departure",
+    summary: "Final commissioning: sending forth of delegates to campus chapters, and check-out."
+  }
+];
 
 export default function ProgrammePage() {
   const [activeDay, setActiveDay] = useState(0);
 
+  const { data: allSessions = [], isLoading, error } = useQuery({
+    queryKey: ["sessions", ACTIVE_EVENT_ID],
+    queryFn: () => getSessions(ACTIVE_EVENT_ID),
+    staleTime: 30 * 60 * 1000, // 30 minutes
+  });
+
+  const activeDayLabel = `Day ${activeDay + 1}`;
+  const filteredSessions = allSessions.filter(
+    (sess) => sess.day.toLowerCase() === activeDayLabel.toLowerCase()
+  );
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="max-w-4xl mx-auto w-full py-24 px-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-20 bg-white border border-black/5 mb-4" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    throw error;
+  }
+
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      
-      {/* ═══════════════════════════════════════
-          SCENE 1: PROGRAMME HERO (Centered & Balanced Height with staggered load animations)
-          ═══════════════════════════════════════ */}
       <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
@@ -19,37 +98,35 @@ export default function ProgrammePage() {
             alt="Sanctuary details background"
             fill
             className="object-cover object-center filter grayscale"
+            priority
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="absolute top-1/2 left-1/3 w-[600px] h-[400px] bg-[#6B1D2A]/20 rounded-full blur-[160px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
+          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             FIVE DAYS IN HIS SANCTUARY
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
             DAILY <br />
             <span className="text-gradient-gold font-normal font-serif">JOURNEY</span>
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2 animate-hero-item delay-300">
+          <p className="font-serif text-base sm:text-lg md:text-xl italic text-white/80 font-light max-w-2xl border-l border-primary/50 pl-6 mt-2">
             An unfolding vertical roadmap from covenant devotion to global deployment.
           </p>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          SCENE 2: TABS SELECTOR (Day Navigation - Light background, sharp buttons, tactile active states)
-          ═══════════════════════════════════════ */}
       <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-6 px-6 md:px-16 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto gap-4 md:gap-8 scrollbar-none">
-          {daysData.map((d, idx) => {
+          {daysConfig.map((d, idx) => {
             const isActive = idx === activeDay;
             return (
               <button
                 key={idx}
                 onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border transition-all duration-300 active-press ${
+                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border transition-all duration-300 active-press cursor-pointer ${
                   isActive 
                     ? "border-primary text-[#0B0907] bg-white shadow-sm font-semibold" 
                     : "border-transparent text-zinc-400 hover:text-zinc-700"
@@ -67,74 +144,66 @@ export default function ProgrammePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          SCENE 3: THE TIMELINE JOURNEY (Light background, sharp markers, tactile program rows)
-          ═══════════════════════════════════════ */}
       <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
-        
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-stretch">
-          
           <div className="mb-16 text-left">
             <span className="font-mono text-xs font-bold text-[#C25627] block mb-2 tracking-widest uppercase">
-              {daysData[activeDay].date}
+              {daysConfig[activeDay].date}
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light text-[#0B0907] uppercase tracking-tight">
-              {daysData[activeDay].name} · <span className="font-serif italic font-extralight text-[#C25627]">{daysData[activeDay].title}</span>
+              {daysConfig[activeDay].name} · <span className="font-serif italic font-extralight text-[#C25627]">{daysConfig[activeDay].title}</span>
             </h2>
             <p className="font-sans text-zinc-500 text-sm font-light mt-3 leading-relaxed max-w-xl">
-              {daysData[activeDay].summary}
+              {daysConfig[activeDay].summary}
             </p>
           </div>
 
-          {/* Unfolding Roadmaps */}
-          <div className="relative pl-6 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
-            
-            {daysData[activeDay].sessions.map((sess, idx) => (
-              <div key={idx} className="relative group active-press cursor-pointer">
-                
-                {/* Visual node marker - Sharp square */}
-                <div className="absolute -left-[31px] md:-left-[55px] top-1.5 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10 group-hover:scale-125 transition-transform duration-300">
-                  <div className="h-1.5 w-1.5 bg-[#C25627]" />
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase">
-                      {sess.time}
-                    </span>
-                    <span className="font-sans text-[10px] text-zinc-400 tracking-wider uppercase font-light">
-                      {sess.venue}
-                    </span>
+          {filteredSessions.length === 0 ? (
+            <div className="py-24 text-center font-serif text-xl italic text-zinc-400 border-l border-black/10 pl-6 md:pl-12">
+              No sessions scheduled for this day yet.
+            </div>
+          ) : (
+            <div className="relative pl-6 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
+              {filteredSessions.map((sess) => (
+                <Link 
+                  href={`/programme/${sess.slug}`} 
+                  key={sess.id} 
+                  className="relative group active-press cursor-pointer block"
+                >
+                  <div className="absolute -left-[31px] md:-left-[55px] top-1.5 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10 group-hover:scale-125 transition-transform duration-300">
+                    <div className="h-1.5 w-1.5 bg-[#C25627]" />
                   </div>
 
-                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300">
-                    {sess.name}
-                  </h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase">
+                        {sess.startTime} - {sess.endTime}
+                      </span>
+                      <span className="font-sans text-[10px] text-zinc-400 tracking-wider uppercase font-light">
+                        {sess.venue}
+                      </span>
+                    </div>
 
-                  {sess.minister && (
-                    <span className="font-sans text-xs text-primary-dark tracking-wider uppercase font-semibold">
-                      Minister: {sess.minister}
+                    <h3 className="font-serif text-xl sm:text-2xl font-light text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300 uppercase">
+                      {sess.title}
+                    </h3>
+
+                    <p className="font-sans text-zinc-600 text-xs sm:text-sm font-light leading-relaxed max-w-2xl mt-1">
+                      {sess.description}
+                    </p>
+                    
+                    <span className="font-sans text-[9px] font-bold tracking-widest text-[#0B0907] group-hover:text-[#C25627] uppercase mt-1 block">
+                      [ VIEW DETAILS ]
                     </span>
-                  )}
-
-                  <p className="font-sans text-zinc-600 text-xs sm:text-sm font-light leading-relaxed max-w-2xl mt-1">
-                    {sess.description}
-                  </p>
-                </div>
-
-              </div>
-            ))}
-
-          </div>
-
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          SCENE 4: REGISTRATION CTA - Dark card, sharp active button
-          ═══════════════════════════════════════ */}
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
           <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             SECURE YOUR REGISTRATION NOW
@@ -155,167 +224,6 @@ export default function ProgrammePage() {
           </a>
         </div>
       </section>
-
     </div>
   );
 }
-
-const daysData = [
-  {
-    label: "DAY 01",
-    name: "Monday",
-    date: "August 10, 2026",
-    title: "The Altar Commenced",
-    summary: "Opening alignment sessions for fellowship leaders, orientation, and setting the revival fire.",
-    sessions: [
-      {
-        time: "10:00 AM - 02:00 PM",
-        name: "Chapter Leaders Arrival & Check-In",
-        venue: "Baptist Academy Hostel Rooms",
-        description: "Registration check-in, room assignments, and material package pick-ups for Lagos East, West, and Central fellowship leaders.",
-      },
-      {
-        time: "04:00 PM - 06:00 PM",
-        name: "Leadership Convocation & Alignment",
-        venue: "Seminar Room A",
-        description: "Prophetic alignment briefing led by the coordinators and alumni team to discuss the five-day flow.",
-        minister: "LSBSF Coordinating Committee",
-      },
-      {
-        time: "07:00 PM - 09:30 PM",
-        name: "Opening Altar Fire & Prayers",
-        venue: "Main Sanctuary Hall",
-        description: "Concentrated sessions of prayers, fanning the revival flame for the conference.",
-        minister: "Pastor Segun Babalola",
-      }
-    ]
-  },
-  {
-    label: "DAY 02",
-    name: "Tuesday",
-    date: "August 11, 2026",
-    title: "The Word Exposed",
-    summary: "Intensive training, seminar sessions, and theological foundations for fellowship leaders.",
-    sessions: [
-      {
-        time: "07:00 AM - 08:30 AM",
-        name: "Morning Covenant Devotions",
-        venue: "Sanctuary East Garden",
-        description: "Quiet reflection, meditation, and communion moments in the morning light.",
-      },
-      {
-        time: "09:30 AM - 12:00 PM",
-        name: "Discipleship Cohort Seminars",
-        venue: "Seminar Classrooms 1-4",
-        description: "Classrooms split by tracks to study theology, covenant foundations, and campus leadership.",
-        minister: "Dr. Helen Adeyemi & Alumni Coordinators",
-      },
-      {
-        time: "04:30 PM - 06:30 PM",
-        name: "Campus Strategy Panel",
-        venue: "Main Sanctuary Hall",
-        description: "Equipping campus chapters on how to maintain active altars and handle conflicts on-site.",
-        minister: "Fellowship Panelists",
-      },
-      {
-        time: "07:00 PM - 09:30 PM",
-        name: "Revival Encounter Session",
-        venue: "Main Sanctuary Hall",
-        description: "An evening of corporate praise, worship, and raw scriptural expository.",
-        minister: "Pastor Segun Babalola",
-      }
-    ]
-  },
-  {
-    label: "DAY 03",
-    name: "Wednesday",
-    date: "August 12, 2026",
-    title: "General Gathering Arrival",
-    summary: "Arrival of the main delegate body. Corporate gatherings commence with the evening revival fire.",
-    sessions: [
-      {
-        time: "08:00 AM - 03:00 PM",
-        name: "General Delegates Arrival & Registration",
-        venue: "Main Sanctuary Foyer",
-        description: "Check-in rosters open. General delegates check in and download study outlines.",
-      },
-      {
-        time: "04:30 PM - 06:00 PM",
-        name: "Anniversary Welcome Briefing",
-        venue: "Main Sanctuary Hall",
-        description: "Welcoming all chapters and celebrating 40 years of Refreshing history.",
-        minister: "LSBSF President",
-      },
-      {
-        time: "07:00 PM - 10:00 PM",
-        name: "The First Corporate Altar Meeting",
-        venue: "Main Sanctuary Hall",
-        description: "General body evening worship and first keynote address on the Greater Glory theme.",
-        minister: "Pastor Segun Babalola",
-      }
-    ]
-  },
-  {
-    label: "DAY 04",
-    name: "Thursday",
-    date: "August 13, 2026",
-    title: "Word Feast & Communion",
-    summary: "A heavy concentration of scripture, breakout panels, and corporate communion table.",
-    sessions: [
-      {
-        time: "07:00 AM - 08:30 AM",
-        name: "Corporate Morning Devotions",
-        venue: "Main Sanctuary Hall",
-        description: "Morning praise and scripture readings for all delegates.",
-      },
-      {
-        time: "09:30 AM - 12:00 PM",
-        name: "General Discipleship Seminar",
-        venue: "Main Sanctuary Hall",
-        description: "In-depth study on preserving the covenant foundations in career, school, and marriage.",
-        minister: "Dr. Helen Adeyemi",
-      },
-      {
-        time: "03:00 PM - 05:00 PM",
-        name: "Q&A Session & Panel Discussions",
-        venue: "Main Sanctuary Hall",
-        description: "Open floor for campus delegates to ask questions on leadership and ministry.",
-      },
-      {
-        time: "07:00 PM - 10:00 PM",
-        name: "Communion Service & Prophetic Night",
-        venue: "Main Sanctuary Hall",
-        description: "Corporate breaking of bread and prayer sessions for global revival.",
-        minister: "Pastor Segun Babalola & Elders",
-      }
-    ]
-  },
-  {
-    label: "DAY 05",
-    name: "Friday",
-    date: "August 14, 2026",
-    title: "Commissioning & Departure",
-    summary: "Final commissioning: sending forth of delegates to campus chapters, and check-out.",
-    sessions: [
-      {
-        time: "07:00 AM - 08:30 AM",
-        name: "Consecration Prayers",
-        venue: "Main Sanctuary Hall",
-        description: "Last morning devotion before campus deployment.",
-      },
-      {
-        time: "09:30 AM - 12:30 PM",
-        name: "Commissioning & Sendforth Service",
-        venue: "Main Sanctuary Hall",
-        description: "Delivering final charges, campus deployment, and sending forth student leaders to campuses.",
-        minister: "Pastor Segun Babalola",
-      },
-      {
-        time: "01:30 PM - 04:00 PM",
-        name: "Check-Out & Departure",
-        venue: "Hostel Rooms",
-        description: "Room clearance and room check-out as delegates return to their destinations.",
-      }
-    ]
-  }
-];

@@ -1,0 +1,4 @@
+- `[x]` Deploy dynamic route fallback handlers via netlify.toml config file
+- `[x]` Implement seed.ts database loader script for seeding official Refreshing '26 schedule
+- `[x]` Update public programme list components to use live schedule datasets
+- `[x]` Update public ministers details layout with official speaker listings

@@ -61,6 +61,7 @@ export function Footer() {
             <Link href="/ministers" className="hover:text-primary text-zinc-300 transition-colors active-press">Featured Ministers</Link>
             <Link href="/gallery" className="hover:text-primary text-zinc-300 transition-colors active-press">Photo Gallery</Link>
             <Link href="/resources" className="hover:text-primary text-zinc-300 transition-colors active-press">Resource Library</Link>
+            <Link href="/announcements" className="hover:text-primary text-zinc-300 transition-colors active-press">General Announcements</Link>
           </div>
         </div>
 

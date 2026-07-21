@@ -23,6 +23,8 @@ export const metadata: Metadata = {
     "Lagos State Baptist Student Fellowship 40th Anniversary Conference. August 10–14, 2026 at Baptist Academy, Obanikoro, Lagos.",
 };
 
+import { QueryProvider } from "@/components/shared/QueryProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className={`${inter.variable} ${cormorant.variable} min-h-full flex flex-col font-sans`}>
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

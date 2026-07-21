@@ -43,10 +43,11 @@ export function Header() {
     { label: "Ministers", href: "/ministers" },
     { label: "Gallery", href: "/gallery" },
     { label: "Resources", href: "/resources" },
+    { label: "Announcements", href: "/announcements" },
     { label: "Contact", href: "/contact" },
   ];
 
-  const editions = ["2026", "2025", "2024"];
+  const editions = ["2026"];
 
   const isMenuVisualDark = mobileMenuOpen || !isScrolled;
 
