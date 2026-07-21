@@ -7,6 +7,8 @@ import { collection, doc, getDoc, getDocs, query, where, orderBy, FirestoreDataC
 import { db } from "./app";
 import { Announcement } from "@/types/announcement";
 
+import seedAnnouncements from "./seedAnnouncements.json";
+
 export const announcementConverter: FirestoreDataConverter<Announcement> = {
   toFirestore(announcement: Announcement) {
     return {
@@ -37,13 +39,25 @@ export const announcementConverter: FirestoreDataConverter<Announcement> = {
 };
 
 export async function getAnnouncements(eventId: string): Promise<Announcement[]> {
-  const ref = collection(db, "announcements").withConverter(announcementConverter);
-  const q = query(
-    ref,
-    where("eventId", "==", eventId),
-    where("status", "==", "published"),
-    orderBy("publishedAt", "desc")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((doc) => doc.data());
+  try {
+    const ref = collection(db, "announcements").withConverter(announcementConverter);
+    const q = query(
+      ref,
+      where("eventId", "==", eventId),
+      where("status", "==", "published"),
+      orderBy("publishedAt", "desc")
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      return (seedAnnouncements as Announcement[]).filter(
+        (a) => a.eventId === eventId && a.status === "published"
+      );
+    }
+    return snap.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.warn("Firestore query getAnnouncements failed, using fallback static data:", error);
+    return (seedAnnouncements as Announcement[]).filter(
+      (a) => a.eventId === eventId && a.status === "published"
+    );
+  }
 }

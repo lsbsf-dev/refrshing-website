@@ -7,6 +7,8 @@ import { collection, doc, getDoc, getDocs, query, where, orderBy, FirestoreDataC
 import { db } from "./app";
 import { FAQ } from "@/types/faq";
 
+import seedFaqs from "./seedFaqs.json";
+
 export const faqConverter: FirestoreDataConverter<FAQ> = {
   toFirestore(faq: FAQ) {
     return {
@@ -29,12 +31,20 @@ export const faqConverter: FirestoreDataConverter<FAQ> = {
 };
 
 export async function getFAQs(eventId: string): Promise<FAQ[]> {
-  const ref = collection(db, "faqs").withConverter(faqConverter);
-  const q = query(
-    ref,
-    where("eventId", "==", eventId),
-    orderBy("order", "asc")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((doc) => doc.data());
+  try {
+    const ref = collection(db, "faqs").withConverter(faqConverter);
+    const q = query(
+      ref,
+      where("eventId", "==", eventId),
+      orderBy("order", "asc")
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      return (seedFaqs as FAQ[]).filter((f) => f.eventId === eventId);
+    }
+    return snap.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.warn("Firestore query getFAQs failed, using fallback static data:", error);
+    return (seedFaqs as FAQ[]).filter((f) => f.eventId === eventId);
+  }
 }

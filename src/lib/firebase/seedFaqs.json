@@ -1,0 +1,37 @@
+[
+  {
+    "id": "faq-1",
+    "eventId": "refreshing-2026",
+    "question": "Where is the venue of the conference?",
+    "answer": "Refreshing 2026 will be hosted at the Life Way Baptist Academy Campgrounds. Specific maps and navigation coordinates are available on our Contact page.",
+    "order": 1
+  },
+  {
+    "id": "faq-2",
+    "eventId": "refreshing-2026",
+    "question": "How do I register for the camp?",
+    "answer": "You can register by clicking any of the 'Register for the Program' links on the site, which will redirect you to the official Google Form where you can submit your details.",
+    "order": 2
+  },
+  {
+    "id": "faq-3",
+    "eventId": "refreshing-2026",
+    "question": "Is accommodation provided for student delegates?",
+    "answer": "Yes, standard hostel accommodation is provided for all registered student delegates at the Baptist Academy Hostels. Make sure to complete your registration early for smooth room allocations.",
+    "order": 3
+  },
+  {
+    "id": "faq-4",
+    "eventId": "refreshing-2026",
+    "question": "What is the schedule distinction between Leaders' Camp and General Camp?",
+    "answer": "Day 1 (Monday) and Day 2 Morning (Tuesday) are exclusively for leaders (coordinators, chapter executives, and intercessors). The General camp sessions begin with the Opening Rally on Tuesday evening at 6:00 PM.",
+    "order": 4
+  },
+  {
+    "id": "faq-5",
+    "eventId": "refreshing-2026",
+    "question": "Are meals provided during the five days?",
+    "answer": "Yes, registered delegates with camp tags are entitled to three meals daily at the dining hall starting from Monday evening (for leaders) or Wednesday morning (for general delegates).",
+    "order": 5
+  }
+]

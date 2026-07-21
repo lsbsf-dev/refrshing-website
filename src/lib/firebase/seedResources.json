@@ -1,0 +1,62 @@
+[
+  {
+    "id": "res-1",
+    "eventId": "refreshing-2026",
+    "slug": "the-greater-glory-study-guide",
+    "title": "The Greater Glory Study Guide",
+    "description": "The official interactive study outline booklet for Wednesday and Thursday seminar tracks.",
+    "category": "Bible Studies",
+    "author": "LSBSF Dev Team",
+    "publishedAt": "2026-07-20T08:00:00Z",
+    "fileUrl": "https://example.com/files/greater-glory-study-guide.pdf",
+    "status": "published"
+  },
+  {
+    "id": "res-2",
+    "eventId": "refreshing-2026",
+    "slug": "40th-anniversary-remembrance-devotional",
+    "title": "40th Anniversary Remembrance Devotional",
+    "description": "Thirty days of reflective scriptural devotionals compiled by Lagos State BSF alumni coordinators.",
+    "category": "Devotionals",
+    "author": "BSF Alumni",
+    "publishedAt": "2026-07-18T08:00:00Z",
+    "fileUrl": "https://example.com/files/40th-anniversary-devotional.pdf",
+    "status": "published"
+  },
+  {
+    "id": "res-3",
+    "eventId": "refreshing-2026",
+    "slug": "campus-leaders-handbook",
+    "title": "Campus Leaders Handbook",
+    "description": "Orientation guides, deployment checklists, and organizational charts for Lagos East, West, and Central chapters.",
+    "category": "Publications",
+    "author": "BSF Executive Council",
+    "publishedAt": "2026-07-15T08:00:00Z",
+    "fileUrl": "https://example.com/files/campus-leaders-handbook.pdf",
+    "status": "published"
+  },
+  {
+    "id": "res-4",
+    "eventId": "refreshing-2026",
+    "slug": "isaiah-52-expository-lectures-outline",
+    "title": "Isaiah 52 Expository Lectures Outline",
+    "description": "Sermon outlines and background references for Dr. Helen Adeyemi's discipleship study classes.",
+    "category": "Bible Studies",
+    "author": "Dr. Helen Adeyemi",
+    "publishedAt": "2026-07-10T08:00:00Z",
+    "fileUrl": "https://example.com/files/isaiah-52-lectures.docx",
+    "status": "published"
+  },
+  {
+    "id": "res-5",
+    "eventId": "refreshing-2026",
+    "slug": "covenant-seeds-daily-devotional-guide",
+    "title": "Covenant Seeds Daily Devotional Guide",
+    "description": "Selected morning devotion readings on building prayer altars and managing campus ministry teams.",
+    "category": "Devotionals",
+    "author": "Alumni Association",
+    "publishedAt": "2026-07-05T08:00:00Z",
+    "fileUrl": "https://example.com/files/covenant-seeds-devotional.pdf",
+    "status": "published"
+  }
+]

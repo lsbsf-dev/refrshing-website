@@ -7,6 +7,8 @@ import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter 
 import { db } from "./app";
 import { Resource } from "@/types/resource";
 
+import seedResources from "./seedResources.json";
+
 export const resourceConverter: FirestoreDataConverter<Resource> = {
   toFirestore(resource: Resource) {
     return {
@@ -41,24 +43,50 @@ export const resourceConverter: FirestoreDataConverter<Resource> = {
 };
 
 export async function getResources(eventId: string): Promise<Resource[]> {
-  const ref = collection(db, "resources").withConverter(resourceConverter);
-  const q = query(
-    ref,
-    where("eventId", "==", eventId),
-    where("status", "==", "published")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((doc) => doc.data());
+  try {
+    const ref = collection(db, "resources").withConverter(resourceConverter);
+    const q = query(
+      ref,
+      where("eventId", "==", eventId),
+      where("status", "==", "published")
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      return (seedResources as Resource[]).filter(
+        (r) => r.eventId === eventId && r.status === "published"
+      );
+    }
+    return snap.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.warn("Firestore query getResources failed, using fallback static data:", error);
+    return (seedResources as Resource[]).filter(
+      (r) => r.eventId === eventId && r.status === "published"
+    );
+  }
 }
 
 export async function getResourceBySlug(eventId: string, slug: string): Promise<Resource | null> {
-  const ref = collection(db, "resources").withConverter(resourceConverter);
-  const q = query(
-    ref,
-    where("eventId", "==", eventId),
-    where("slug", "==", slug),
-    where("status", "==", "published")
-  );
-  const snap = await getDocs(q);
-  return snap.empty ? null : snap.docs[0].data();
+  try {
+    const ref = collection(db, "resources").withConverter(resourceConverter);
+    const q = query(
+      ref,
+      where("eventId", "==", eventId),
+      where("slug", "==", slug),
+      where("status", "==", "published")
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      const fallback = (seedResources as Resource[]).find(
+        (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
+      );
+      return fallback || null;
+    }
+    return snap.docs[0].data();
+  } catch (error) {
+    console.warn("Firestore query getResourceBySlug failed, using fallback static data:", error);
+    const fallback = (seedResources as Resource[]).find(
+      (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
+    );
+    return fallback || null;
+  }
 }
