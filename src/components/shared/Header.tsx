@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
+import { REGISTRATION_URL } from "@/lib/constants";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -144,7 +145,7 @@ export function Header() {
 
           {/* Register CTA */}
           <a
-            href="https://forms.gle/DSW4CVMXWK61BHT96"
+            href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-sans text-xs font-semibold px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"
@@ -198,7 +199,7 @@ export function Header() {
             </div>
 
             <a
-              href="https://forms.gle/DSW4CVMXWK61BHT96"
+              href={REGISTRATION_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full text-center font-sans font-semibold py-3 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"

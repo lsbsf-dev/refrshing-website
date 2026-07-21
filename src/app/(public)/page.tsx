@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { REGISTRATION_URL } from "@/lib/constants";
 
 /* ─────────────────────────────────────────────
    Scroll reveal hook for staggered visuals
@@ -709,7 +710,7 @@ export default function PublicHomepage() {
 
             <div className="w-full flex justify-center">
               <a
-                href="https://forms.gle/DSW4CVMXWK61BHT96"
+                href={REGISTRATION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block w-full sm:w-auto px-12 py-5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 text-center active-press"

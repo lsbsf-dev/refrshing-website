@@ -11,6 +11,8 @@ import { ChevronDown, Calendar, AlertCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAnnouncements } from "@/lib/firebase/announcements";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import seedAnnouncements from "@/lib/firebase/seedAnnouncements.json";
+import { Announcement } from "@/types/announcement";
 
 export default function AnnouncementsPage() {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -19,6 +21,9 @@ export default function AnnouncementsPage() {
     queryKey: ["announcements", ACTIVE_EVENT_ID],
     queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    initialData: () => (seedAnnouncements as Announcement[]).filter(
+      (a) => a.eventId === ACTIVE_EVENT_ID && a.status === "published"
+    ),
   });
 
   const toggleAnnouncement = (id: string) => {
@@ -28,8 +33,8 @@ export default function AnnouncementsPage() {
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
-        <div className="max-w-3xl mx-auto w-full py-28 px-6 flex flex-col gap-4">
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="max-w-3xl mx-auto w-full pt-10 pb-28 px-6 flex flex-col gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 bg-white border border-black/5" />
           ))}
@@ -44,7 +49,7 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -71,7 +76,7 @@ export default function AnnouncementsPage() {
         </div>
       </section>
 
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
+      <section className="relative w-full pt-10 pb-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-3xl mx-auto w-full">
           {announcements.length === 0 ? (
             <div className="py-24 text-center font-serif text-xl italic text-zinc-400">

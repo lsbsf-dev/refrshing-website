@@ -57,15 +57,29 @@ export const photoConverter: FirestoreDataConverter<Photo> = {
   },
 };
 
+import seedAlbums from "./seedAlbums.json";
+
 export async function getAlbums(eventId: string): Promise<GalleryAlbum[]> {
-  const ref = collection(db, "galleryAlbums").withConverter(galleryAlbumConverter);
-  const q = query(
-    ref,
-    where("eventId", "==", eventId),
-    where("status", "==", "published")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((doc) => doc.data());
+  try {
+    const ref = collection(db, "galleryAlbums").withConverter(galleryAlbumConverter);
+    const q = query(
+      ref,
+      where("eventId", "==", eventId),
+      where("status", "==", "published")
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      return (seedAlbums as GalleryAlbum[]).filter(
+        (a) => a.eventId === eventId && a.status === "published"
+      );
+    }
+    return snap.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.warn("Firestore query getAlbums failed, using fallback static data:", error);
+    return (seedAlbums as GalleryAlbum[]).filter(
+      (a) => a.eventId === eventId && a.status === "published"
+    );
+  }
 }
 
 export async function getAlbumBySlug(eventId: string, slug: string): Promise<GalleryAlbum | null> {

@@ -45,7 +45,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
   if (loadingAlbum) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5" />
         <div className="max-w-7xl mx-auto w-full py-24 px-6">
           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {[1, 2, 3].map((i) => (
@@ -67,7 +67,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src={album.coverImageUrl}

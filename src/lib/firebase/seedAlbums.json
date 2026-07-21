@@ -1,0 +1,32 @@
+[
+  {
+    "id": "alb-1",
+    "eventId": "refreshing-2026",
+    "slug": "worship-encounters",
+    "title": "Worship Encounters",
+    "description": "Moments of corporate praise, prayer, and deep spiritual consecration during general camp sessions.",
+    "coverImageUrl": "/pictures/Image 3.jpg",
+    "photoCount": 6,
+    "status": "published"
+  },
+  {
+    "id": "alb-2",
+    "eventId": "refreshing-2026",
+    "slug": "leaders-camp-sessions",
+    "title": "Leaders Camp Sessions",
+    "description": "Moments from the executive committee orientations, coordinating briefings, and initial altar fires.",
+    "coverImageUrl": "/pictures/Image 4.jpg",
+    "photoCount": 4,
+    "status": "published"
+  },
+  {
+    "id": "alb-3",
+    "eventId": "refreshing-2026",
+    "slug": "fellowship-highlights",
+    "title": "Fellowship Highlights",
+    "description": "Joyful interactions, group portraits, and reunion snapshots of campus chapters and alumni.",
+    "coverImageUrl": "/pictures/Image 5.jpg",
+    "photoCount": 4,
+    "status": "published"
+  }
+]

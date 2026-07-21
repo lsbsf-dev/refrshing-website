@@ -17,7 +17,7 @@ export default function ContactPage() {
       {/* ═══════════════════════════════════════
           SCENE 1: CONTACT HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"

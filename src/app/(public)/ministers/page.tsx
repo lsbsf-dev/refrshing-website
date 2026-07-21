@@ -11,18 +11,24 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getMinisters } from "@/lib/firebase/ministers";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { REGISTRATION_URL } from "@/lib/constants";
+import seedMinisters from "@/lib/firebase/seedMinisters.json";
+import { Minister } from "@/types/minister";
 
 export default function MinistersPage() {
   const { data: ministers = [], isLoading, error } = useQuery({
     queryKey: ["ministers", ACTIVE_EVENT_ID],
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000, // 6 hours
+    initialData: () => (seedMinisters as Minister[]).filter(
+      (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
+    ),
   });
 
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5" />
         <div className="max-w-7xl mx-auto w-full py-24 px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
           {[1, 2].map((i) => (
             <div key={i} className="h-96 bg-zinc-200 border border-black/5" />
@@ -38,7 +44,7 @@ export default function MinistersPage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -143,7 +149,7 @@ export default function MinistersPage() {
             Register to attend our keynote breakout seminars. Camp registration is required for all delegates.
           </p>
           <a
-            href="https://forms.gle/DSW4CVMXWK61BHT96"
+            href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 active-press"

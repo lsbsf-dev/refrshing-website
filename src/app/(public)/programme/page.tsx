@@ -11,6 +11,9 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getSessions } from "@/lib/firebase/programme";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { REGISTRATION_URL } from "@/lib/constants";
+import seedSessions from "@/lib/firebase/seedSessions.json";
+import { Session } from "@/types/programme";
 
 interface DayConfig {
   label: string;
@@ -65,6 +68,9 @@ export default function ProgrammePage() {
     queryKey: ["sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
     staleTime: 30 * 60 * 1000, // 30 minutes
+    initialData: () => (seedSessions as Session[]).filter(
+      (s) => s.eventId === ACTIVE_EVENT_ID && s.status === "published"
+    ),
   });
 
   const activeDayLabel = `Day ${activeDay + 1}`;
@@ -72,10 +78,25 @@ export default function ProgrammePage() {
     (sess) => sess.day.toLowerCase() === activeDayLabel.toLowerCase()
   );
 
+  const parseTimeToMinutes = (timeStr: string) => {
+    const match = timeStr.trim().match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+    if (!match) return 0;
+    let hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const ampm = match[3].toUpperCase();
+    if (ampm === "PM" && hours < 12) hours += 12;
+    if (ampm === "AM" && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  };
+
+  const sortedSessions = [...filteredSessions].sort((a, b) => {
+    return parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime);
+  });
+
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5" />
         <div className="max-w-4xl mx-auto w-full py-24 px-6">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-20 bg-white border border-black/5 mb-4" />
@@ -91,7 +112,7 @@ export default function ProgrammePage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -144,9 +165,9 @@ export default function ProgrammePage() {
         </div>
       </section>
 
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
+      <section className="relative w-full pt-8 pb-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-stretch">
-          <div className="mb-16 text-left">
+          <div className="mb-12 text-left">
             <span className="font-mono text-xs font-bold text-[#C25627] block mb-2 tracking-widest uppercase">
               {daysConfig[activeDay].date}
             </span>
@@ -158,13 +179,13 @@ export default function ProgrammePage() {
             </p>
           </div>
 
-          {filteredSessions.length === 0 ? (
-            <div className="py-24 text-center font-serif text-xl italic text-zinc-400 border-l border-black/10 pl-6 md:pl-12">
+          {sortedSessions.length === 0 ? (
+            <div className="py-16 text-center font-serif text-xl italic text-zinc-400 border-l border-black/10 pl-6 md:pl-12">
               No sessions scheduled for this day yet.
             </div>
           ) : (
             <div className="relative pl-6 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
-              {filteredSessions.map((sess) => (
+              {sortedSessions.map((sess) => (
                 <Link 
                   href={`/programme/${sess.slug}`} 
                   key={sess.id} 
@@ -215,7 +236,7 @@ export default function ProgrammePage() {
             Secure your delegates roster, workshop handouts, and hostel room allocations. Camp registration is required for all delegates.
           </p>
           <a
-            href="https://forms.gle/DSW4CVMXWK61BHT96"
+            href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 active-press"

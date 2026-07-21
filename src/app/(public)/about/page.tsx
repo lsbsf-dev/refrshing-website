@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { REGISTRATION_URL } from "@/lib/constants";
 
 export default function AboutPage() {
   return (
@@ -11,7 +12,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════
           SCENE 1: ABOUT HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -146,7 +147,7 @@ export default function AboutPage() {
               Explore Schedule
             </Link>
             <a
-              href="https://forms.gle/DSW4CVMXWK61BHT96"
+              href={REGISTRATION_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3.5 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[11px] tracking-wider uppercase transition-all duration-300 active-press"

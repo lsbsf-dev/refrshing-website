@@ -11,18 +11,23 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbums } from "@/lib/firebase/gallery";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import seedAlbums from "@/lib/firebase/seedAlbums.json";
+import { GalleryAlbum } from "@/types/gallery";
 
 export default function GalleryPage() {
   const { data: albums = [], isLoading, error } = useQuery({
     queryKey: ["galleryAlbums", ACTIVE_EVENT_ID],
     queryFn: () => getAlbums(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000, // 6 hours
+    initialData: () => (seedAlbums as GalleryAlbum[]).filter(
+      (a) => a.eventId === ACTIVE_EVENT_ID && a.status === "published"
+    ),
   });
 
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-36 pb-24 px-6 md:px-16 border-b border-white/5" />
+        <div className="w-full h-[45dvh] min-h-[380px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5" />
         <div className="max-w-7xl mx-auto w-full py-24 px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           {[1, 2].map((i) => (
             <div key={i} className="aspect-video bg-zinc-200 border border-black/5" />
@@ -38,7 +43,7 @@ export default function GalleryPage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-36 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -65,7 +70,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
+      <section className="relative w-full pt-10 pb-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           {albums.length === 0 ? (
             <div className="py-32 text-center font-serif text-2xl italic text-zinc-400">
