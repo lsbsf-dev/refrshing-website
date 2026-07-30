@@ -1,7 +1,60 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper to check if a document is published
+    
+    // ==========================================
+    // SECURITY UTILITIES & ROLE RESOLUTIONS
+    // ==========================================
+
+    // Check if the user is authenticated and session has not been revoked
+    function isSessionValid() {
+      return request.auth != null && 
+        (
+          !exists(/databases/$(database)/documents/users/$(request.auth.uid)) ||
+          request.auth.token.auth_time >= get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tokensValidAfter
+        );
+    }
+
+    // Role Checks (Enforcing Session Validity)
+    function isSuperAdmin() {
+      return isSessionValid() && 
+        request.auth.token.role == 'superAdmin' && 
+        request.auth.token.mfaEnrolled == true;
+    }
+
+    function isEventAdmin(eventId) {
+      return isSessionValid() && 
+        request.auth.token.role == 'eventAdmin' && 
+        eventId in request.auth.token.allowedEvents && 
+        request.auth.token.mfaEnrolled == true;
+    }
+
+    function isEditor(eventId) {
+      return isSessionValid() && 
+        request.auth.token.role == 'editor' && 
+        eventId in request.auth.token.allowedEvents;
+    }
+
+    function isRegistrationStaff(eventId) {
+      return isSessionValid() && 
+        request.auth.token.role == 'registrationStaff' && 
+        eventId in request.auth.token.allowedEvents;
+    }
+
+    // checkinStaff doesn't require MFA
+    function isCheckinStaff(eventId) {
+      return isSessionValid() && 
+        request.auth.token.role == 'checkinStaff' && 
+        eventId in request.auth.token.allowedEvents;
+    }
+
+    function isViewer(eventId) {
+      return isSessionValid() && 
+        request.auth.token.role == 'viewer' && 
+        eventId in request.auth.token.allowedEvents;
+    }
+
+    // Helper to check if a document is published (public website access)
     function isPublished() {
       return resource.data.status == 'published';
     }
@@ -11,40 +64,111 @@ service cloud.firestore {
       return email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
     }
 
-    // Public conference read-only collections
-    match /events/{eventId} {
-      allow read: if true;
-    }
-    match /ministers/{ministerId} {
-      allow read: if isPublished();
-    }
-    match /sessions/{sessionId} {
-      allow read: if isPublished();
-    }
-    match /galleryAlbums/{albumId} {
-      allow read: if isPublished();
-    }
-    match /photos/{photoId} {
-      allow read: if true;
-    }
-    match /resources/{resourceId} {
-      allow read: if isPublished();
-    }
-    match /announcements/{announcementId} {
-      allow read: if isPublished();
-    }
-    match /faqs/{faqId} {
-      allow read: if true;
+    // ==========================================
+    // SYSTEM SETTINGS & METADATA
+    // ==========================================
+    
+    // Global Settings (Requires Super Admin)
+    match /settings/{settingId} {
+      allow read: if isSuperAdmin() || isSessionValid();
+      allow write: if isSuperAdmin();
     }
 
-    // User submissions write-only rules
+    // User Directory Metadata (Used for session validation and admin management)
+    match /users/{userId} {
+      allow read: if isSuperAdmin() || (isSessionValid() && request.auth.uid == userId);
+      // All modifications to roles/metadata must be done via Cloud Functions, not client writes
+      allow write: if false;
+    }
+
+    // Audit logs (Read-only for admins, writes strictly restricted to Server/Cloud Functions SDK)
+    match /audit_logs/{logId} {
+      allow read: if isSuperAdmin();
+      allow write: if false;
+    }
+
+    // ==========================================
+    // EVENT CONTEXT SPECIFIC COLLECTIONS
+    // ==========================================
+
+    match /events/{eventId} {
+      // Public website can read event details
+      allow read: if true;
+      // Writing requires Super Admin or Event Admin
+      allow write: if isSuperAdmin() || isEventAdmin(eventId);
+
+      // Ministers Subcollection
+      match /ministers/{ministerId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Sessions Subcollection
+      match /sessions/{sessionId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // GalleryAlbums Subcollection
+      match /galleryAlbums/{albumId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Photos Subcollection
+      match /photos/{photoId} {
+        allow read: if true;
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Resources Subcollection
+      match /resources/{resourceId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Announcements Subcollection
+      match /announcements/{announcementId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // FAQs Subcollection
+      match /faqs/{faqId} {
+        allow read: if true;
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Registrations & Attendees (Strict privacy gating)
+      match /attendees/{attendeeId} {
+        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId);
+      }
+
+      // Check-in view (Denormalized public-safe details for checkin staff)
+      match /checkinView/{attendeeId} {
+        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId) || isCheckinStaff(eventId) || isViewer(eventId);
+        // Direct writes blocked: check-in is performed exclusively via the markCheckedIn Cloud Function
+        allow write: if false;
+      }
+    }
+
+    // ==========================================
+    // PUBLIC FORM SUBMISSIONS
+    // ==========================================
+    
     match /enquiries/{enquiryId} {
       allow create: if request.resource.data.name.size() >= 2
                     && isValidEmail(request.resource.data.email)
                     && request.resource.data.message.size() >= 10;
+      allow read: if isSuperAdmin();
+      allow write: if isSuperAdmin();
     }
+
     match /newsletter/{subscriberId} {
       allow create: if isValidEmail(request.resource.data.email);
+      allow read: if isSuperAdmin();
+      allow write: if isSuperAdmin();
     }
   }
 }
