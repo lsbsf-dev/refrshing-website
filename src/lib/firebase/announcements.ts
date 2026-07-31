@@ -49,7 +49,7 @@ export async function getAnnouncements(eventId: string): Promise<Announcement[]>
     );
     const snap = await getDocs(q);
     if (snap.empty) {
-      return (seedAnnouncements as Announcement[]).filter(
+      return (seedAnnouncements as unknown as Announcement[]).filter(
         (a) => a.eventId === eventId && a.status === "published"
       );
     }
