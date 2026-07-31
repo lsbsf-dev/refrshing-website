@@ -15,7 +15,7 @@ interface Announcement {
 }
 
 export default function AdminAnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(seedAnnouncements as Announcement[]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>(seedAnnouncements as unknown as Announcement[]);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);

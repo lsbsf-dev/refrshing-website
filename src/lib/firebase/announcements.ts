@@ -56,7 +56,7 @@ export async function getAnnouncements(eventId: string): Promise<Announcement[]>
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
     console.warn("Firestore query getAnnouncements failed, using fallback static data:", error);
-    return (seedAnnouncements as Announcement[]).filter(
+    return (seedAnnouncements as unknown as Announcement[]).filter(
       (a) => a.eventId === eventId && a.status === "published"
     );
   }
