@@ -128,7 +128,7 @@ export default function AdminResourcesPage() {
                   type="text"
                   value={editingResource.category}
                   onChange={(e) =>
-                    setEditingResource({ ...editingResource, category: e.target.value })
+                    setEditingResource({ ...editingResource, category: e.target.value as any })
                   }
                   className="w-full bg-white/5 border border-white/10 text-white text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
