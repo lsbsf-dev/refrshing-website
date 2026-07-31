@@ -93,7 +93,7 @@ export function Header() {
         
         {/* Left: Extra Large & Prominent Branding Logo */}
         <Link href="/" className="flex items-center active-press">
-          <div className="relative h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 bg-white p-1 sm:p-1.5 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/60 hover:scale-[1.05] transition-transform duration-300">
+          <div className="relative h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 bg-white p-1 sm:p-1.5 rounded-2xl flex items-center justify-center shadow-xl border-none hover:scale-[1.05] transition-transform duration-300">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
