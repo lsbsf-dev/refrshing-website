@@ -14,5 +14,7 @@ export interface Session {
   endTime: string;
   venue: string;
   ministerIds: string[];
+  ministerNames?: string[];
+  scriptureText?: string;
   status: "draft" | "published";
 }
