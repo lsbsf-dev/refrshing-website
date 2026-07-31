@@ -160,16 +160,16 @@ export default function ProgrammePage() {
               <button
                 key={idx}
                 onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border rounded-xl transition-all duration-300 active-press cursor-pointer ${
+                className={`flex-shrink-0 text-left font-sans py-3 px-6 border rounded-2xl transition-all duration-300 active-press cursor-pointer ${
                   isActive 
-                    ? "border-[#C25627] text-white bg-[#C25627] shadow-sm font-semibold" 
-                    : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5"
+                    ? "border-[#C25627] bg-[#C25627] shadow-md" 
+                    : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5 bg-white/50"
                 }`}
               >
-                <span className="block font-mono text-sm font-bold tracking-widest text-[#C25627] mb-0.5">
+                <span className={`block font-mono text-xs font-bold tracking-widest mb-0.5 ${isActive ? "text-[#DDB94E]" : "text-[#C25627]"}`}>
                   {d.label}
                 </span>
-                <span className="block text-sm font-semibold uppercase tracking-wider">
+                <span className={`block text-sm font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-[#0B0907]"}`}>
                   {d.name}
                 </span>
               </button>
