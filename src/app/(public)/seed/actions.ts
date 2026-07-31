@@ -78,7 +78,7 @@ export async function seedDatabase(
         category: r.category,
         author: r.author || "",
         publishedAt: r.publishedAt || "",
-        fileUrl: r.fileUrl || null,
+        fileUrl: (r as any).fileUrl || null,
         status: r.status,
       });
       resourceCount++;
