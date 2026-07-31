@@ -21,7 +21,7 @@ export default function AnnouncementsPage() {
     queryKey: ["announcements", ACTIVE_EVENT_ID],
     queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    initialData: () => (seedAnnouncements as Announcement[]).filter(
+    initialData: () => (seedAnnouncements as unknown as Announcement[]).filter(
       (a) => a.eventId === ACTIVE_EVENT_ID && a.status === "published"
     ),
   });
