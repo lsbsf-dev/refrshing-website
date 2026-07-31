@@ -183,13 +183,13 @@ export default function PublicHomepage() {
         </div>
 
         {/* Hero Content - Clean Display Typography (Staggered load sequences) */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-16 flex-1 flex flex-col justify-center items-start gap-4">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-16 flex-1 flex flex-col justify-center items-start gap-4">
           
           <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             LAGOS STATE BAPTIST STUDENT FELLOWSHIP PRESENTS
           </span>
 
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
+          <h1 className="font-serif text-3xl xs:text-4xl sm:text-6xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
             <span className="text-gradient-gold block font-serif">
               THE GREATER
             </span>
@@ -217,7 +217,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 2: THEME (Scripture Art Card)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div data-reveal className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
@@ -266,7 +266,7 @@ export default function PublicHomepage() {
           </span>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-16 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
             {/* Left: Exhibition Gallery Wall (2 Overlapping polaroids) */}
@@ -339,7 +339,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 4: FEATURED MINISTERS (Clean Warm Ivory background, no image overlay, no glow)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto">
           
@@ -423,7 +423,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 5: PROGRAMME JOURNEY (Structured Roadmap - Warm Ivory Light background, no glow, no texture)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
@@ -490,7 +490,7 @@ export default function PublicHomepage() {
       <section className="relative w-full py-20 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] light-smokey-glow pointer-events-none" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 flex flex-col items-start text-left">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-16 flex flex-col items-start text-left">
           
           <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase mb-4">
             ENCOUNTER CHRONICLES
@@ -542,7 +542,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 7: GALLERY PREVIEW (Collage - Warm Light Ivory, no glow, sharp images)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-32 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-32 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto text-center flex flex-col items-center">
           
@@ -615,7 +615,7 @@ export default function PublicHomepage() {
           SCENE 8: COMMUNITY SECTION (Fellowship display - Warm Light Ivory, no glow, sharp images)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-32 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
             {/* Left: Narrative */}
@@ -671,7 +671,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 9: TESTIMONIES (Warm Light Ivory background, sharp outlines)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-28 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
           
@@ -710,7 +710,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 10: REGISTRATION CTA (Voucher Slip contrast card resting on Warm Light Ivory)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-2xl mx-auto">
           
@@ -762,7 +762,7 @@ export default function PublicHomepage() {
       {/* ═══════════════════════════════════════
           SCENE 11: CHAPTERS (Warm Light Paper Background, sharp card grids)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#F2EDE3] text-[#0B0907] border-t border-black/5 overflow-hidden">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#F2EDE3] text-[#0B0907] border-t border-black/5 overflow-hidden">
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 text-left">
           
           <div className="max-w-md">

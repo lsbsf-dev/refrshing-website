@@ -78,7 +78,7 @@ export default function SearchPage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -104,7 +104,7 @@ export default function SearchPage() {
         </div>
       </section>
 
-      <section className="relative w-full py-10 px-6 md:px-16 bg-[#FAF6EE] border-b border-black/5 z-20">
+      <section className="relative w-full py-10 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] border-b border-black/5 z-20">
         <div className="max-w-3xl mx-auto w-full">
           <div className="relative w-full">
             <input
@@ -119,7 +119,7 @@ export default function SearchPage() {
         </div>
       </section>
 
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-5xl mx-auto w-full">
           
           <div className="flex border-b border-black/10 mb-10 overflow-x-auto scrollbar-none gap-8">

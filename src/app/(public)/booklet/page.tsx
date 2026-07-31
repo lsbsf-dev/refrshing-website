@@ -70,7 +70,7 @@ export default function BookletPage() {
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero ── */}
-      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-16 px-6 md:px-16 relative overflow-hidden border-b border-white/5">
+      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 relative overflow-hidden border-b border-white/5">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/4 w-[500px] h-[350px] bg-[#DDB94E]/8 blur-[120px] rounded-full" />
         </div>
@@ -89,7 +89,7 @@ export default function BookletPage() {
 
       {/* ── Search + Tabs ── */}
       <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30">
-        <div className="max-w-7xl mx-auto px-6 md:px-16 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
           {/* Search */}
           <input
             type="search"
@@ -118,7 +118,7 @@ export default function BookletPage() {
       </section>
 
       {/* ── Content Grid ── */}
-      <section className="w-full py-12 px-6 md:px-16">
+      <section className="w-full py-12 px-4 sm:px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
           {filteredResources.length === 0 ? (
             <div className="text-center py-24">
@@ -174,7 +174,7 @@ export default function BookletPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative w-full py-20 px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden border-t border-white/5 mt-auto">
+      <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden border-t border-white/5 mt-auto">
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
           <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             JOIN THE REFRESHING

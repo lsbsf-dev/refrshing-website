@@ -68,7 +68,7 @@ export default function MinisterSlugPage({
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] animate-pulse">
         <div className="h-[40dvh] bg-[#0B0907]" />
-        <div className="max-w-7xl mx-auto w-full py-16 px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="max-w-7xl mx-auto w-full py-10 sm:py-16 px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 aspect-[3/4] bg-zinc-200" />
           <div className="lg:col-span-7 space-y-4 pt-4">
             {[...Array(6)].map((_, i) => (
@@ -86,7 +86,7 @@ export default function MinisterSlugPage({
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero banner ── */}
-      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-12 px-6 md:px-16 border-b border-white/5">
+      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-12 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="max-w-7xl mx-auto w-full">
           <Link
             href="/ministers"
@@ -109,7 +109,7 @@ export default function MinisterSlugPage({
       </section>
 
       {/* ── Profile card ── */}
-      <section className="w-full py-16 px-6 md:px-16">
+      <section className="w-full py-16 px-4 sm:px-6 md:px-16">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
           {/* Photo */}

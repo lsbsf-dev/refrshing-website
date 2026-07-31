@@ -102,7 +102,7 @@ export default function BookletSlugPage({
     return (
       <div className="w-full flex-1 bg-[#FAF6EE] animate-pulse">
         <div className="h-[30dvh] bg-[#0B0907]" />
-        <div className="max-w-3xl mx-auto py-16 px-6 space-y-4">
+        <div className="max-w-3xl mx-auto py-10 sm:py-16 px-4 sm:px-6 space-y-4">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className={`h-4 bg-black/5 rounded w-${i % 2 === 0 ? "full" : "3/4"}`} />
           ))}
@@ -129,7 +129,7 @@ export default function BookletSlugPage({
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero banner ── */}
-      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-12 px-6 md:px-16 border-b border-white/5">
+      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-12 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="max-w-4xl mx-auto w-full">
           {/* Back link */}
           <Link
@@ -165,7 +165,7 @@ export default function BookletSlugPage({
       </section>
 
       {/* ── Article content ── */}
-      <section className="w-full py-12 px-6 md:px-16">
+      <section className="w-full py-12 px-4 sm:px-6 md:px-16">
         <div className="max-w-3xl mx-auto">
           <div
             className="space-y-4"
@@ -190,7 +190,7 @@ export default function BookletSlugPage({
 
       {/* ── Related Sessions ── */}
       {relatedSessions.length > 0 && (
-        <section className="w-full py-12 px-6 md:px-16 bg-white border-t border-black/5">
+        <section className="w-full py-12 px-4 sm:px-6 md:px-16 bg-white border-t border-black/5">
           <div className="max-w-4xl mx-auto">
             <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase block mb-6">
               USED IN SESSIONS & SERVICES
@@ -229,7 +229,7 @@ export default function BookletSlugPage({
 
       {/* ── Related Ministers/Authors ── */}
       {relatedMinisters.length > 0 && (
-        <section className="w-full py-12 px-6 md:px-16 bg-[#FAF6EE] border-t border-black/5">
+        <section className="w-full py-12 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] border-t border-black/5">
           <div className="max-w-4xl mx-auto">
             <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase block mb-6">
               RELATED SPEAKERS & AUTHORS
@@ -260,7 +260,7 @@ export default function BookletSlugPage({
       )}
 
       {/* ── More from the guide ── */}
-      <section className="w-full py-8 px-6 md:px-16 border-t border-black/5">
+      <section className="w-full py-8 px-4 sm:px-6 md:px-16 border-t border-black/5">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link
             href="/booklet"

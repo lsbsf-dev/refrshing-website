@@ -46,8 +46,8 @@ export default function MinistersPage() {
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[40dvh] min-h-[280px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-20 px-6 md:px-16 border-b border-white/5" />
-        <div className="max-w-7xl mx-auto w-full py-16 px-6">
+        <div className="w-full h-[40dvh] min-h-[280px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-20 px-4 sm:px-6 md:px-16 border-b border-white/5" />
+        <div className="max-w-7xl mx-auto w-full py-10 sm:py-16 px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="bg-white border border-black/5 h-[320px]" />
@@ -62,7 +62,7 @@ export default function MinistersPage() {
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero ── */}
-      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-16 px-6 md:px-16 border-b border-white/5 relative overflow-hidden">
+      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#C25627]/10 blur-[120px] rounded-full" />
         </div>
@@ -81,7 +81,7 @@ export default function MinistersPage() {
 
       {/* ── Filter Tabs ── */}
       <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30">
-        <div className="max-w-7xl mx-auto px-6 md:px-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16">
           <div
             role="tablist"
             aria-label="Speaker categories"
@@ -112,14 +112,14 @@ export default function MinistersPage() {
       </section>
 
       {/* ── Grid ── */}
-      <section className="w-full py-16 px-6 md:px-16">
+      <section className="w-full py-12 sm:py-16 px-4 sm:px-4 sm:px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
           {filteredMinisters.length === 0 ? (
             <div className="text-center py-24">
               <p className="font-sans text-[#7A7062] text-sm">No ministers in this category yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
               {filteredMinisters.map((minister) => (
                 <Link
                   key={minister.id}
@@ -172,7 +172,7 @@ export default function MinistersPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden border-t border-white/5">
+      <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden border-t border-white/5">
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
           <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             SECURE YOUR PLACE

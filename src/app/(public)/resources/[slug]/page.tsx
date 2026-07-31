@@ -37,8 +37,8 @@ export default function ResourceSlugPage({ params }: { params: Promise<{ slug: s
   if (isLoading) {
     return (
       <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[40dvh] min-h-[340px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-20 px-6 md:px-16 border-b border-white/5" />
-        <div className="max-w-3xl mx-auto w-full py-24 px-6 flex flex-col gap-6">
+        <div className="w-full h-[40dvh] min-h-[340px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-20 px-4 sm:px-6 md:px-16 border-b border-white/5" />
+        <div className="max-w-3xl mx-auto w-full py-16 sm:py-24 px-4 sm:px-6 flex flex-col gap-6">
           <div className="h-4 w-48 bg-zinc-200" />
           <div className="h-6 w-96 bg-zinc-300" />
         </div>
@@ -56,7 +56,7 @@ export default function ResourceSlugPage({ params }: { params: Promise<{ slug: s
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[40dvh] min-h-[340px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-20 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[40dvh] min-h-[340px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-20 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-15 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -84,7 +84,7 @@ export default function ResourceSlugPage({ params }: { params: Promise<{ slug: s
         </div>
       </section>
 
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907]">
+      <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907]">
         <div className="relative z-10 max-w-3xl mx-auto">
           
           <div className="flex flex-wrap items-center gap-6 border-b border-black/5 pb-8 mb-10 text-[#7A7062] font-mono text-sm tracking-wider uppercase font-semibold">

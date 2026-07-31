@@ -12,7 +12,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════
           SCENE 1: ABOUT HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -41,7 +41,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════
           SCENE 2: COVENANT FOUNDATIONS (The 1986 spark)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] texture-paper overflow-hidden">
+      <section className="relative w-full py-28 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] texture-paper overflow-hidden">
         
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
@@ -89,7 +89,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════
           SCENE 3: MOVEMENT PILLARS (Extended warmth, Light background, high contrast cards)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-28 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center">
           
@@ -127,7 +127,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════
           SCENE 4: JOIN THE MISSION (CTA stub - Dark card registration overlay)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
+      <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
           <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">

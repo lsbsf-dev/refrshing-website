@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function BookletSlugError() {
   return (
-    <div className="w-full flex-1 flex flex-col items-center justify-center bg-[#FAF6EE] px-6 py-24 text-center">
+    <div className="w-full flex-1 flex flex-col items-center justify-center bg-[#FAF6EE] px-4 sm:px-6 py-16 sm:py-24 text-center">
       <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase block mb-4">
         CAMP GUIDE — ERROR
       </span>
