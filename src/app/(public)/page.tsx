@@ -225,27 +225,30 @@ export default function PublicHomepage() {
               THE 40TH ANNIVERSARY REVIVAL
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl md:text-7xl font-light tracking-tight text-white leading-tight uppercase">
-              Beyond the <br />
-              <span className="text-gradient-sunset font-normal">Former Glory</span>
+              GREATER <br />
+              <span className="text-gradient-sunset font-normal">GLORY</span>
             </h2>
             <div className="h-[1px] w-24 bg-[#C25627] my-2" />
-            <p className="font-sans text-white/70 text-base leading-relaxed font-light max-w-xl">
-              Refreshing 2026 is a threshold. For forty years, the Lord has gathered campus students in revival, faith, and fellowship. But the narrative is not ending. We are being commissioned into a greater weight of His presence, a heavier output of His glory on our campuses.
+            <p className="font-sans text-white/80 text-base leading-relaxed font-light max-w-xl">
+              Refreshing 2026 is a threshold. For forty years, the Lord has gathered students across campuses and churches in revival, faith, and fellowship. But the narrative is not ending. We are being commissioned into a greater weight of His presence and a fuller display of His glory across our churches and campuses.
             </p>
           </div>
 
           <div data-reveal className="lg:col-span-5 relative flex justify-center">
-            {/* Elegant scripture card - open typography framed with lines */}
+            {/* Elegant scripture card */}
             <div className="w-full max-w-md py-6 border-y border-[#DDB94E]/25 relative text-left">
               <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#C25627] uppercase block mb-3">
                 HAGGAI 2:9
               </span>
-              <p className="font-serif text-lg md:text-xl italic font-light text-white/95 leading-relaxed">
-                &ldquo;The glory of this present house will be greater than the glory of the former house, and in this place I will grant peace, says the Lord Almighty.&rdquo;
+              <p className="font-serif text-lg md:text-xl italic font-light text-white/95 leading-relaxed mb-4">
+                &ldquo;The glory of this present house shall be greater than of the former, saith the Lord of hosts: and in this place will I give peace, saith the Lord of hosts.&rdquo;
               </p>
-              <div className="mt-4">
+              <div className="pt-3 border-t border-white/10">
+                <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#DDB94E] uppercase block mb-1">
+                  ISAIAH 52:1–7
+                </span>
                 <span className="font-sans text-xs font-bold tracking-widest text-[#FFD6C4] uppercase block">
-                  ISAIAH 52:1 · ARISE & PUT ON STRENGTH
+                  ARISE, AWAKE & PUT ON THY STRENGTH
                 </span>
               </div>
             </div>
@@ -255,7 +258,7 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 3: 40 YEARS (Nostalgic Album - polaroid rounded frames, tape kept)
+          SCENE 3: 40 YEARS (A Legacy of Covenant and Fire)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-24 bg-gradient-to-b from-[#0B0907] via-[#1D1013] to-[#0B0907] text-[#FCFAF6] texture-paper overflow-hidden border-t border-white/5 min-h-[90vh] flex items-center">
         
@@ -269,11 +272,11 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-16 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {/* Left: Exhibition Gallery Wall (2 Overlapping polaroids) */}
+            {/* Left: Exhibition Gallery Wall */}
             <div className="lg:col-span-7 relative flex justify-center z-10 w-full">
               <div data-reveal className="relative w-full max-w-xl h-[420px] sm:h-[550px]">
                 
-                {/* Photo 1: Image 14 (Historic seed, polaroid) */}
+                {/* Photo 1: Image 14 */}
                 <div className="absolute left-0 top-0 w-[60%] aspect-[3/4] z-10 border border-black/15 shadow-2xl rotate-[-3deg] transition-transform duration-500 hover:rotate-0 bg-white p-2.5 rounded-2xl overflow-hidden active-press">
                   <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
                     <Image
@@ -289,7 +292,7 @@ export default function PublicHomepage() {
                   <div className="absolute -top-3 left-[30%] w-12 h-4 archival-tape" />
                 </div>
 
-                {/* Photo 2: Image 10 (Modern outpour, polaroid) */}
+                {/* Photo 2: Image 10 */}
                 <div className="absolute right-0 top-16 w-[60%] aspect-[3/4] z-20 border-4 border-[#FAF6EE] shadow-2xl rotate-[3deg] transition-transform duration-500 hover:rotate-0 bg-[#FAF6EE] p-2.5 rounded-2xl overflow-hidden active-press">
                   <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
                     <Image
@@ -311,22 +314,25 @@ export default function PublicHomepage() {
             {/* Right: Editorial Narrative */}
             <div data-reveal className="lg:col-span-5 flex flex-col items-start gap-6 text-left">
               <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
-                40 YEARS OF AN ENCOUNTER
+                A LEGACY OF COVENANT AND FIRE
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] uppercase">
-                A legacy <br />
-                of covenant <br />
-                and <span className="font-serif italic font-extralight text-primary-dark">fire</span>.
+                40 Years <br />
+                of Kingdom <br />
+                <span className="font-serif italic font-extralight text-primary-dark">Impact</span>.
               </h2>
+              <p className="font-sans text-white/80 text-sm leading-relaxed font-light">
+                Since its inception in 1986, the Lagos State Baptist Student Fellowship (LSBSF) has served as a central pillar for student ministry across the state. What began as a passionate network of prayer movements has grown into a unified, transformative force.
+              </p>
               <p className="font-sans text-white/70 text-sm leading-relaxed font-light">
-                Since its commencement in 1986, the Refreshing conference has stood as an altar for campus students. For four decades, lives have been transformed, ministries birthed, and fellowship bonds cemented.
+                Through our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth.
               </p>
               <Link
                 href="/about"
                 className="group inline-flex items-center gap-2 font-sans text-sm font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2 active-press"
               >
                 <span className="border-b border-[#DDB94E] group-hover:border-white pb-0.5">
-                  THE MOVEMENT HISTORY
+                  READ OUR FULL PHILOSOPHY & HISTORY
                 </span>
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>

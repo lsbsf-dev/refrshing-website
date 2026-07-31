@@ -25,39 +25,39 @@ interface DayConfig {
 
 const daysConfig: DayConfig[] = [
   {
-    label: "DAY 01",
-    name: "Monday",
-    date: "August 10, 2026",
-    title: "The Altar Commenced",
-    summary: "Opening alignment sessions for fellowship leaders, orientation, and setting the revival fire."
+    "label": "DAY 01",
+    "name": "Monday",
+    "date": "August 10, 2026",
+    "title": "Unveiled Glory",
+    "summary": "Opening message on 2 Corinthians 3:18, vertical alignment, and unveiling the weight of His presence."
   },
   {
-    label: "DAY 02",
-    name: "Tuesday",
-    date: "August 11, 2026",
-    title: "The Word Exposed",
-    summary: "Intensive training, seminar sessions, and theological foundations for fellowship leaders."
+    "label": "DAY 02",
+    "name": "Tuesday",
+    "date": "August 11, 2026",
+    "title": "A Call to Awakening & Anointing Night",
+    "summary": "Morning teaching on Elijah & Elisha, afternoon BSF orientation, and all-night Destined for Glory anointing service."
   },
   {
-    label: "DAY 03",
-    name: "Wednesday",
-    date: "August 12, 2026",
-    title: "General Gathering Arrival",
-    summary: "Arrival of the main delegate body. Corporate gatherings commence with the evening revival fire."
+    "label": "DAY 03",
+    "name": "Wednesday",
+    "date": "August 12, 2026",
+    "title": "Who May Ascend?",
+    "summary": "General conference arrival, evening revival fire, and Psalm 24 exposition on clean hands and pure hearts."
   },
   {
-    label: "DAY 04",
-    name: "Thursday",
-    date: "August 13, 2026",
-    title: "Word Feast & Communion",
-    summary: "A heavy concentration of scripture, breakout panels, and corporate communion table."
+    "label": "DAY 04",
+    "name": "Thursday",
+    "date": "August 13, 2026",
+    "title": "The Greater Generation & Refreshing Night",
+    "summary": "Morning exposition on John 14:12 & Haggai 2:9, Academic & Career seminar, and Refreshing Night Theme Message."
   },
   {
-    label: "DAY 05",
-    name: "Friday",
-    date: "August 14, 2026",
-    title: "Commissioning & Departure",
-    summary: "Final commissioning: sending forth of delegates to campus chapters, and check-out."
+    "label": "DAY 05",
+    "name": "Friday",
+    "date": "August 14, 2026",
+    "title": "Arise: Pure & Undefiled & Refreshing @40",
+    "summary": "Relationship seminar, Refreshing @40 anniversary celebration, praise ministrations, and closing charge."
   }
 ];
 
