@@ -8,6 +8,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getResources } from "@/lib/firebase/resources";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
