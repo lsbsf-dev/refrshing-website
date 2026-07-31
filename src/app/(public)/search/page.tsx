@@ -147,7 +147,7 @@ export default function SearchPage() {
                 activeTab === "resources" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
               }`}
             >
-              Resources ({filteredResources.length})
+              Camp Guide ({filteredResources.length})
               {activeTab === "resources" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
             </button>
             <button
@@ -212,7 +212,7 @@ export default function SearchPage() {
                   {filteredResources.map((r) => (
                     <Link
                       key={r.id}
-                      href={`/resources/${r.slug}`}
+                      href={`/booklet/${r.slug}`}
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
                       <span className="font-mono text-[9px] text-[#C25627] tracking-widest block uppercase mb-1">{r.category}</span>

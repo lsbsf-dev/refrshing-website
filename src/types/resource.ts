@@ -9,10 +9,12 @@ export interface Resource {
   slug: string;
   title: string;
   description: string;
-  category: "Bible Studies" | "Articles" | "Session Notes" | "Presentation Slides" | "Sermon Recordings" | "Videos" | "Worship Lyrics" | "Downloads";
+  category: "Bible Studies" | "Articles" | "Session Notes" | "Presentation Slides" | "Sermon Recordings" | "Videos" | "Worship Lyrics" | "Downloads" | "Devotionals" | "Publications";
   author: string;
   publishedAt: string; // ISO string
   fileUrl?: string; // Download file url
   embedUrl?: string; // Media embed url
   status: "draft" | "published";
+  sessionIds?: string[]; // Cross-link: sessions that use this resource
+  ministerIds?: string[]; // Cross-link: ministers who authored/are linked to this resource
 }

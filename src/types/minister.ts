@@ -12,4 +12,5 @@ export interface Minister {
   biography: string;
   affiliation: string;
   status: "draft" | "published";
+  category: "keynote" | "music" | "panelist";
 }

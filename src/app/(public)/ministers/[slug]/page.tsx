@@ -1,6 +1,7 @@
 /**
  * Minister Profile Details Page
- * Loads biography data from Firestore using TanStack query hooks.
+ * Loads biography data from Firestore with cross-links to assigned sessions
+ * and published articles/resources authored by this minister.
  */
 
 "use client";
@@ -9,19 +10,28 @@ import React, { use, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Calendar, ChevronLeft } from "lucide-react";
+import { Calendar, ChevronLeft, Clock, MapPin, BookOpen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getMinisterBySlug } from "@/lib/firebase/ministers";
 import { getSessionsForMinister } from "@/lib/firebase/programme";
+import { getResources } from "@/lib/firebase/resources";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { logAnalyticsEvent } from "@/lib/analytics";
 
-export default function MinisterSlugPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = use(params);
+export default function MinisterSlugPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = use(params);
 
-  const { data: minister, isLoading: loadingMinister, error: errorMinister } = useQuery({
-    queryKey: ["minister", ACTIVE_EVENT_ID, resolvedParams.slug],
-    queryFn: () => getMinisterBySlug(ACTIVE_EVENT_ID, resolvedParams.slug),
+  const {
+    data: minister,
+    isLoading: loadingMinister,
+    error,
+  } = useQuery({
+    queryKey: ["minister", ACTIVE_EVENT_ID, slug],
+    queryFn: () => getMinisterBySlug(ACTIVE_EVENT_ID, slug),
     staleTime: 6 * 60 * 60 * 1000,
   });
 
@@ -35,138 +45,181 @@ export default function MinisterSlugPage({ params }: { params: Promise<{ slug: s
     }
   }, [minister]);
 
-  const { data: sessions = [], isLoading: loadingSessions } = useQuery({
+  const { data: sessions = [] } = useQuery({
     queryKey: ["sessions", "minister", minister?.id],
-    queryFn: () => getSessionsForMinister(ACTIVE_EVENT_ID, minister?.id || ""),
-    enabled: !!minister?.id,
+    queryFn: () => getSessionsForMinister(ACTIVE_EVENT_ID, minister!.id),
+    enabled: !!minister,
     staleTime: 30 * 60 * 1000,
   });
 
+  const { data: allResources = [] } = useQuery({
+    queryKey: ["resources", ACTIVE_EVENT_ID],
+    queryFn: () => getResources(ACTIVE_EVENT_ID),
+    enabled: !!minister,
+    staleTime: 6 * 60 * 60 * 1000,
+  });
+
+  // Resources authored by or linked to this minister
+  const relatedResources = allResources.filter(
+    (r) => r.ministerIds?.includes(minister?.id || "") || r.author === minister?.name
+  );
+
   if (loadingMinister) {
     return (
-      <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] animate-pulse">
-        <div className="w-full h-[40dvh] min-h-[340px] bg-[#0B0907] flex flex-col justify-center pt-40 lg:pt-48 pb-20 px-6 md:px-16 border-b border-white/5" />
-        <div className="max-w-7xl mx-auto w-full py-24 px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] animate-pulse">
+        <div className="h-[40dvh] bg-[#0B0907]" />
+        <div className="max-w-7xl mx-auto w-full py-16 px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 aspect-[3/4] bg-zinc-200" />
-          <div className="lg:col-span-7 flex flex-col gap-4">
-            <div className="h-4 w-48 bg-zinc-200" />
-            <div className="h-10 w-96 bg-zinc-300" />
+          <div className="lg:col-span-7 space-y-4 pt-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className={`h-4 bg-zinc-200 rounded ${i === 0 ? "w-1/3" : i % 2 === 0 ? "w-full" : "w-3/4"}`} />
+            ))}
           </div>
         </div>
       </div>
     );
   }
 
-  if (errorMinister) {
-    throw errorMinister;
-  }
-
-  if (!minister) {
-    notFound();
-  }
+  if (error || !minister) return notFound();
 
   return (
-    <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[40dvh] min-h-[340px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-20 px-6 md:px-16 border-b border-white/5">
-        <div className="absolute inset-0 opacity-15 pointer-events-none">
-          <Image
-            src={minister.photoUrl || "/pictures/Image 6.jpg"}
-            alt={minister.name}
-            fill
-            className="object-cover object-center filter grayscale"
-            priority
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
+    <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <Link 
+      {/* ── Hero banner ── */}
+      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-12 px-6 md:px-16 border-b border-white/5">
+        <div className="max-w-7xl mx-auto w-full">
+          <Link
             href="/ministers"
-            className="flex items-center gap-1 font-sans text-[10px] font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
+            className="inline-flex items-center gap-1.5 font-sans text-xs text-white/40 hover:text-white transition-colors mb-6 active-press"
           >
-            <ChevronLeft className="h-3.5 w-3.5" /> Back to Ministers
+            <ChevronLeft className="h-3.5 w-3.5" />
+            Back to Ministers
           </Link>
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
-            MINISTER PROFILE
+          <span className="font-sans text-[9px] font-bold tracking-widest text-[#DDB94E] uppercase block mb-2">
+            {minister.category === "music"
+              ? "GOSPEL MUSIC"
+              : minister.category === "panelist"
+                ? "PANELIST & ALUMNI"
+                : "KEYNOTE SPEAKER"}
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight uppercase select-none leading-none">
-            {minister.name.split(" ")[0]} <span className="text-gradient-sunset font-normal font-serif">{minister.name.split(" ").slice(1).join(" ")}</span>
+          <h1 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none">
+            {minister.name}
           </h1>
         </div>
       </section>
 
-      <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907]">
-        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          
-          <div className="lg:col-span-5 relative flex justify-center lg:justify-start">
-            <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] border border-black/10 shadow-2xl bg-white overflow-hidden p-2.5">
-              <div className="relative w-full h-full overflow-hidden">
+      {/* ── Profile card ── */}
+      <section className="w-full py-16 px-6 md:px-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+          {/* Photo */}
+          <div className="lg:col-span-4">
+            <div className="relative w-full max-w-sm mx-auto lg:max-w-none aspect-[3/4] bg-[#0B0907] overflow-hidden">
+              {minister.photoUrl ? (
                 <Image
-                  src={minister.photoUrl || "/pictures/Image 6.jpg"}
+                  src={minister.photoUrl}
                   alt={minister.name}
                   fill
-                  sizes="(max-width: 768px) 100vw, 40vw"
-                  className="object-cover object-top scale-105"
+                  className="object-cover object-top"
                   priority
                 />
-              </div>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="font-serif text-8xl text-white/10 font-light uppercase">
+                    {minister.name.charAt(0)}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
-            <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase">
-              {minister.affiliation}
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-light tracking-tight text-[#0B0907] leading-none uppercase">
-              BIOGRAPHY
-            </h2>
-            <div className="h-[1px] w-20 bg-primary-dark my-1" />
-            
-            <div className="font-sans text-zinc-600 text-sm leading-relaxed font-light space-y-4">
-              {minister.biography.split("\n\n").map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
+          {/* Bio */}
+          <div className="lg:col-span-8 flex flex-col gap-6">
+            <div className="flex flex-col gap-1">
+              <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                Affiliation
+              </span>
+              <p className="font-sans text-sm text-[#0B0907] font-medium">
+                {minister.affiliation}
+              </p>
             </div>
 
+            <div className="flex flex-col gap-3">
+              <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                Biography
+              </span>
+              <p className="font-sans text-sm text-[#3D3530] leading-relaxed font-light whitespace-pre-line">
+                {minister.biography}
+              </p>
+            </div>
+
+            {/* Sessions */}
             {sessions.length > 0 && (
-              <div className="w-full mt-6 border-t border-black/5 pt-8">
-                <h3 className="font-serif text-xl font-normal uppercase text-[#0B0907] mb-4">
-                  ASSIGNED SESSIONS
-                </h3>
-                <div className="grid grid-cols-1 gap-4">
+              <div className="flex flex-col gap-4 pt-6 border-t border-black/5">
+                <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                  Assigned Sessions
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {sessions.map((session) => (
-                    <div key={session.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-black/10 bg-white shadow-xs group">
-                      <div className="flex items-start gap-3">
-                        <Calendar className="h-5 w-5 text-[#C25627] mt-0.5" />
-                        <div>
-                          <Link 
-                            href={`/programme/${session.slug}`}
-                            className="font-serif text-base font-normal text-[#0B0907] hover:text-[#C25627] uppercase transition-colors"
-                          >
-                            {session.title}
-                          </Link>
-                          <span className="block font-mono text-[9px] text-[#C25627] tracking-widest uppercase mt-0.5">
-                            {session.day}
+                    <Link
+                      key={session.id}
+                      href={`/programme/${session.slug}`}
+                      className="group flex flex-col gap-1.5 p-4 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 active-press"
+                    >
+                      <span className="font-mono text-[9px] text-[#C25627] tracking-widest uppercase">
+                        {session.day}
+                      </span>
+                      <h3 className="font-serif text-sm font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
+                        {session.title}
+                      </h3>
+                      <div className="flex items-center gap-3 font-sans text-[10px] text-[#7A7062]">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {session.startTime} – {session.endTime}
+                        </span>
+                        {session.venue && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {session.venue}
                           </span>
-                        </div>
+                        )}
                       </div>
-                      <Link 
-                        href={`/programme/${session.slug}`}
-                        className="mt-3 sm:mt-0 font-sans text-[10px] font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] uppercase active-press self-start sm:self-center"
-                      >
-                        [ VIEW DETAILS ]
-                      </Link>
-                    </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Related Resources/Articles */}
+            {relatedResources.length > 0 && (
+              <div className="flex flex-col gap-4 pt-6 border-t border-black/5">
+                <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                  Published Articles & Study Materials
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {relatedResources.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/booklet/${r.slug}`}
+                      className="group flex items-start gap-3 p-4 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 active-press"
+                    >
+                      <BookOpen className="h-4 w-4 text-[#C25627] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                      <div>
+                        <p className="font-serif text-sm text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
+                          {r.title}
+                        </p>
+                        <span className="font-mono text-[9px] text-[#7A7062] tracking-widest uppercase">
+                          {r.category}
+                        </span>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>
             )}
           </div>
-
         </div>
       </section>
     </div>
   );
 }
-
-

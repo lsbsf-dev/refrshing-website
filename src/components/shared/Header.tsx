@@ -43,7 +43,7 @@ export function Header() {
     { label: "Programme", href: "/programme" },
     { label: "Ministers", href: "/ministers" },
     { label: "Gallery", href: "/gallery" },
-    { label: "Resources", href: "/resources" },
+    { label: "Camp Guide", href: "/booklet" },
     { label: "Announcements", href: "/announcements" },
     { label: "Contact", href: "/contact" },
   ];
