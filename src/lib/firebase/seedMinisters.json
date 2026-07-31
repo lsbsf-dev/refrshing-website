@@ -88,17 +88,6 @@
     "category": "keynote"
   },
   {
-    "id": "rebecca-olowookere",
-    "eventId": "refreshing-2026",
-    "slug": "rebecca-olowookere",
-    "name": "Min. Rebecca Olowookere",
-    "photoUrl": "/ministers/Rebecca Olowookere.jpg",
-    "biography": "Rebecca Olowookere Iyanuoluwa is a devoted child of God, called and anointed to bring healing and deliverance to men across every season of life. Through her God-given gifts of ministry, she carries a mandate to restore hope, bring spiritual freedom, and point hearts back to the presence of God through worship.\n\nBeyond ministry, Rebecca is a dedicated student and a Kingdom Entrepreneur. She integrates her faith with purpose-driven enterprise, believing that business can be a vessel for impact, excellence, and the advancement of God's Kingdom on earth.\n\nHer life's pursuit is simple yet profound: to raise a generation that is hungry for God, rooted in worship, Word, prayers and committed to living out His purpose in every sphere of influence.",
-    "affiliation": "Worship Minister & Kingdom Entrepreneur",
-    "status": "published",
-    "category": "music"
-  },
-  {
     "id": "rev-ebenezer-osundele",
     "eventId": "refreshing-2026",
     "slug": "rev-ebenezer-osundele",
@@ -132,6 +121,39 @@
     "category": "keynote"
   },
   {
+    "id": "bro-sunday-oguntola",
+    "eventId": "refreshing-2026",
+    "slug": "bro-sunday-oguntola",
+    "name": "Mr. Sunday Oguntola",
+    "photoUrl": "/ministers/Mr. Sunday Oguntola.jpg",
+    "biography": "Bro Sunday Oguntola is a child of God passionate about expanding the Kingdom of Light.\n\nA practising journalist, he is the author of 10 Commandments for Academic Excellence and Effective media relations for pastors and churches.\n\nHe is the President of the Lagos State Baptist Student Alumni Fellowship (LSBSFAA) where he mentors the next generation of student leaders.\n\nHe is married with kids.",
+    "affiliation": "President, LSBSFAA; Author & Journalist",
+    "status": "published",
+    "category": "keynote"
+  },
+  {
+    "id": "pst-adebusola-oguntola",
+    "eventId": "refreshing-2026",
+    "slug": "pst-adebusola-oguntola",
+    "name": "Pst. Mrs. Adebusola Oguntola",
+    "photoUrl": "/ministers/Pst. Mrs. Adebusola Oguntola.jpeg",
+    "biography": "Adebusola Oguntola studied Estate Management at the University of Lagos. She also bagged a Masters degree in Facilities Management from the same institution. She yielded to the call of God upon her life and proceeded to Baptist College of Theology, Lagos where she received ministerial training and thereafter bagged Bachelor's degree in Christian Religious Education.\n\nShe is the Head of Practice at Busola Oguntola Consulting, a real estate firm with passion for facility and property management, valuation of property and assets, project development and other real estate consultancy services.\n\nShe has been involved in Christian leadership since her undergraduate days. Since she gave her life to Christ in 1992, she has remained committed to the Kingdom business. She is mandated to help in raising godly homes. She is also committed to children and youth development through godly strategies.\n\nShe lives in Lagos with her husband, Sunday Oguntola and their three children.",
+    "affiliation": "Head of Practice, Busola Oguntola Consulting",
+    "status": "published",
+    "category": "keynote"
+  },
+  {
+    "id": "rebecca-olowookere",
+    "eventId": "refreshing-2026",
+    "slug": "rebecca-olowookere",
+    "name": "Min. Rebecca Olowookere",
+    "photoUrl": "/ministers/Rebecca Olowookere.jpg",
+    "biography": "Rebecca Olowookere Iyanuoluwa is a devoted child of God, called and anointed to bring healing and deliverance to men across every season of life. Through her God-given gifts of ministry, she carries a mandate to restore hope, bring spiritual freedom, and point hearts back to the presence of God through worship.\n\nBeyond ministry, Rebecca is a dedicated student and a Kingdom Entrepreneur. She integrates her faith with purpose-driven enterprise, believing that business can be a vessel for impact, excellence, and the advancement of God's Kingdom on earth.\n\nHer life's pursuit is simple yet profound: to raise a generation that is hungry for God, rooted in worship, Word, prayers and committed to living out His purpose in every sphere of influence.",
+    "affiliation": "Worship Minister & Kingdom Entrepreneur",
+    "status": "published",
+    "category": "music"
+  },
+  {
     "id": "ebunolamisings",
     "eventId": "refreshing-2026",
     "slug": "ebunolamisings",
@@ -152,27 +174,5 @@
     "affiliation": "Gospel Music Ministers; Visionaries, Altar of Praise",
     "status": "published",
     "category": "music"
-  },
-  {
-    "id": "bro-sunday-oguntola",
-    "eventId": "refreshing-2026",
-    "slug": "bro-sunday-oguntola",
-    "name": "Mr. Sunday Oguntola",
-    "photoUrl": "/ministers/Mr. Sunday Oguntola.jpg",
-    "biography": "Bro Sunday Oguntola is a child of God passionate about expanding the Kingdom of Light.\n\nA practising journalist, he is the author of 10 Commandments for Academic Excellence and Effective media relations for pastors and churches.\n\nHe is the President of the Lagos State Baptist Student Alumni Fellowship (LSBSFAA) where he mentors the next generation of student leaders.\n\nHe is married with kids.",
-    "affiliation": "President, LSBSFAA; Author & Journalist",
-    "status": "published",
-    "category": "panelist"
-  },
-  {
-    "id": "pst-adebusola-oguntola",
-    "eventId": "refreshing-2026",
-    "slug": "pst-adebusola-oguntola",
-    "name": "Pst. Mrs. Adebusola Oguntola",
-    "photoUrl": "/ministers/Pst. Mrs. Adebusola Oguntola.jpeg",
-    "biography": "Adebusola Oguntola studied Estate Management at the University of Lagos. She also bagged a Masters degree in Facilities Management from the same institution. She yielded to the call of God upon her life and proceeded to Baptist College of Theology, Lagos where she received ministerial training and thereafter bagged Bachelor's degree in Christian Religious Education.\n\nShe is the Head of Practice at Busola Oguntola Consulting, a real estate firm with passion for facility and property management, valuation of property and assets, project development and other real estate consultancy services.\n\nShe has been involved in Christian leadership since her undergraduate days. Since she gave her life to Christ in 1992, she has remained committed to the Kingdom business. She is mandated to help in raising godly homes. She is also committed to children and youth development through godly strategies.\n\nShe lives in Lagos with her husband, Sunday Oguntola and their three children.",
-    "affiliation": "Head of Practice, Busola Oguntola Consulting",
-    "status": "published",
-    "category": "keynote"
   }
 ]

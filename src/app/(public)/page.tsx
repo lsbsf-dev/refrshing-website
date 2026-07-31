@@ -343,82 +343,68 @@ export default function PublicHomepage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SCENE 4: FEATURED MINISTERS (Clean Warm Ivory background, no image overlay, no glow)
+          SCENE 4: FEATURED MINISTERS (Compact 3-Card Grid with Controlled Sizing)
           ═══════════════════════════════════════ */}
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-7xl mx-auto">
           
-          <div className="mb-20 text-left max-w-3xl">
+          <div className="mb-16 text-left max-w-3xl">
             <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
               THE ORACLES COMMITTED
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#0B0907] uppercase leading-none">
-              FEATURED <br />
-              <span className="text-[#C25627] font-normal font-serif">MINISTERS</span>
+              FEATURED <span className="text-[#C25627] font-normal font-serif">MINISTERS</span>
             </h2>
-            <div className="w-20 h-[1px] bg-[#C25627] mt-6" />
+            <div className="w-20 h-[1px] bg-[#C25627] mt-4" />
           </div>
 
-          {/* Magazine Cover Editorial Layout - Sharp corners */}
-          <div className="flex flex-col gap-28">
-            {ministers.slice(0, 3).map((min, idx) => {
-              const isEven = idx % 2 === 0;
-              return (
-                <div key={min.id} data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                  {/* Photo Frame */}
-                  <Link
-                    href={`/ministers/${min.slug}`}
-                    className={`lg:col-span-6 relative aspect-[3/4] w-full border border-black/10 overflow-hidden shadow-xl bg-white transition-all duration-500 hover:rotate-0 active-press block ${
-                      isEven ? "rotate-[-2deg]" : "rotate-[2deg] lg:order-2"
-                    }`}
-                  >
-                    <Image
-                      src={min.photoUrl || "/pictures/Image 6.jpg"}
-                      alt={min.name}
-                      fill
-                      className="object-cover object-top scale-120 -translate-y-4 transition-transform duration-[1500ms] hover:scale-[1.22]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-                    <div className="absolute bottom-6 left-6 text-left">
-                      <span className="font-sans text-xs font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
-                        {min.affiliation || "SPEAKER"}
-                      </span>
-                      <h3 className="font-serif text-3xl font-normal text-white mt-3 uppercase">
-                        {min.name}
-                      </h3>
-                    </div>
-                  </Link>
-
-                  {/* Biography */}
-                  <div className={`lg:col-span-6 flex flex-col items-start gap-4 text-left ${!isEven ? "lg:order-1" : ""}`}>
-                    <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
-                      {min.affiliation}
+          {/* Compact 3-Column Card Grid - Fits screen height comfortably */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {ministers.slice(0, 3).map((min) => (
+              <Link
+                key={min.id}
+                href={`/ministers/${min.slug}`}
+                className="group flex flex-col bg-white border border-black/10 rounded-2xl overflow-hidden hover:border-[#C25627]/40 hover:shadow-xl transition-all duration-300 active-press"
+              >
+                {/* Photo Frame - Controlled Height */}
+                <div className="relative w-full h-[260px] sm:h-[290px] bg-[#0B0907] overflow-hidden">
+                  <Image
+                    src={min.photoUrl || "/pictures/Image 6.jpg"}
+                    alt={min.name}
+                    fill
+                    className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+                  <div className="absolute bottom-4 left-4 text-left">
+                    <span className="font-sans text-xs font-bold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-2.5 py-1 rounded-full shadow-sm">
+                      {min.category === "music" ? "GOSPEL MUSIC" : "SPEAKER"}
                     </span>
-                    <div className="font-sans text-[#4A4032] text-sm leading-relaxed font-light space-y-3">
-                      {min.biography.split("\n\n").slice(0, 2).map((paragraph, pIdx) => (
-                        <p key={pIdx}>{paragraph}</p>
-                      ))}
-                    </div>
-                    <div className="h-[1px] w-full bg-black/10 my-2" />
-                    <Link
-                      href={`/ministers/${min.slug}`}
-                      className="font-serif text-lg italic text-[#C25627] font-light border-l-2 border-[#C25627]/40 pl-4 hover:text-[#0B0907] transition-colors"
-                    >
-                      &ldquo;View full profile and assigned schedule sessions.&rdquo;
-                    </Link>
                   </div>
                 </div>
-              );
-            })}
+
+                {/* Info */}
+                <div className="flex flex-col gap-2 p-5 flex-1 text-left">
+                  <h3 className="font-serif text-xl font-medium text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
+                    {min.name}
+                  </h3>
+                  <p className="font-sans text-xs text-[#7A7062] font-light leading-relaxed line-clamp-3">
+                    {min.biography}
+                  </p>
+                  <span className="font-sans text-xs font-bold tracking-widest text-[#C25627] uppercase mt-auto pt-3 flex items-center gap-1">
+                    View Profile →
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
 
-          <div data-reveal className="flex justify-center mt-20">
+          <div data-reveal className="flex justify-center mt-12">
             <Link
               href="/ministers"
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
+              className="group inline-flex items-center gap-3 px-8 py-3.5 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-xs tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 rounded-full active-press"
             >
-              <span>EXPLORE ALL SPEAKERS</span>
+              <span>EXPLORE ALL MINISTERS</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </Link>
           </div>

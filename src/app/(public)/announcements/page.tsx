@@ -76,23 +76,23 @@ export default function AnnouncementsPage() {
         </div>
       </section>
 
-      <section className="relative w-full pt-10 pb-28 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
+      <section className="relative w-full py-16 sm:py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-3xl mx-auto w-full">
           {announcements.length === 0 ? (
             <div className="py-24 text-center font-serif text-xl italic text-zinc-400">
               No recent announcements.
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {announcements.map((item) => {
                 const isOpen = openId === item.id;
                 return (
                   <div
                     key={item.id}
-                    className={`border transition-all duration-300 bg-white shadow-xs ${
+                    className={`border rounded-2xl overflow-hidden transition-all duration-300 bg-white shadow-xs ${
                       item.isUrgent 
                         ? "border-red-500/40 hover:border-red-500/60" 
-                        : "border-black/10 hover:border-[#C25627]/30"
+                        : "border-black/10 hover:border-[#C25627]/40"
                     }`}
                   >
                     <button

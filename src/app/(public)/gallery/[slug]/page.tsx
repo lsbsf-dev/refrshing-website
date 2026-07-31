@@ -114,7 +114,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
                 <button
                   key={photo.id}
                   onClick={() => setLightboxImage(photo.url)}
-                  className="break-inside-avoid w-full flex flex-col text-left group border border-black/5 overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/30 relative shadow-md hover:scale-[1.01] active-press cursor-pointer"
+                  className="break-inside-avoid w-full flex flex-col text-left group border border-black/10 rounded-2xl overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/40 relative shadow-md hover:scale-[1.01] active-press cursor-pointer"
                 >
                   <div className="relative w-full overflow-hidden aspect-video">
                     <Image

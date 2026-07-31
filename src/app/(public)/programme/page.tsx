@@ -160,10 +160,10 @@ export default function ProgrammePage() {
               <button
                 key={idx}
                 onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 text-left font-sans py-2.5 px-5 border transition-all duration-300 active-press cursor-pointer ${
+                className={`flex-shrink-0 text-left font-sans py-2.5 px-6 border rounded-full transition-all duration-300 active-press cursor-pointer ${
                   isActive 
-                    ? "border-primary text-[#0B0907] bg-white shadow-sm font-semibold" 
-                    : "border-transparent text-zinc-400 hover:text-zinc-700"
+                    ? "border-[#C25627] text-white bg-[#C25627] shadow-sm font-semibold" 
+                    : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5"
                 }`}
               >
                 <span className="block font-mono text-sm font-bold tracking-widest text-[#C25627] mb-0.5">
@@ -210,7 +210,7 @@ export default function ProgrammePage() {
 
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="font-mono text-sm font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase">
+                      <span className="font-mono text-xs font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase rounded-full">
                         {sess.startTime} - {sess.endTime}
                       </span>
                       <span className="font-sans text-sm text-zinc-400 tracking-wider uppercase font-light">

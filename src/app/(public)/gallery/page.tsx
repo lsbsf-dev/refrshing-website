@@ -82,7 +82,7 @@ export default function GalleryPage() {
                 <Link
                   key={album.id}
                   href={`/gallery/${album.slug}`}
-                  className="group w-full flex flex-col text-left border border-black/10 overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/30 relative shadow-md hover:scale-[1.01] active-press cursor-pointer block"
+                  className="group w-full flex flex-col text-left border border-black/10 rounded-2xl overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/40 relative shadow-md hover:scale-[1.01] active-press cursor-pointer block"
                 >
                   <div className="relative w-full aspect-video overflow-hidden">
                     <Image

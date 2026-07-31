@@ -70,10 +70,17 @@ export default function BookletPage() {
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero ── */}
-      <section className="w-full bg-[#0B0907] text-white flex flex-col justify-end pt-36 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 relative overflow-hidden border-b border-white/5">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/4 w-[500px] h-[350px] bg-[#DDB94E]/8 blur-[120px] rounded-full" />
+      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <Image
+            src="/pictures/Image 3.jpg"
+            alt="Sanctuary background"
+            fill
+            className="object-cover object-center filter grayscale"
+            priority
+          />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
             REFRESHING 2026 — DIGITAL COMPANION
@@ -133,7 +140,7 @@ export default function BookletPage() {
                   <Link
                     key={resource.id}
                     href={`/booklet/${resource.slug}`}
-                    className="group flex flex-col bg-white border border-black/5 hover:border-[#C25627]/30 hover:shadow-md transition-all duration-300 p-6 active-press"
+                    className="group flex flex-col bg-white border border-black/10 rounded-2xl hover:border-[#C25627]/40 hover:shadow-lg transition-all duration-300 p-6 active-press"
                   >
                     {/* Index + category */}
                     <div className="flex items-center justify-between mb-4">

@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   title: "Refreshing 2026 — The Greater Glory",
   description:
     "Lagos State Baptist Student Fellowship 40th Anniversary Conference. August 10–14, 2026 at Baptist Academy, Obanikoro, Lagos.",
+  icons: {
+    icon: "/refreshing-logo.png",
+    shortcut: "/refreshing-logo.png",
+    apple: "/refreshing-logo.png",
+  },
 };
 
 import { QueryProvider } from "@/components/shared/QueryProvider";
