@@ -1,29 +1,35 @@
 [
   {
     "id": "ann-1",
+    "eventId": "refreshing-2026",
     "title": "Refreshing 2026 Registration Open",
     "content": "Hostel allocation and camper registration is now live. All fellowship chapters are requested to submit attendee lists early.",
     "date": "August 1, 2026",
     "category": "General",
     "priority": "high",
-    "status": "published"
+    "status": "published",
+    "publishedAt": "2026-08-01T08:00:00Z"
   },
   {
     "id": "ann-2",
+    "eventId": "refreshing-2026",
     "title": "Ministers & Speakers Lineup Announced",
     "content": "We are honored to unveil our 16 anointed ministers for Refreshing 2026 — Haggai 2:9 Exposition.",
     "date": "August 5, 2026",
     "category": "Program",
     "priority": "medium",
-    "status": "published"
+    "status": "published",
+    "publishedAt": "2026-08-05T08:00:00Z"
   },
   {
     "id": "ann-3",
+    "eventId": "refreshing-2026",
     "title": "Hostel Check-In Protocols for Day 1",
     "content": "Arrival accreditation starts at 8:00 AM on Monday, August 10 at Baptist Academy Obanikoro.",
     "date": "August 8, 2026",
     "category": "Logistics",
     "priority": "urgent",
-    "status": "published"
+    "status": "published",
+    "publishedAt": "2026-08-08T08:00:00Z"
   }
 ]
