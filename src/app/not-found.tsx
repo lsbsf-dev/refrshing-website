@@ -10,7 +10,7 @@ export default function NotFound() {
   return (
     <div className="w-full flex-1 min-h-[70vh] flex flex-col bg-[#FAF6EE] text-[#0B0907] items-center justify-center py-32 px-6">
       <div className="max-w-md text-center flex flex-col items-center gap-6">
-        <span className="font-mono text-[10px] font-bold tracking-[0.35em] text-[#E05320] uppercase animate-hero-item">
+        <span className="font-mono text-sm font-bold tracking-[0.35em] text-[#E05320] uppercase animate-hero-item">
           404 ERROR
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl font-light uppercase text-[#0B0907] leading-none select-none">

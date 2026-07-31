@@ -64,7 +64,7 @@ export default function FAQPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#E05320]/15 rounded-full blur-[140px] pointer-events-none" />
         
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             COMMON INQUIRIES
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">

@@ -46,7 +46,7 @@ export default function ContactPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#6B1D2A]/20 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             REFRESHING ENQUIRY CHANNELS
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
@@ -69,7 +69,7 @@ export default function ContactPage() {
           {/* Left: Contact Channels */}
           <div className="lg:col-span-6 flex flex-col items-start gap-8 text-left w-full">
             <div>
-              <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-2">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-2">
                 MAIN FELLOWSHIP ALIGNMENT
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight leading-none uppercase text-[#0B0907]">
@@ -105,7 +105,7 @@ export default function ContactPage() {
               <h4 className="font-sans text-xs font-bold text-[#0B0907] uppercase tracking-wider mb-2">
                 CONFERENCE VENUE
               </h4>
-              <p className="font-sans text-[#7A7062] text-xs leading-relaxed font-light">
+              <p className="font-sans text-[#7A7062] text-sm leading-relaxed font-light">
                 Baptist Academy Hall, Obanikoro, Ikorodu Road, Lagos, Nigeria.
               </p>
             </div>
@@ -114,7 +114,7 @@ export default function ContactPage() {
           {/* Right: Email Form */}
           <div className="lg:col-span-6 w-full">
             <div className="p-8 md:p-12 border border-black/10 bg-white relative shadow-xl">
-              <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-6 text-left">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-6 text-left">
                 SUBMIT AN ENQUIRY
               </span>
 
@@ -125,7 +125,7 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6 text-left">
                   <div className="flex flex-col gap-2">
-                    <label className="font-sans text-[10px] font-bold text-[#0B0907] tracking-wider uppercase">FULL NAME</label>
+                    <label className="font-sans text-sm font-bold text-[#0B0907] tracking-wider uppercase">FULL NAME</label>
                     <input
                       type="text"
                       required
@@ -138,7 +138,7 @@ export default function ContactPage() {
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <label className="font-sans text-[10px] font-bold text-[#0B0907] tracking-wider uppercase">EMAIL ADDRESS</label>
+                    <label className="font-sans text-sm font-bold text-[#0B0907] tracking-wider uppercase">EMAIL ADDRESS</label>
                     <input
                       type="email"
                       required
@@ -151,7 +151,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="font-sans text-[10px] font-bold text-[#0B0907] tracking-wider uppercase">ENQUIRY DETAILS</label>
+                    <label className="font-sans text-sm font-bold text-[#0B0907] tracking-wider uppercase">ENQUIRY DETAILS</label>
                     <textarea
                       required
                       rows={4}
@@ -172,7 +172,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark disabled:bg-zinc-300 disabled:text-zinc-600 text-white hover:text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer active-press"
+                    className="w-full py-4 bg-[#0B0907] hover:bg-primary-dark disabled:bg-zinc-300 disabled:text-zinc-600 text-white hover:text-[#0B0907] font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 mt-4 text-center cursor-pointer active-press"
                   >
                     {submitting ? "Sending..." : "Send message"}
                   </button>

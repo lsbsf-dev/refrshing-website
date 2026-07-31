@@ -47,7 +47,7 @@ export default function BottomNavigation() {
                 className={`h-5 w-5 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}
                 strokeWidth={isActive ? 2.5 : 1.8}
               />
-              <span className="font-sans text-[9px] font-semibold tracking-wide uppercase">
+              <span className="font-sans text-xs font-semibold tracking-wide uppercase">
                 {label}
               </span>
               {isActive && (

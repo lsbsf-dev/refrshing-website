@@ -120,11 +120,11 @@ export default function SessionSlugPage({
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <Link
             href="/programme"
-            className="flex items-center gap-1 font-sans text-[10px] font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
+            className="flex items-center gap-1 font-sans text-sm font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
           >
             <ChevronLeft className="h-3.5 w-3.5" /> Back to Programme
           </Link>
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             SESSION · {session.day}
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight uppercase leading-none">
@@ -142,7 +142,7 @@ export default function SessionSlugPage({
             <div className="flex items-center gap-3 p-5 border border-black/10 bg-white shadow-xs">
               <Calendar className="h-5 w-5 text-[#C25627]" />
               <div>
-                <span className="block font-mono text-[9px] text-[#C25627] tracking-widest uppercase">
+                <span className="block font-mono text-xs text-[#C25627] tracking-widest uppercase">
                   CONFERENCE DAY
                 </span>
                 <span className="font-sans text-sm font-semibold uppercase">{session.day}</span>
@@ -151,7 +151,7 @@ export default function SessionSlugPage({
             <div className="flex items-center gap-3 p-5 border border-black/10 bg-white shadow-xs">
               <Clock className="h-5 w-5 text-[#C25627]" />
               <div>
-                <span className="block font-mono text-[9px] text-[#C25627] tracking-widest uppercase">
+                <span className="block font-mono text-xs text-[#C25627] tracking-widest uppercase">
                   SESSION TIME
                 </span>
                 <span className="font-sans text-sm font-semibold uppercase">
@@ -162,7 +162,7 @@ export default function SessionSlugPage({
             <div className="flex items-center gap-3 p-5 border border-black/10 bg-white shadow-xs">
               <MapPin className="h-5 w-5 text-[#C25627]" />
               <div>
-                <span className="block font-mono text-[9px] text-[#C25627] tracking-widest uppercase">
+                <span className="block font-mono text-xs text-[#C25627] tracking-widest uppercase">
                   ROOM VENUE
                 </span>
                 <span className="font-sans text-sm font-semibold uppercase">{session.venue}</span>
@@ -201,14 +201,14 @@ export default function SessionSlugPage({
                           >
                             {speaker.name}
                           </Link>
-                          <span className="block font-mono text-[9px] text-zinc-400 tracking-widest uppercase mt-0.5">
+                          <span className="block font-mono text-xs text-zinc-400 tracking-widest uppercase mt-0.5">
                             {speaker.affiliation}
                           </span>
                         </div>
                       </div>
                       <Link
                         href={`/ministers/${speaker.slug}`}
-                        className="font-sans text-[10px] font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] uppercase active-press"
+                        className="font-sans text-sm font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] uppercase active-press"
                       >
                         [ VIEW ]
                       </Link>
@@ -224,7 +224,7 @@ export default function SessionSlugPage({
             <div className="mt-10 flex flex-col gap-4">
               <div className="flex items-center gap-2">
                 <Music className="h-4 w-4 text-[#C25627]" />
-                <span className="font-sans text-[10px] font-bold tracking-widest text-[#C25627] uppercase">
+                <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase">
                   Suggested Hymns & Worship
                 </span>
               </div>
@@ -250,7 +250,7 @@ export default function SessionSlugPage({
             <div className="mt-8 flex flex-col gap-4">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4 text-[#C25627]" />
-                <span className="font-sans text-[10px] font-bold tracking-widest text-[#C25627] uppercase">
+                <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase">
                   Recommended Readings & Devotionals
                 </span>
               </div>

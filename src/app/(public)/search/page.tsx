@@ -91,7 +91,7 @@ export default function SearchPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             CROSS-SITE SEARCH
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
@@ -176,7 +176,7 @@ export default function SearchPage() {
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
                       <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{m.name}</h3>
-                      <span className="font-mono text-[9px] text-[#C25627] tracking-widest block uppercase mt-1">{m.affiliation}</span>
+                      <span className="font-mono text-xs text-[#C25627] tracking-widest block uppercase mt-1">{m.affiliation}</span>
                       <p className="font-sans text-xs text-zinc-500 font-light mt-3 line-clamp-2">{m.biography}</p>
                     </Link>
                   ))}
@@ -196,7 +196,7 @@ export default function SearchPage() {
                     >
                       <div className="flex justify-between items-center">
                         <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{s.title}</h3>
-                        <span className="font-mono text-[9px] text-[#C25627] tracking-widest uppercase bg-[#C25627]/10 px-2 py-0.5">{s.day}</span>
+                        <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase bg-[#C25627]/10 px-2 py-0.5">{s.day}</span>
                       </div>
                       <p className="font-sans text-xs text-zinc-500 font-light mt-2 line-clamp-2">{s.description}</p>
                     </Link>
@@ -215,7 +215,7 @@ export default function SearchPage() {
                       href={`/booklet/${r.slug}`}
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
-                      <span className="font-mono text-[9px] text-[#C25627] tracking-widest block uppercase mb-1">{r.category}</span>
+                      <span className="font-mono text-xs text-[#C25627] tracking-widest block uppercase mb-1">{r.category}</span>
                       <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{r.title}</h3>
                       <p className="font-sans text-xs text-zinc-500 font-light mt-2 line-clamp-2">{r.description}</p>
                     </Link>
@@ -236,7 +236,7 @@ export default function SearchPage() {
                     >
                       <div className="flex justify-between items-center">
                         <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{a.title}</h3>
-                        <span className="font-mono text-[9px] text-zinc-400 tracking-widest uppercase bg-black/5 px-2 py-0.5">{a.category}</span>
+                        <span className="font-mono text-xs text-zinc-400 tracking-widest uppercase bg-black/5 px-2 py-0.5">{a.category}</span>
                       </div>
                       <p className="font-sans text-xs text-zinc-500 font-light mt-2 line-clamp-2">{a.content}</p>
                     </Link>

@@ -45,12 +45,12 @@ export default function SeedPage() {
         <h1 className="text-2xl font-bold mb-1 text-center text-indigo-400">
           Database Seeder
         </h1>
-        <p className="text-[11px] text-slate-400 text-center mb-6 uppercase tracking-wider">
+        <p className="text-sm text-slate-400 text-center mb-6 uppercase tracking-wider">
           Privileged Server-Side Seeding
         </p>
 
         {/* Config Status */}
-        <div className="mb-5 p-4 bg-slate-900/60 border border-slate-700 rounded text-[10px] space-y-2">
+        <div className="mb-5 p-4 bg-slate-900/60 border border-slate-700 rounded text-sm space-y-2">
           {Object.entries(keys).map(([key, val]) => (
             <div key={key} className="flex justify-between gap-4">
               <span className="text-slate-400 truncate">{key.replace("NEXT_PUBLIC_FIREBASE_", "")}:</span>
@@ -62,7 +62,7 @@ export default function SeedPage() {
         </div>
 
         {missingKeys.length > 0 && (
-          <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400 text-[10px] leading-relaxed">
+          <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400 text-sm leading-relaxed">
             <strong>⚠️ Missing Keys:</strong> Add real Firebase credentials to{" "}
             <code>.env.local</code> and restart the server before seeding.
           </div>

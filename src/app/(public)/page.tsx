@@ -185,7 +185,7 @@ export default function PublicHomepage() {
         {/* Hero Content - Clean Display Typography (Staggered load sequences) */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-16 flex-1 flex flex-col justify-center items-start gap-4">
           
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             LAGOS STATE BAPTIST STUDENT FELLOWSHIP PRESENTS
           </span>
 
@@ -204,7 +204,7 @@ export default function PublicHomepage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 mt-1 font-mono text-[9px] tracking-widest text-[#DDB94E] uppercase animate-hero-item delay-400">
+          <div className="flex flex-wrap items-center gap-3 mt-1 font-mono text-xs tracking-widest text-[#DDB94E] uppercase animate-hero-item delay-400">
             <span>AUGUST 10–14, 2026</span>
             <span>·</span>
             <span>BAPTIST ACADEMY, OBANIKORO, LAGOS</span>
@@ -221,7 +221,7 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div data-reveal className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
-            <span className="font-sans text-[10px] font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
+            <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
               THE 40TH ANNIVERSARY REVIVAL
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl md:text-7xl font-light tracking-tight text-white leading-tight uppercase">
@@ -237,14 +237,14 @@ export default function PublicHomepage() {
           <div data-reveal className="lg:col-span-5 relative flex justify-center">
             {/* Elegant scripture card - open typography framed with lines */}
             <div className="w-full max-w-md py-6 border-y border-[#DDB94E]/25 relative text-left">
-              <span className="font-mono text-[9px] font-bold tracking-[0.2em] text-[#C25627] uppercase block mb-3">
+              <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#C25627] uppercase block mb-3">
                 HAGGAI 2:9
               </span>
               <p className="font-serif text-lg md:text-xl italic font-light text-white/95 leading-relaxed">
                 &ldquo;The glory of this present house will be greater than the glory of the former house, and in this place I will grant peace, says the Lord Almighty.&rdquo;
               </p>
               <div className="mt-4">
-                <span className="font-sans text-[9px] font-bold tracking-widest text-[#FFD6C4] uppercase block">
+                <span className="font-sans text-xs font-bold tracking-widest text-[#FFD6C4] uppercase block">
                   ISAIAH 52:1 · ARISE & PUT ON STRENGTH
                 </span>
               </div>
@@ -310,7 +310,7 @@ export default function PublicHomepage() {
 
             {/* Right: Editorial Narrative */}
             <div data-reveal className="lg:col-span-5 flex flex-col items-start gap-6 text-left">
-              <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
                 40 YEARS OF AN ENCOUNTER
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] uppercase">
@@ -323,7 +323,7 @@ export default function PublicHomepage() {
               </p>
               <Link
                 href="/about"
-                className="group inline-flex items-center gap-2 font-sans text-[11px] font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2 active-press"
+                className="group inline-flex items-center gap-2 font-sans text-sm font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2 active-press"
               >
                 <span className="border-b border-[#DDB94E] group-hover:border-white pb-0.5">
                   THE MOVEMENT HISTORY
@@ -344,7 +344,7 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto">
           
           <div className="mb-20 text-left max-w-3xl">
-            <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
+            <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
               THE ORACLES COMMITTED
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#0B0907] uppercase leading-none">
@@ -375,7 +375,7 @@ export default function PublicHomepage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
                     <div className="absolute bottom-6 left-6 text-left">
-                      <span className="font-sans text-[9px] font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
+                      <span className="font-sans text-xs font-extrabold tracking-widest text-[#FAF6EE] uppercase bg-[#C25627] px-3 py-1">
                         {min.affiliation || "SPEAKER"}
                       </span>
                       <h3 className="font-serif text-3xl font-normal text-white mt-3 uppercase">
@@ -386,7 +386,7 @@ export default function PublicHomepage() {
 
                   {/* Biography */}
                   <div className={`lg:col-span-6 flex flex-col items-start gap-4 text-left ${!isEven ? "lg:order-1" : ""}`}>
-                    <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
+                    <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
                       {min.affiliation}
                     </span>
                     <div className="font-sans text-[#4A4032] text-sm leading-relaxed font-light space-y-3">
@@ -410,7 +410,7 @@ export default function PublicHomepage() {
           <div data-reveal className="flex justify-center mt-20">
             <Link
               href="/ministers"
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
+              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
             >
               <span>EXPLORE ALL SPEAKERS</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -428,7 +428,7 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
           <div data-reveal className="lg:col-span-5 flex flex-col items-start gap-6 text-left">
-            <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase">
+            <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase">
               FIVE DAYS IN HIS SANCTUARY
             </span>
             <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#0B0907] uppercase leading-none">
@@ -446,7 +446,7 @@ export default function PublicHomepage() {
 
             <Link
               href="/programme"
-              className="group inline-flex items-center gap-2 font-sans text-[12px] font-extrabold tracking-wider text-[#C25627] hover:text-[#0B0907] transition-all duration-300 mt-4 active-press"
+              className="group inline-flex items-center gap-2 font-sans text-sm font-extrabold tracking-wider text-[#C25627] hover:text-[#0B0907] transition-all duration-300 mt-4 active-press"
             >
               <span className="border-b border-[#C25627] group-hover:border-black pb-0.5">
                 VIEW PROGRAMME DETAILS
@@ -473,7 +473,7 @@ export default function PublicHomepage() {
                   <h3 className="font-serif text-xl font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300 uppercase">
                     {item.label} · {item.title}
                   </h3>
-                  <p className="font-sans text-[#7A7062] text-xs font-light mt-2 leading-relaxed">
+                  <p className="font-sans text-[#7A7062] text-sm font-light mt-2 leading-relaxed">
                     {item.summary}
                   </p>
                 </div>
@@ -492,7 +492,7 @@ export default function PublicHomepage() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 flex flex-col items-start text-left">
           
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase mb-4">
+          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase mb-4">
             ENCOUNTER CHRONICLES
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl font-light text-white uppercase tracking-tight mb-16">
@@ -511,7 +511,7 @@ export default function PublicHomepage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
               <div className="absolute bottom-6 left-6 text-left max-w-md">
-                <span className="font-mono text-[9px] text-[#DDB94E] tracking-widest uppercase">CONCENTRATED FIRE</span>
+                <span className="font-mono text-xs text-[#DDB94E] tracking-widest uppercase">CONCENTRATED FIRE</span>
                 <p className="font-serif text-lg italic text-white/90 font-light mt-1">
                   &ldquo;Deep worship moments fanning revival flames.&rdquo;
                 </p>
@@ -527,7 +527,7 @@ export default function PublicHomepage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
               <div className="absolute bottom-6 left-6 text-left">
-                <span className="font-mono text-[9px] text-[#DDB94E] tracking-widest uppercase">CORPORATE ENCOUNTER</span>
+                <span className="font-mono text-xs text-[#DDB94E] tracking-widest uppercase">CORPORATE ENCOUNTER</span>
                 <p className="font-serif text-base italic text-white/90 font-light mt-1">
                   Over thousands in fellowship lines of praise.
                 </p>
@@ -546,7 +546,7 @@ export default function PublicHomepage() {
         
         <div className="relative z-10 max-w-7xl mx-auto text-center flex flex-col items-center">
           
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase mb-4">
+          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase mb-4">
             IMAGING THE ENCOUNTER
           </span>
           <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#0B0907] uppercase leading-none mb-16">
@@ -601,7 +601,7 @@ export default function PublicHomepage() {
           <div data-reveal className="mt-16">
             <Link
               href="/gallery"
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-[11px] tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
+              className="group inline-flex items-center gap-3 px-8 py-4 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 active-press"
             >
               <span>ACCESS THE FULL GALLERY</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -620,7 +620,7 @@ export default function PublicHomepage() {
             
             {/* Left: Narrative */}
             <div data-reveal className="lg:col-span-5 flex flex-col items-start gap-6 text-left">
-              <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
                 COVENANT CONNECTION
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight text-[#0B0907] uppercase leading-none">
@@ -644,7 +644,7 @@ export default function PublicHomepage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-3 left-3 bg-[#C25627] text-white font-mono text-[8px] font-bold px-2.5 py-1 uppercase z-10">
+                <div className="absolute bottom-3 left-3 bg-[#C25627] text-white font-mono text-sm font-bold px-2.5 py-1 uppercase z-10">
                   FELLOWSHIP JOURNEY
                 </div>
               </div>
@@ -657,7 +657,7 @@ export default function PublicHomepage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-3 right-3 bg-primary text-black font-mono text-[8px] font-bold px-2.5 py-1 uppercase z-10">
+                <div className="absolute bottom-3 right-3 bg-primary text-black font-mono text-sm font-bold px-2.5 py-1 uppercase z-10">
                   COVENANT STICKER
                 </div>
               </div>
@@ -675,7 +675,7 @@ export default function PublicHomepage() {
         
         <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
           
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
+          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
             TESTIMONIALS
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl font-light text-[#0B0907] uppercase leading-none mb-16">
@@ -696,7 +696,7 @@ export default function PublicHomepage() {
                   <h4 className="font-sans text-xs font-bold text-[#C25627] uppercase">
                     {test.name}
                   </h4>
-                  <span className="font-sans text-[10px] text-zinc-500 tracking-wider uppercase mt-0.5 block">
+                  <span className="font-sans text-sm text-zinc-500 tracking-wider uppercase mt-0.5 block">
                     {test.role}
                   </span>
                 </div>
@@ -718,14 +718,14 @@ export default function PublicHomepage() {
           <div data-reveal className="w-full border border-dashed border-[#DDB94E]/40 bg-[#15130F] text-white p-8 sm:p-12 md:p-16 flex flex-col items-center gap-6 text-center shadow-2xl relative rounded-3xl active-press">
             
             {/* Stamps */}
-            <span className="absolute top-4 left-6 font-mono text-[8px] text-white/20 uppercase tracking-widest hidden sm:block">
+            <span className="absolute top-4 left-6 font-mono text-sm text-white/20 uppercase tracking-widest hidden sm:block">
               LSBSF CAMPUS DEP
             </span>
-            <span className="absolute top-4 right-6 font-mono text-[8px] text-[#DDB94E]/40 uppercase tracking-widest hidden sm:block">
+            <span className="absolute top-4 right-6 font-mono text-sm text-[#DDB94E]/40 uppercase tracking-widest hidden sm:block">
               EDITION // 40
             </span>
 
-            <span className="font-sans text-[10px] font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
+            <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
               CAMP REGISTRATION VOUCHER
             </span>
 
@@ -744,13 +744,13 @@ export default function PublicHomepage() {
                 href={REGISTRATION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full sm:w-auto px-12 py-5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 text-center active-press"
+                className="inline-block w-full sm:w-auto px-12 py-5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 text-center active-press"
               >
                 Register for the Program
               </a>
             </div>
 
-            <span className="font-sans text-[9px] text-[#FFD6C4]/40 tracking-widest uppercase block mt-4">
+            <span className="font-sans text-xs text-[#FFD6C4]/40 tracking-widest uppercase block mt-4">
               * SECURE ENTRY FOR WORKSHOPS & HOSTEL ALLOCATIONS
             </span>
 
@@ -766,14 +766,14 @@ export default function PublicHomepage() {
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 text-left">
           
           <div className="max-w-md">
-            <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-2">
+            <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-2">
               FELLOWSHIP HUBS
             </span>
             <h3 className="font-serif text-2xl sm:text-3xl font-light text-[#0B0907] uppercase tracking-tight">
               LAGOS STATE BSF <br />
               <span className="font-serif italic font-extralight text-[#C25627]">Chapters</span>
             </h3>
-            <p className="font-sans text-zinc-600 text-xs leading-relaxed font-light mt-3">
+            <p className="font-sans text-zinc-600 text-sm leading-relaxed font-light mt-3">
               Coordinating campus student chapters across Lagos State associations. Connect with fellowship leaders for transportation and logistics.
             </p>
           </div>
@@ -787,7 +787,7 @@ export default function PublicHomepage() {
                 <h4 className="font-sans text-xs font-bold text-[#0B0907] uppercase tracking-wider">
                   {chap.name}
                 </h4>
-                <p className="font-sans text-zinc-500 text-[11px] leading-relaxed font-light mt-4">
+                <p className="font-sans text-zinc-500 text-sm leading-relaxed font-light mt-4">
                   {chap.description}
                 </p>
               </div>

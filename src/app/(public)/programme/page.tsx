@@ -139,7 +139,7 @@ export default function ProgrammePage() {
         <div className="absolute top-1/2 left-1/3 w-[600px] h-[400px] bg-[#6B1D2A]/20 rounded-full blur-[160px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             FIVE DAYS IN HIS SANCTUARY
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
@@ -166,7 +166,7 @@ export default function ProgrammePage() {
                     : "border-transparent text-zinc-400 hover:text-zinc-700"
                 }`}
               >
-                <span className="block font-mono text-[10px] font-bold tracking-widest text-[#C25627] mb-0.5">
+                <span className="block font-mono text-sm font-bold tracking-widest text-[#C25627] mb-0.5">
                   {d.label}
                 </span>
                 <span className="block text-sm font-semibold uppercase tracking-wider">
@@ -210,10 +210,10 @@ export default function ProgrammePage() {
 
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase">
+                      <span className="font-mono text-sm font-extrabold tracking-widest text-[#C25627] bg-[#C25627]/10 border border-[#C25627]/20 px-3 py-1 uppercase">
                         {sess.startTime} - {sess.endTime}
                       </span>
-                      <span className="font-sans text-[10px] text-zinc-400 tracking-wider uppercase font-light">
+                      <span className="font-sans text-sm text-zinc-400 tracking-wider uppercase font-light">
                         {sess.venue}
                       </span>
                     </div>
@@ -222,11 +222,11 @@ export default function ProgrammePage() {
                       {sess.title}
                     </h3>
 
-                    <p className="font-sans text-zinc-600 text-xs sm:text-sm font-light leading-relaxed max-w-2xl mt-1">
+                    <p className="font-sans text-zinc-600 text-sm sm:text-base font-light leading-relaxed max-w-2xl mt-1">
                       {sess.description}
                     </p>
                     
-                    <span className="font-sans text-[9px] font-bold tracking-widest text-[#0B0907] group-hover:text-[#C25627] uppercase mt-1 block">
+                    <span className="font-sans text-xs font-bold tracking-widest text-[#0B0907] group-hover:text-[#C25627] uppercase mt-1 block">
                       [ VIEW DETAILS ]
                     </span>
                   </div>
@@ -239,7 +239,7 @@ export default function ProgrammePage() {
 
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
-          <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             SECURE YOUR REGISTRATION NOW
           </span>
           <h2 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none">
@@ -252,7 +252,7 @@ export default function ProgrammePage() {
             href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-4 active-press"
+            className="px-10 py-4 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 mt-4 active-press"
           >
             Register for the Program
           </a>

@@ -75,7 +75,7 @@ export default function BookletPage() {
           <div className="absolute top-1/2 left-1/4 w-[500px] h-[350px] bg-[#DDB94E]/8 blur-[120px] rounded-full" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto w-full">
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
+          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
             REFRESHING 2026 — DIGITAL COMPANION
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl font-light text-white uppercase leading-none mb-6">
@@ -104,7 +104,7 @@ export default function BookletPage() {
               <button
                 key={id}
                 onClick={() => setActiveFilter(id)}
-                className={`flex-shrink-0 font-sans text-[10px] font-bold tracking-wider uppercase py-2 px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
+                className={`flex-shrink-0 font-sans text-sm font-bold tracking-wider uppercase py-2 px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
                   activeFilter === id
                     ? "border-[#C25627] text-[#C25627]"
                     : "border-transparent text-[#7A7062] hover:text-[#0B0907]"
@@ -137,10 +137,10 @@ export default function BookletPage() {
                   >
                     {/* Index + category */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-[9px] text-[#C25627] tracking-widest uppercase font-bold bg-[#C25627]/8 px-2 py-1">
+                      <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase font-bold bg-[#C25627]/8 px-2 py-1">
                         {resource.category}
                       </span>
-                      <span className="font-mono text-[10px] text-[#7A7062] opacity-40">
+                      <span className="font-mono text-sm text-[#7A7062] opacity-40">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
                     </div>
@@ -154,13 +154,13 @@ export default function BookletPage() {
                     </div>
 
                     {/* Author */}
-                    <p className="font-sans text-[10px] text-[#7A7062] font-light mt-auto">
+                    <p className="font-sans text-sm text-[#7A7062] font-light mt-auto">
                       {resource.author}
                     </p>
 
                     {/* CTA */}
                     <div className="flex items-center gap-1 mt-4 pt-4 border-t border-black/5">
-                      <span className="font-sans text-[9px] font-bold tracking-widest text-[#C25627] uppercase group-hover:gap-2 transition-all">
+                      <span className="font-sans text-xs font-bold tracking-widest text-[#C25627] uppercase group-hover:gap-2 transition-all">
                         READ
                       </span>
                       <ChevronRight className="h-3 w-3 text-[#C25627] group-hover:translate-x-1 transition-transform duration-200" />
@@ -176,7 +176,7 @@ export default function BookletPage() {
       {/* ── CTA ── */}
       <section className="relative w-full py-20 px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden border-t border-white/5 mt-auto">
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
-          <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             JOIN THE REFRESHING
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl font-light text-white uppercase leading-none">
@@ -186,7 +186,7 @@ export default function BookletPage() {
             href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-10 py-4 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-[12px] tracking-widest uppercase transition-all duration-300 mt-2 active-press"
+            className="px-10 py-4 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-sm tracking-widest uppercase transition-all duration-300 mt-2 active-press"
           >
             Register for the Programme
           </a>

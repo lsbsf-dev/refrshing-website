@@ -95,7 +95,7 @@ export default function MinisterSlugPage({
             <ChevronLeft className="h-3.5 w-3.5" />
             Back to Ministers
           </Link>
-          <span className="font-sans text-[9px] font-bold tracking-widest text-[#DDB94E] uppercase block mb-2">
+          <span className="font-sans text-xs font-bold tracking-widest text-[#DDB94E] uppercase block mb-2">
             {minister.category === "music"
               ? "GOSPEL MUSIC"
               : minister.category === "panelist"
@@ -136,7 +136,7 @@ export default function MinisterSlugPage({
           {/* Bio */}
           <div className="lg:col-span-8 flex flex-col gap-6">
             <div className="flex flex-col gap-1">
-              <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+              <span className="font-sans text-sm text-[#C25627] tracking-widest uppercase font-bold">
                 Affiliation
               </span>
               <p className="font-sans text-sm text-[#0B0907] font-medium">
@@ -145,7 +145,7 @@ export default function MinisterSlugPage({
             </div>
 
             <div className="flex flex-col gap-3">
-              <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+              <span className="font-sans text-sm text-[#C25627] tracking-widest uppercase font-bold">
                 Biography
               </span>
               <p className="font-sans text-sm text-[#3D3530] leading-relaxed font-light whitespace-pre-line">
@@ -156,7 +156,7 @@ export default function MinisterSlugPage({
             {/* Sessions */}
             {sessions.length > 0 && (
               <div className="flex flex-col gap-4 pt-6 border-t border-black/5">
-                <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                <span className="font-sans text-sm text-[#C25627] tracking-widest uppercase font-bold">
                   Assigned Sessions
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -166,13 +166,13 @@ export default function MinisterSlugPage({
                       href={`/programme/${session.slug}`}
                       className="group flex flex-col gap-1.5 p-4 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 active-press"
                     >
-                      <span className="font-mono text-[9px] text-[#C25627] tracking-widest uppercase">
+                      <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase">
                         {session.day}
                       </span>
                       <h3 className="font-serif text-sm font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
                         {session.title}
                       </h3>
-                      <div className="flex items-center gap-3 font-sans text-[10px] text-[#7A7062]">
+                      <div className="flex items-center gap-3 font-sans text-sm text-[#7A7062]">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {session.startTime} – {session.endTime}
@@ -193,7 +193,7 @@ export default function MinisterSlugPage({
             {/* Related Resources/Articles */}
             {relatedResources.length > 0 && (
               <div className="flex flex-col gap-4 pt-6 border-t border-black/5">
-                <span className="font-sans text-[10px] text-[#C25627] tracking-widest uppercase font-bold">
+                <span className="font-sans text-sm text-[#C25627] tracking-widest uppercase font-bold">
                   Published Articles & Study Materials
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -208,7 +208,7 @@ export default function MinisterSlugPage({
                         <p className="font-serif text-sm text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
                           {r.title}
                         </p>
-                        <span className="font-mono text-[9px] text-[#7A7062] tracking-widest uppercase">
+                        <span className="font-mono text-sm text-[#7A7062] tracking-widest uppercase">
                           {r.category}
                         </span>
                       </div>

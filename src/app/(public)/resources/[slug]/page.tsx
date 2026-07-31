@@ -71,11 +71,11 @@ export default function ResourceSlugPage({ params }: { params: Promise<{ slug: s
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <Link 
             href="/resources"
-            className="flex items-center gap-1 font-sans text-[10px] font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
+            className="flex items-center gap-1 font-sans text-sm font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
           >
             <ChevronLeft className="h-3.5 w-3.5" /> Back to Library
           </Link>
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             {resource.category}
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight uppercase select-none leading-none">
@@ -87,7 +87,7 @@ export default function ResourceSlugPage({ params }: { params: Promise<{ slug: s
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907]">
         <div className="relative z-10 max-w-3xl mx-auto">
           
-          <div className="flex flex-wrap items-center gap-6 border-b border-black/5 pb-8 mb-10 text-[#7A7062] font-mono text-[10px] tracking-wider uppercase font-semibold">
+          <div className="flex flex-wrap items-center gap-6 border-b border-black/5 pb-8 mb-10 text-[#7A7062] font-mono text-sm tracking-wider uppercase font-semibold">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-[#C25627]" />
               <span>BY {resource.author}</span>

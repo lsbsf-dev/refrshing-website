@@ -102,7 +102,7 @@ export function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`font-sans text-[15px] font-medium tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
+                className={`font-sans text-base font-medium tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
               >
                 {link.label}
               </Link>
@@ -116,7 +116,7 @@ export function Header() {
           <div className="relative" onMouseLeave={() => setEditionDropdownOpen(false)}>
             <button
               onClick={() => setEditionDropdownOpen(!editionDropdownOpen)}
-              className={`flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 border transition-all rounded-lg active-press ${switcherBorderClass}`}
+              className={`flex items-center gap-1 font-sans text-sm font-semibold px-3 py-1.5 border transition-all rounded-lg active-press ${switcherBorderClass}`}
             >
               <span>2026</span>
               <ChevronDown className="h-3 w-3" />
@@ -148,7 +148,7 @@ export function Header() {
             href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-xs font-semibold px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"
+            className="font-sans text-sm font-semibold px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press"
           >
             Register
           </a>
@@ -179,7 +179,7 @@ export function Header() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`font-sans text-lg font-semibold border-b border-white/10 pb-2 active-press ${isActive ? "text-[#DDB94E]" : "text-white/80"}`}
+                  className={`font-sans text-xl font-semibold border-b border-white/10 pb-2 active-press ${isActive ? "text-[#DDB94E]" : "text-white/80"}`}
                 >
                   {link.label}
                 </Link>

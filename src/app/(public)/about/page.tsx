@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#E05320]/15 rounded-full blur-[120px] pointer-events-none" />
         
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             REFRESHING HISTORICAL ARCHIVES
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
@@ -56,7 +56,7 @@ export default function AboutPage() {
                   className="object-cover filter sepia-[0.4] brightness-[0.88] contrast-[1.05]"
                 />
               </div>
-              <div className="absolute bottom-6 left-6 bg-[#0B0907] text-[#FAF6EE] font-mono text-[9px] font-bold px-3 py-1 uppercase rounded-sm">
+              <div className="absolute bottom-6 left-6 bg-[#0B0907] text-[#FAF6EE] font-mono text-xs font-bold px-3 py-1 uppercase rounded-sm">
                 LAGOS STATE BSF FOUNDING MOMENT · 1986
               </div>
             </div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
 
           {/* Right: History narrative */}
           <div className="lg:col-span-6 flex flex-col items-start gap-6 text-left text-[#0B0907]">
-            <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#E05320] uppercase">
+            <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#E05320] uppercase">
               OUR SPARK
             </span>
             <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight leading-none uppercase text-[#0B0907]">
@@ -93,7 +93,7 @@ export default function AboutPage() {
         
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center">
           
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#E05320] uppercase block mb-3">
+          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#E05320] uppercase block mb-3">
             WHAT DEFINES LSBSF
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl font-light tracking-tight text-[#0B0907] uppercase leading-none mb-16 text-center">
@@ -113,7 +113,7 @@ export default function AboutPage() {
                   <h4 className="font-serif text-xl font-normal text-[#0B0907] uppercase mb-3">
                     {pil.title}
                   </h4>
-                  <p className="font-sans text-zinc-600 text-xs leading-relaxed font-light">
+                  <p className="font-sans text-zinc-600 text-sm leading-relaxed font-light">
                     {pil.description}
                   </p>
                 </div>
@@ -130,7 +130,7 @@ export default function AboutPage() {
       <section className="relative w-full py-24 px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
-          <span className="font-sans text-[10px] font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             STAY CONNECTED TO THE REVIVAL
           </span>
           <h2 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none">
@@ -142,7 +142,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap gap-4 justify-center mt-4">
             <Link
               href="/programme"
-              className="px-6 py-3 border border-white/20 hover:border-white/40 text-white font-sans font-semibold text-[11px] tracking-wider uppercase bg-white/5 hover:bg-white/10 transition-all duration-300 active-press"
+              className="px-6 py-3 border border-white/20 hover:border-white/40 text-white font-sans font-semibold text-sm tracking-wider uppercase bg-white/5 hover:bg-white/10 transition-all duration-300 active-press"
             >
               Explore Schedule
             </Link>
@@ -150,7 +150,7 @@ export default function AboutPage() {
               href={REGISTRATION_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-[11px] tracking-wider uppercase transition-all duration-300 active-press"
+              className="px-8 py-3.5 bg-primary hover:bg-primary-light text-[#0B0907] font-sans font-bold text-sm tracking-wider uppercase transition-all duration-300 active-press"
             >
               Register for the Program
             </a>

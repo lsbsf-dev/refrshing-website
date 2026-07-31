@@ -22,7 +22,7 @@ export default function ResourceError({
   return (
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] items-center justify-center py-32 px-6">
       <div className="max-w-md text-center flex flex-col items-center gap-6">
-        <span className="font-mono text-[10px] font-bold tracking-[0.3em] text-[#E05320] uppercase">
+        <span className="font-mono text-sm font-bold tracking-[0.3em] text-[#E05320] uppercase">
           ARTICLE EXCEPTION
         </span>
         <h1 className="font-serif text-3xl md:text-4xl font-light uppercase text-[#0B0907]">

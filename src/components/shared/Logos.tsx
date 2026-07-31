@@ -84,7 +84,7 @@ export function LSBSFLogo({ className = "h-12 w-auto" }: { className?: string })
         <span className="font-sans font-bold text-xs tracking-wide leading-none text-foreground">
           LSBSF
         </span>
-        <span className="font-sans text-[9px] text-foreground-muted leading-tight">
+        <span className="font-sans text-xs text-foreground-muted leading-tight">
           Lagos State Baptist<br />Student Fellowship
         </span>
       </div>

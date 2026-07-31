@@ -54,7 +54,7 @@ export function Footer() {
 
         {/* Column 2: Explore links */}
         <div className="flex flex-col gap-4">
-          <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">EXPLORE</span>
+          <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">EXPLORE</span>
           <div className="flex flex-col gap-2.5 font-sans text-xs">
             <Link href="/about" className="hover:text-primary text-zinc-300 transition-colors active-press">About Refreshing</Link>
             <Link href="/programme" className="hover:text-primary text-zinc-300 transition-colors active-press">Daily Programme</Link>
@@ -67,7 +67,7 @@ export function Footer() {
 
         {/* Column 3: Information Links */}
         <div className="flex flex-col gap-4">
-          <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">INFORMATION</span>
+          <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">INFORMATION</span>
           <div className="flex flex-col gap-2.5 font-sans text-xs">
             <Link href="/faq" className="hover:text-primary text-zinc-300 transition-colors active-press">Frequently Asked Questions</Link>
             <Link href="/contact" className="hover:text-primary text-zinc-300 transition-colors active-press">Venue & Directions</Link>
@@ -77,7 +77,7 @@ export function Footer() {
 
         {/* Column 4: Organized By Seal details - BSF Seal enlarged considerably */}
         <div className="flex flex-col gap-4">
-          <span className="font-sans text-[11px] font-bold tracking-widest text-[#DDB94E] uppercase">ORGANIZED BY</span>
+          <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">ORGANIZED BY</span>
           <div className="flex flex-col gap-4 items-start">
             {/* BSF logo backing plate - scaled up significantly to stand out confidently */}
             <div className="relative h-28 w-28 sm:h-32 sm:w-32 bg-white p-3.5 rounded-lg flex items-center justify-center shadow-lg hover:scale-[1.02] transition-transform duration-300">
@@ -91,7 +91,7 @@ export function Footer() {
                 />
               </div>
             </div>
-            <p className="font-sans text-[10px] text-zinc-400 leading-relaxed">
+            <p className="font-sans text-sm text-zinc-400 leading-relaxed">
               A program of Lagos State Baptist Student Fellowship, coordinating Lagos East, Lagos West, and Lagos Central chapters.
             </p>
           </div>
@@ -99,7 +99,7 @@ export function Footer() {
       </div>
  
       {/* Bottom bar */}
-      <div className="mx-auto w-full max-w-7xl px-6 border-t border-white/10 mt-16 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 font-sans text-[11px] text-zinc-400">
+      <div className="mx-auto w-full max-w-7xl px-6 border-t border-white/10 mt-16 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 font-sans text-sm text-zinc-400">
         <span>
           Copyright (c) {currentYear} LSBSF. All rights reserved.
         </span>

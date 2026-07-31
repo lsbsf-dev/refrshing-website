@@ -63,7 +63,7 @@ export default function AnnouncementsPage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#E05320]/15 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
-          <span className="font-sans text-[10px] font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
+          <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             EVENT BROADCASTS
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
@@ -101,14 +101,14 @@ export default function AnnouncementsPage() {
                     >
                       <div className="flex flex-col gap-1.5 pr-4">
                         <div className="flex flex-wrap items-center gap-3">
-                          <span className={`font-mono text-[9px] font-bold tracking-widest px-2.5 py-0.5 uppercase ${
+                          <span className={`font-mono text-xs font-bold tracking-widest px-2.5 py-0.5 uppercase ${
                             item.isUrgent 
                               ? "bg-red-500/10 text-red-600 border border-red-500/20" 
                               : "bg-[#C25627]/10 text-[#C25627] border border-[#C25627]/20"
                           }`}>
                             {item.category}
                           </span>
-                          <span className="font-sans text-[10px] text-zinc-400 font-light tracking-wide flex items-center gap-1">
+                          <span className="font-sans text-sm text-zinc-400 font-light tracking-wide flex items-center gap-1">
                             <Calendar className="h-3 w-3 text-zinc-400" /> {new Date(item.publishedAt).toLocaleDateString()}
                           </span>
                         </div>
