@@ -208,9 +208,9 @@ export default function SessionSlugPage({
                       </div>
                       <Link
                         href={`/ministers/${speaker.slug}`}
-                        className="font-sans text-sm font-bold tracking-widest text-[#0B0907] hover:text-[#C25627] uppercase active-press"
+                        className="font-sans text-xs font-bold tracking-widest text-[#C25627] hover:text-[#0B0907] uppercase active-press"
                       >
-                        [ VIEW ]
+                        View Profile →
                       </Link>
                     </div>
                   ))}

@@ -93,12 +93,12 @@ export default function MinistersPage() {
       </section>
 
       {/* ── Filter Tabs ── */}
-      <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16">
+      <section className="w-full bg-white border-b border-black/10 sticky top-24 lg:top-28 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 py-4">
           <div
             role="tablist"
             aria-label="Speaker categories"
-            className="flex items-center gap-2 py-2 overflow-x-auto scrollbar-hide"
+            className="flex items-center gap-3 overflow-x-auto scrollbar-hide"
           >
             {tabsConfig.map((tab) => (
               <button
@@ -106,9 +106,9 @@ export default function MinistersPage() {
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-shrink-0 font-sans text-xs font-semibold tracking-wider uppercase py-3 px-5 rounded-full transition-all duration-200 active-press cursor-pointer ${
+                className={`flex-shrink-0 font-sans text-xs font-semibold tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 active-press cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-[#C25627] text-white shadow-sm"
+                    ? "bg-[#C25627] text-white shadow-md font-bold"
                     : "bg-black/5 text-[#7A7062] hover:text-[#0B0907] hover:bg-black/10"
                 }`}
               >

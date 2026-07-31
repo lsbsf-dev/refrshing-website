@@ -108,8 +108,8 @@ export default function GalleryPage() {
                         {album.description}
                       </p>
                     </div>
-                    <span className="font-sans text-sm font-bold tracking-widest text-[#0B0907] group-hover:text-[#C25627] transition-colors uppercase mt-6 block">
-                      [ OPEN ALBUM ]
+                    <span className="font-sans text-xs font-bold tracking-widest text-[#C25627] group-hover:text-[#0B0907] transition-colors uppercase mt-6 flex items-center gap-1">
+                      Open Album →
                     </span>
                   </div>
                 </Link>

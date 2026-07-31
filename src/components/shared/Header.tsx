@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -11,6 +11,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -20,9 +21,23 @@ export function Header() {
       } else {
         setIsScrolled(false);
       }
+      // Close dropdown on scroll
+      setMoreDropdownOpen(false);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setMoreDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -55,32 +70,32 @@ export function Header() {
 
   const isMenuVisualDark = mobileMenuOpen || !isScrolled;
 
-  const headerHeightClass = "h-20 lg:h-24";
+  const headerHeightClass = "h-24 lg:h-28";
   const headerBackgroundClass = mobileMenuOpen
     ? "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent"
     : isScrolled
-      ? "fixed top-0 left-0 right-0 z-50 w-full bg-white/95 border-b border-black/5 backdrop-blur-md shadow-sm"
-      : "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent";
+      ? "fixed top-0 left-0 right-0 z-50 w-full bg-white/95 border-b border-black/10 backdrop-blur-md shadow-md transition-all duration-300"
+      : "fixed top-0 left-0 right-0 z-50 w-full bg-gradient-to-b from-black/80 via-black/40 to-transparent border-transparent transition-all duration-300";
 
   const activeLinkClass = isScrolled
-    ? "text-[#C25627] font-semibold border-b-2 border-[#C25627]"
-    : "text-[#DDB94E] font-semibold border-b-2 border-[#DDB94E]";
+    ? "text-[#C25627] font-bold border-b-2 border-[#C25627]"
+    : "text-[#DDB94E] font-bold border-b-2 border-[#DDB94E] drop-shadow-md";
 
   const defaultLinkClass = isScrolled
-    ? "text-[#0B0907]/90 hover:text-[#C25627] transition-colors py-1"
-    : "text-white/85 hover:text-white transition-colors py-1";
+    ? "text-[#0B0907] hover:text-[#C25627] font-semibold transition-colors py-1"
+    : "text-white hover:text-[#DDB94E] font-semibold transition-colors py-1 drop-shadow-sm";
 
   const iconColorClass = isMenuVisualDark
-    ? "text-white/90 hover:text-white transition-colors"
+    ? "text-white hover:text-[#DDB94E] transition-colors drop-shadow-sm"
     : "text-[#0B0907] hover:text-[#C25627] transition-colors";
 
   return (
-    <header className={`flex items-center transition-all duration-300 ${headerBackgroundClass} ${headerHeightClass}`}>
+    <header className={`flex items-center ${headerBackgroundClass} ${headerHeightClass}`}>
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
         
-        {/* Left: Branding Logo (Rounded corners) */}
+        {/* Left: Prominent Branding Logo */}
         <Link href="/" className="flex items-center active-press">
-          <div className="relative h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 bg-white p-2 rounded-xl flex items-center justify-center shadow-sm hover:scale-[1.02] transition-transform duration-300">
+          <div className="relative h-16 w-16 sm:h-20 sm:w-20 lg:h-22 lg:w-22 bg-white p-2.5 rounded-2xl flex items-center justify-center shadow-lg border border-black/10 hover:scale-[1.03] transition-transform duration-300">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
@@ -94,31 +109,31 @@ export function Header() {
         </Link>
 
         {/* Center: Streamlined Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-5 xl:gap-7 ml-4">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-6">
           {primaryNavLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`font-sans text-sm font-medium tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
+                className={`font-sans text-sm tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
               >
                 {link.label}
               </Link>
             );
           })}
 
-          {/* More Dropdown */}
-          <div className="relative" onMouseLeave={() => setMoreDropdownOpen(false)}>
+          {/* More Dropdown (Click to open, closes on scroll or click outside) */}
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-              className={`flex items-center gap-1 font-sans text-sm font-medium tracking-wide active-press ${defaultLinkClass}`}
+              className={`flex items-center gap-1.5 font-sans text-sm tracking-wide active-press cursor-pointer ${defaultLinkClass}`}
             >
               <span>More</span>
-              <ChevronDown className="h-3.5 w-3.5" />
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${moreDropdownOpen ? "rotate-180 text-[#C25627]" : ""}`} />
             </button>
             {moreDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-44 bg-white border border-black/10 shadow-2xl overflow-hidden z-50 rounded-xl animate-fade-in p-1.5">
+              <div className="absolute right-0 mt-3 w-52 bg-white border border-black/10 shadow-2xl overflow-hidden z-50 rounded-2xl animate-fade-in p-2.5 flex flex-col gap-1">
                 {secondaryNavLinks.map((item) => {
                   const isActive = pathname === item.href;
                   return (
@@ -126,10 +141,10 @@ export function Header() {
                       key={item.label}
                       href={item.href}
                       onClick={() => setMoreDropdownOpen(false)}
-                      className={`block font-sans text-xs px-3.5 py-2.5 rounded-lg transition-colors active-press ${
+                      className={`block font-sans text-xs px-4 py-3 rounded-xl transition-all duration-200 active-press ${
                         isActive
-                          ? "bg-[#C25627]/10 text-[#C25627] font-semibold"
-                          : "text-[#0B0907] hover:bg-black/5"
+                          ? "bg-[#C25627]/10 text-[#C25627] font-bold"
+                          : "text-[#0B0907] font-medium hover:bg-black/5 hover:text-[#C25627]"
                       }`}
                     >
                       {item.label}
@@ -142,9 +157,9 @@ export function Header() {
         </nav>
 
         {/* Right: Actions */}
-        <div className="hidden lg:flex items-center gap-4 xl:gap-5">
+        <div className="hidden lg:flex items-center gap-5 xl:gap-6">
           {/* Search Trigger */}
-          <Link href="/search" className={`active-press p-2 rounded-full hover:bg-white/10 transition-colors ${iconColorClass}`}>
+          <Link href="/search" className={`active-press p-2.5 rounded-full hover:bg-white/10 transition-colors ${iconColorClass}`}>
             <Search className="h-5 w-5" />
           </Link>
 
@@ -153,7 +168,7 @@ export function Header() {
             href={REGISTRATION_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-xs font-bold tracking-wider uppercase px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all duration-300 rounded-full shadow-sm hover:shadow-md active-press"
+            className="font-sans text-xs font-bold tracking-wider uppercase px-7 py-3 bg-[#C25627] hover:bg-[#E05320] text-white transition-all duration-300 rounded-full shadow-md hover:shadow-lg active-press"
           >
             Register
           </a>
@@ -169,15 +184,15 @@ export function Header() {
             className={`active-press p-2 ${iconColorClass}`}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-24 pb-8 overflow-y-auto animate-fade-in text-white">
-          <nav className="flex flex-col gap-4 text-left mb-8">
+        <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-28 pb-8 overflow-y-auto animate-fade-in text-white">
+          <nav className="flex flex-col gap-5 text-left mb-8">
             {allNavLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
               return (
@@ -185,8 +200,8 @@ export function Header() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`font-sans text-lg font-medium border-b border-white/10 pb-2.5 active-press ${
-                    isActive ? "text-[#DDB94E] font-semibold" : "text-white/85"
+                  className={`font-sans text-lg font-medium border-b border-white/10 pb-3 active-press ${
+                    isActive ? "text-[#DDB94E] font-bold" : "text-white/90"
                   }`}
                 >
                   {link.label}
@@ -200,7 +215,7 @@ export function Header() {
               href={REGISTRATION_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center font-sans font-bold text-sm tracking-wider uppercase py-3.5 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press shadow-lg"
+              className="w-full text-center font-sans font-bold text-sm tracking-wider uppercase py-4 bg-[#C25627] hover:bg-[#E05320] text-white transition-all rounded-full active-press shadow-xl"
             >
               Register for the Program
             </a>
