@@ -17,10 +17,11 @@ import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 import { BookOpen, FileText, Music, BookMarked, Download, ChevronRight } from "lucide-react";
 
-type FilterTab = "all" | "worship" | "rules" | "studies" | "devotionals" | "publications";
+type FilterTab = "all" | "articles" | "worship" | "rules" | "studies" | "devotionals" | "publications";
 
 const filterTabs: { id: FilterTab; label: string; icon: React.ElementType }[] = [
   { id: "all", label: "All Sections", icon: BookOpen },
+  { id: "articles", label: "Articles", icon: FileText },
   { id: "worship", label: "Hymns & Worship", icon: Music },
   { id: "studies", label: "Bible Studies", icon: BookMarked },
   { id: "devotionals", label: "Devotionals", icon: FileText },
@@ -46,7 +47,7 @@ export default function BookletPage() {
     queryFn: () => getResources(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000,
     initialData: () =>
-      (seedResources as Resource[]).filter(
+      (seedResources as unknown as Resource[]).filter(
         (r) => r.eventId === ACTIVE_EVENT_ID && r.status === "published"
       ),
   });
@@ -59,11 +60,12 @@ export default function BookletPage() {
   const filteredResources = resources.filter((r) => {
     const ms = matchesSearch(r);
     if (activeFilter === "all") return ms;
+    if (activeFilter === "articles") return ms && r.category === "Articles";
     if (activeFilter === "worship") return ms && r.category === "Worship Lyrics";
     if (activeFilter === "rules") return ms && r.slug === "camp-rules-and-regulations";
     if (activeFilter === "studies") return ms && r.category === "Bible Studies";
     if (activeFilter === "devotionals") return ms && r.category === "Devotionals";
-    if (activeFilter === "publications") return ms && (r.category === "Publications" || r.category === "Articles" || r.category === "Downloads");
+    if (activeFilter === "publications") return ms && (r.category === "Publications" || r.category === "Downloads");
     return ms;
   });
 

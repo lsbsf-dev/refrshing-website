@@ -51,15 +51,21 @@ export async function getResources(eventId: string): Promise<Resource[]> {
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedResources as Resource[]).filter(
-        (r) => r.eventId === eventId && r.status === "published"
-      );
+    const firestoreDocs = snap.empty ? [] : snap.docs.map((doc) => doc.data());
+    const seedDocs = (seedResources as unknown as Resource[]).filter(
+      (r) => r.eventId === eventId && r.status === "published"
+    );
+    // Combine results, ensuring all seed items are represented if not present in Firestore yet
+    const merged = [...firestoreDocs];
+    for (const s of seedDocs) {
+      if (!merged.some((m) => m.slug === s.slug || m.id === s.id)) {
+        merged.push(s);
+      }
     }
-    return snap.docs.map((doc) => doc.data());
+    return merged;
   } catch (error) {
     console.warn("Firestore query getResources failed, using fallback static data:", error);
-    return (seedResources as Resource[]).filter(
+    return (seedResources as unknown as Resource[]).filter(
       (r) => r.eventId === eventId && r.status === "published"
     );
   }
@@ -75,16 +81,16 @@ export async function getResourceBySlug(eventId: string, slug: string): Promise<
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      const fallback = (seedResources as Resource[]).find(
-        (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
-      );
-      return fallback || null;
+    if (!snap.empty) {
+      return snap.docs[0].data();
     }
-    return snap.docs[0].data();
+    const fallback = (seedResources as unknown as Resource[]).find(
+      (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
+    );
+    return fallback || null;
   } catch (error) {
     console.warn("Firestore query getResourceBySlug failed, using fallback static data:", error);
-    const fallback = (seedResources as Resource[]).find(
+    const fallback = (seedResources as unknown as Resource[]).find(
       (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
     );
     return fallback || null;

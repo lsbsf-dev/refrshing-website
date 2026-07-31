@@ -6,7 +6,7 @@ import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 
 export default function AdminResourcesPage() {
-  const [resourcesList, setResourcesList] = useState<Resource[]>(seedResources as Resource[]);
+  const [resourcesList, setResourcesList] = useState<Resource[]>(seedResources as unknown as Resource[]);
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
 

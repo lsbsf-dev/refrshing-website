@@ -53,7 +53,7 @@ export default function MinisterDetailPage({
     queryKey: ["resources", ACTIVE_EVENT_ID],
     queryFn: () => getResources(ACTIVE_EVENT_ID),
     staleTime: 30 * 60 * 1000,
-    initialData: () => seedResources as Resource[],
+    initialData: () => seedResources as unknown as Resource[],
   });
 
   const sessions = minister

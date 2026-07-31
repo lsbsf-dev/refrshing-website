@@ -60,7 +60,7 @@ export default function SessionSlugPage({
     enabled: !!session,
     staleTime: 6 * 60 * 60 * 1000,
     initialData: () =>
-      (seedResources as Resource[]).filter(
+      (seedResources as unknown as Resource[]).filter(
         (r) => r.eventId === ACTIVE_EVENT_ID && r.status === "published"
       ),
   });
