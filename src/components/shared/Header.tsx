@@ -21,7 +21,6 @@ export function Header() {
       } else {
         setIsScrolled(false);
       }
-      // Close dropdown on scroll
       setMoreDropdownOpen(false);
     };
 
@@ -29,7 +28,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -70,12 +68,12 @@ export function Header() {
 
   const isMenuVisualDark = mobileMenuOpen || !isScrolled;
 
-  const headerHeightClass = "h-24 lg:h-28";
+  const headerHeightClass = "h-24 lg:h-32";
   const headerBackgroundClass = mobileMenuOpen
     ? "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent"
     : isScrolled
       ? "fixed top-0 left-0 right-0 z-50 w-full bg-white/95 border-b border-black/10 backdrop-blur-md shadow-md transition-all duration-300"
-      : "fixed top-0 left-0 right-0 z-50 w-full bg-gradient-to-b from-black/80 via-black/40 to-transparent border-transparent transition-all duration-300";
+      : "fixed top-0 left-0 right-0 z-50 w-full bg-gradient-to-b from-black/85 via-black/40 to-transparent border-transparent transition-all duration-300";
 
   const activeLinkClass = isScrolled
     ? "text-[#C25627] font-bold border-b-2 border-[#C25627]"
@@ -93,9 +91,9 @@ export function Header() {
     <header className={`flex items-center ${headerBackgroundClass} ${headerHeightClass}`}>
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
         
-        {/* Left: Prominent Branding Logo */}
+        {/* Left: Extra Large & Prominent Branding Logo */}
         <Link href="/" className="flex items-center active-press">
-          <div className="relative h-16 w-16 sm:h-20 sm:w-20 lg:h-22 lg:w-22 bg-white p-2.5 rounded-2xl flex items-center justify-center shadow-lg border border-black/10 hover:scale-[1.03] transition-transform duration-300">
+          <div className="relative h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 bg-white p-1 sm:p-1.5 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/60 hover:scale-[1.05] transition-transform duration-300">
             <div className="relative w-full h-full">
               <Image
                 src="/refreshing-logo.png"
@@ -116,18 +114,18 @@ export function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`font-sans text-sm tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
+                className={`font-sans text-base tracking-wide active-press ${isActive ? activeLinkClass : defaultLinkClass}`}
               >
                 {link.label}
               </Link>
             );
           })}
 
-          {/* More Dropdown (Click to open, closes on scroll or click outside) */}
+          {/* More Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-              className={`flex items-center gap-1.5 font-sans text-sm tracking-wide active-press cursor-pointer ${defaultLinkClass}`}
+              className={`flex items-center gap-1.5 font-sans text-base tracking-wide active-press cursor-pointer ${defaultLinkClass}`}
             >
               <span>More</span>
               <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${moreDropdownOpen ? "rotate-180 text-[#C25627]" : ""}`} />
@@ -160,7 +158,7 @@ export function Header() {
         <div className="hidden lg:flex items-center gap-5 xl:gap-6">
           {/* Search Trigger */}
           <Link href="/search" className={`active-press p-2.5 rounded-full hover:bg-white/10 transition-colors ${iconColorClass}`}>
-            <Search className="h-5 w-5" />
+            <Search className="h-6 w-6" />
           </Link>
 
           {/* Register CTA */}
@@ -177,7 +175,7 @@ export function Header() {
         {/* Mobile menu trigger */}
         <div className="lg:hidden flex items-center gap-3 z-50">
           <Link href="/search" className={`active-press p-2 ${iconColorClass}`}>
-            <Search className="h-5 w-5" />
+            <Search className="h-6 w-6" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -191,7 +189,7 @@ export function Header() {
 
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-28 pb-8 overflow-y-auto animate-fade-in text-white">
+        <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-32 pb-8 overflow-y-auto animate-fade-in text-white">
           <nav className="flex flex-col gap-5 text-left mb-8">
             {allNavLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
