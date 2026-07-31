@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, ShieldCheck, ArrowRight, KeyRound } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
+import { auth } from "@/lib/firebase/app";
 
 export default function AdminLoginPage() {
   const router = useRouter();
