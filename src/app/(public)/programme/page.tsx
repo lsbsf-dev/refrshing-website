@@ -200,7 +200,7 @@ export default function ProgrammePage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[420px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[460px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-52 lg:pt-64 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -227,9 +227,9 @@ export default function ProgrammePage() {
         </div>
       </section>
 
-      <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-6 px-4 sm:px-6 md:px-16 overflow-hidden z-20">
+      <section className="relative w-full bg-white/95 backdrop-blur-md border-b border-black/10 sticky top-20 lg:top-24 z-30 shadow-sm pt-4 pb-4 px-4 sm:px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
-          <ScrollableTabBar className="gap-4 md:gap-8 justify-start md:justify-center">
+          <ScrollableTabBar className="gap-4 md:gap-8 md:justify-center w-full">
             {daysConfig.map((d, idx) => {
               const isActive = idx === activeDay;
               return (

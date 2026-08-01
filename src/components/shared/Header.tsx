@@ -73,7 +73,7 @@ export function Header() {
 
   const isMenuVisualDark = mobileMenuOpen || !isScrolled;
 
-  const headerHeightClass = "h-24 lg:h-32";
+  const headerHeightClass = "h-20 lg:h-24";
   const headerBackgroundClass = mobileMenuOpen
     ? "fixed top-0 left-0 right-0 z-50 w-full bg-transparent border-transparent"
     : isScrolled
@@ -98,8 +98,8 @@ export function Header() {
         
         {/* Left: Extra Large & Prominent Branding Logo */}
         <Link href="/" className="flex items-center active-press">
-          <div className="relative h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 bg-white p-1 sm:p-1.5 rounded-2xl flex items-center justify-center shadow-xl border-none hover:scale-[1.05] transition-transform duration-300">
-            <div className="relative w-full h-full">
+          <div className="relative h-16 w-16 sm:h-20 sm:w-20 lg:h-20 lg:w-20 bg-white rounded-2xl overflow-hidden flex items-center justify-center shadow-xl border-none hover:scale-[1.05] transition-transform duration-300">
+            <div className="relative w-full h-full scale-[1.35]">
               <Image
                 src="/refreshing-logo.png"
                 alt="Refreshing 2026 Logo"

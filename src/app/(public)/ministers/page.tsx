@@ -94,9 +94,9 @@ export default function MinistersPage() {
       </section>
 
       {/* ── Filter Tabs ── */}
-      <section className="w-full bg-white border-b border-black/10 sticky top-24 lg:top-28 z-30 shadow-xs [padding-top:env(safe-area-inset-top,0px)]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 py-4">
-          <ScrollableTabBar className="gap-3">
+      <section className="w-full bg-white/95 backdrop-blur-md border-b border-black/10 sticky top-20 lg:top-24 z-30 shadow-sm pt-4 pb-4">
+        <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20">
+          <ScrollableTabBar className="gap-3 md:justify-center w-full">
             {tabsConfig.map((tab) => (
               <button
                 key={tab.id}

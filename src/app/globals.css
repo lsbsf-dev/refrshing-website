@@ -277,10 +277,16 @@ body {
 .delay-700 { animation-delay: 700ms; }
 
 /* Scroll-triggered reveal - progressive enhancement */
+/* Scroll-triggered reveal - progressive enhancement */
 [data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+[data-reveal].is-revealed {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Tactile warm paper texture overlay */
