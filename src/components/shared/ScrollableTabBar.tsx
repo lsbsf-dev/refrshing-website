@@ -28,7 +28,7 @@ interface ScrollableTabBarProps {
   children: React.ReactNode;
   /** Additional className applied to the inner scrollable flex container (e.g. "gap-3") */
   className?: string;
-  /** When true, arrow buttons use the dark/admin colour scheme */
+  /** Set to true for admin portal dark theme compatibility */
   isDark?: boolean;
 }
 
@@ -76,10 +76,8 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
   // inner content doesn't shift when arrows appear/disappear.
   const arrowBase = "shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C25627]";
 
-  // Active (scrollable) state colours
-  const arrowActive = isDark
-    ? "bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 cursor-pointer"
-    : "bg-black/[0.08] hover:bg-black/[0.15] text-[#7A7062] hover:text-[#0B0907] cursor-pointer";
+  // Active (scrollable) state colours (Supports both Light and Dark mode)
+  const arrowActive = "bg-black/[0.08] hover:bg-black/[0.15] text-[#7A7062] hover:text-[#0B0907] dark:bg-white/5 dark:hover:bg-white/10 dark:text-white/60 dark:hover:text-white/90 cursor-pointer";
 
   // Disabled (at edge) state — visually gone, pointer and keyboard inert
   const arrowDisabled = "opacity-0 pointer-events-none cursor-default";
@@ -100,14 +98,7 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
 
       {/* Left edge fade mask — only when there's content to the left */}
       {canScrollLeft && (
-        <div
-          className="absolute left-[44px] top-0 bottom-0 w-8 pointer-events-none z-10"
-          style={{
-            background: isDark
-              ? "linear-gradient(to right, rgba(18,16,12,0.8), transparent)"
-              : "linear-gradient(to right, rgba(255,255,255,0.9), transparent)",
-          }}
-        />
+        <div className="absolute left-[44px] top-0 bottom-0 w-8 pointer-events-none z-10 bg-gradient-to-r from-[#F7F4EE] dark:from-[#0B0907] to-transparent" />
       )}
 
       {/* Scrollable content */}
@@ -120,14 +111,7 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
 
       {/* Right edge fade mask — only when there's content to the right */}
       {canScrollRight && (
-        <div
-          className="absolute right-[44px] top-0 bottom-0 w-8 pointer-events-none z-10"
-          style={{
-            background: isDark
-              ? "linear-gradient(to left, rgba(18,16,12,0.8), transparent)"
-              : "linear-gradient(to left, rgba(255,255,255,0.9), transparent)",
-          }}
-        />
+        <div className="absolute right-[44px] top-0 bottom-0 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#F7F4EE] dark:from-[#0B0907] to-transparent" />
       )}
 
       {/* Right arrow */}

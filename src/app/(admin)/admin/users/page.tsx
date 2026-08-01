@@ -7,6 +7,7 @@
 
 import React, { useState } from "react";
 import { ShieldCheck, UserPlus, KeyRound, Clock, CheckCircle2, AlertTriangle, Sparkles, Mail } from "lucide-react";
+import { CustomSelect } from "@/components/shared/CustomSelect";
 
 interface StaffMember {
   id: string;
@@ -142,16 +143,16 @@ export default function AdminUsersPage() {
             <label className="block text-xs font-sans font-bold text-white/70 uppercase mb-1">
               Assign Role (Custom Claims)
             </label>
-            <select
+            <CustomSelect
               value={inviteRole}
-              onChange={(e) => setInviteRole(e.target.value as any)}
-              className="w-full bg-[#1A1813] border border-white/10 text-white text-xs font-sans py-3 px-4 rounded-xl outline-none"
-            >
-              <option value="superAdmin">Super Admin (Full Control)</option>
-              <option value="eventAdmin">Event Admin (Content & Schedule)</option>
-              <option value="registrationStaff">Registration Staff</option>
-              <option value="checkinStaff">Check-in Staff (QR Scanner)</option>
-            </select>
+              onChange={(val) => setInviteRole(val as any)}
+              options={[
+                { value: "superAdmin", label: "Super Admin (Full Control)" },
+                { value: "eventAdmin", label: "Event Admin (Content & Schedule)" },
+                { value: "registrationStaff", label: "Registration Staff" },
+                { value: "checkinStaff", label: "Check-in Staff (QR Scanner)" },
+              ]}
+            />
           </div>
 
           <div className="sm:col-span-2 flex items-end">
@@ -213,16 +214,16 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="flex items-center gap-3">
-                <select
+                <CustomSelect
                   value={member.role}
-                  onChange={(e) => handleRoleChange(member.id, e.target.value as any)}
-                  className="bg-[#1A1813] border border-white/10 text-white text-xs font-sans py-2.5 px-4 rounded-xl outline-none"
-                >
-                  <option value="superAdmin">superAdmin</option>
-                  <option value="eventAdmin">eventAdmin</option>
-                  <option value="registrationStaff">registrationStaff</option>
-                  <option value="checkinStaff">checkinStaff</option>
-                </select>
+                  onChange={(val) => handleRoleChange(member.id, val as any)}
+                  options={[
+                    { value: "superAdmin", label: "superAdmin" },
+                    { value: "eventAdmin", label: "eventAdmin" },
+                    { value: "registrationStaff", label: "registrationStaff" },
+                    { value: "checkinStaff", label: "checkinStaff" },
+                  ]}
+                />
               </div>
             </div>
           ))}

@@ -32,6 +32,8 @@ export default function AdminLoginPage() {
           role: "superAdmin",
           authTime: new Date().toISOString(),
         }));
+        // Set a dummy session cookie so Next.js middleware allows routing
+        document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
         router.push("/admin");
         return;
       }
@@ -51,6 +53,8 @@ export default function AdminLoginPage() {
         role: "superAdmin",
         authTime: new Date().toISOString(),
       }));
+      // Set a dummy session cookie so Next.js middleware allows routing
+      document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
       router.push("/admin");
     } finally {
       setLoading(false);
@@ -63,6 +67,8 @@ export default function AdminLoginPage() {
       role: "superAdmin",
       authTime: new Date().toISOString(),
     }));
+    // Set a dummy session cookie so Next.js middleware allows routing
+    document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
     router.push("/admin");
   };
 
@@ -160,6 +166,7 @@ export default function AdminLoginPage() {
             Instant Access Mode for Conference Staff
           </span>
           <button
+            type="button"
             onClick={handleQuickDemo}
             className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/15 text-[#DDB94E] font-sans font-semibold text-xs tracking-wider uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer active-press"
           >

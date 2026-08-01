@@ -1,38 +1,22 @@
-/**
- * Firebase Admin SDK Initialization
- * Server-side only. Initializes with service account credentials from env vars
- * if available, otherwise falls back to project-only mode for local dev.
- */
+import * as admin from 'firebase-admin';
 
-import * as admin from "firebase-admin";
-
-const projectId =
-  process.env.FIREBASE_PROJECT_ID ||
-  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
-  "dummy-project";
-const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-
+// Protect against multiple initializations
 if (!admin.apps.length) {
   try {
-    if (privateKey && clientEmail) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey: privateKey.replace(/\\n/g, "\n"),
-        }),
-      });
-      console.log("Firebase Admin initialized via service account credentials.");
-    } else {
-      admin.initializeApp({ projectId });
-      console.log(`Firebase Admin initialized in local/default mode for project: ${projectId}`);
-    }
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        // Replace escaped newline characters if passed via environment variables
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      }),
+    });
   } catch (error) {
-    console.error("Error initializing Firebase Admin SDK:", error);
+    console.error('Firebase admin initialization error', error);
   }
 }
 
-const adminDb = admin.firestore();
-
-export { adminDb };
+export const auth = admin.auth();
+export const firestore = admin.firestore();
+export const adminDb = firestore; // Alias for backward compatibility
+export const storage = admin.storage();

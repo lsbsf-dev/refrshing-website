@@ -3,7 +3,7 @@
  * Handlers for retrieving speaker profiles and biography data.
  */
 
-import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./app";
 import { Minister } from "@/types/minister";
 
@@ -83,4 +83,22 @@ export async function getMinisterBySlug(eventId: string, slug: string): Promise<
     );
     return fallback || null;
   }
+}
+
+export async function updateMinister(ministerId: string, data: Partial<Minister>): Promise<void> {
+  const ref = doc(db, "ministers", ministerId).withConverter(ministerConverter);
+  // We use updateDoc to only update the provided fields, or setDoc with merge: true
+  await setDoc(ref, data as Minister, { merge: true });
+}
+
+export async function createMinister(minister: Omit<Minister, "id">): Promise<string> {
+  const slug = minister.slug || minister.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const ref = doc(db, "ministers", slug).withConverter(ministerConverter);
+  await setDoc(ref, minister as Minister);
+  return slug;
+}
+
+export async function deleteMinister(ministerId: string): Promise<void> {
+  const ref = doc(db, "ministers", ministerId);
+  await updateDoc(ref, { status: "deleted" }); // Soft delete, or import deleteDoc for hard delete
 }

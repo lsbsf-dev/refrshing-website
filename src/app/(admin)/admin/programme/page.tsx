@@ -6,13 +6,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Calendar, Clock, MapPin, Edit2, Plus, Sparkles, X, Save, User } from "lucide-react";
-import seedSessions from "@/lib/firebase/seedSessions.json";
+import { Calendar, Clock, MapPin, Edit2, Plus, Sparkles, X, Save, User, Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getSessions, updateSession, createSession } from "@/lib/firebase/programme";
+import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { Session } from "@/types/programme";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 export default function AdminProgrammePage() {
-  const [sessionsList, setSessionsList] = useState<Session[]>(seedSessions as Session[]);
+  const queryClient = useQueryClient();
+
+  const { data: sessionsList = [], isLoading } = useQuery({
+    queryKey: ["admin", "sessions", ACTIVE_EVENT_ID],
+    queryFn: () => getSessions(ACTIVE_EVENT_ID),
+  });
   const [selectedDayFilter, setSelectedDayFilter] = useState("all");
   const [editingSession, setEditingSession] = useState<Session | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -30,11 +37,11 @@ export default function AdminProgrammePage() {
 
   const daysConfig = [
     { id: "all", label: "All Days" },
-    { id: "DAY ONE", label: "Monday (Day 1)" },
-    { id: "DAY TWO", label: "Tuesday (Day 2)" },
-    { id: "DAY THREE", label: "Wednesday (Day 3)" },
-    { id: "DAY FOUR", label: "Thursday (Day 4)" },
-    { id: "DAY FIVE", label: "Friday (Day 5)" },
+    { id: "DAY 1", label: "Monday (Day 1)" },
+    { id: "DAY 2", label: "Tuesday (Day 2)" },
+    { id: "DAY 3", label: "Wednesday (Day 3)" },
+    { id: "DAY 4", label: "Thursday (Day 4)" },
+    { id: "DAY 5", label: "Friday (Day 5)" },
   ];
 
   const filteredSessions = sessionsList.filter((s) => {
@@ -42,15 +49,53 @@ export default function AdminProgrammePage() {
     return s.day.toUpperCase() === selectedDayFilter.toUpperCase();
   });
 
+  const handleCreateNew = () => {
+    setEditingSession({
+      id: "new-" + Date.now(),
+      eventId: "refreshing-2026",
+      slug: "",
+      day: "Day 1",
+      title: "",
+      description: "",
+      startTime: "9:00 AM",
+      endTime: "10:00 AM",
+      venue: "Main Chapel",
+      ministerIds: [],
+      status: "draft"
+    });
+  };
+
+  // Mutations
+  const updateMutation = useMutation({
+    mutationFn: (data: Session) => updateSession(data.id || data.slug, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
+      setEditingSession(null);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: Omit<Session, "id">) => createSession(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
+      setEditingSession(null);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    },
+  });
+
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingSession || !editingSession.title.trim()) return;
-    setSessionsList((prev) =>
-      prev.map((s) => (s.id === editingSession.id ? editingSession : s))
-    );
-    setEditingSession(null);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    
+    if (editingSession.id.startsWith("new-")) {
+      const { id, ...rest } = editingSession;
+      createMutation.mutate(rest);
+    } else {
+      updateMutation.mutate(editingSession);
+    }
   };
 
   return (
@@ -66,6 +111,13 @@ export default function AdminProgrammePage() {
             PROGRAMME <span className="text-[#C25627] font-normal">SESSIONS</span>
           </h1>
         </div>
+        <button
+          onClick={handleCreateNew}
+          className="px-6 py-3.5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs tracking-wider uppercase rounded-full transition-all active-press shadow-lg flex items-center gap-2 shrink-0"
+        >
+          <Plus className="h-4 w-4" />
+          <span>New Session</span>
+        </button>
       </div>
 
       {savedSuccess && (
@@ -77,7 +129,7 @@ export default function AdminProgrammePage() {
 
       {/* Day Filter Bar */}
       <div className="overflow-hidden">
-        <ScrollableTabBar className="gap-2" isDark={true}>
+        <ScrollableTabBar className="gap-2">
           {daysConfig.map((d) => (
             <button
               key={d.id}
@@ -85,7 +137,7 @@ export default function AdminProgrammePage() {
               className={`flex-shrink-0 whitespace-nowrap px-5 py-2.5 rounded-xl font-sans text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
                 selectedDayFilter === d.id
                   ? "bg-[#C25627] text-white shadow-md font-bold"
-                  : "bg-white/5 text-white/70 hover:bg-white/10"
+                  : "bg-black/5 text-black/60 hover:bg-black/10 dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10"
               }`}
             >
               {d.label}
@@ -95,6 +147,15 @@ export default function AdminProgrammePage() {
       </div>
 
       {/* ── Sessions List ── */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : filteredSessions.length === 0 ? (
+        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+          <p className="font-sans text-sm text-zinc-500">No sessions found for this day.</p>
+        </div>
+      ) : (
       <div className="flex flex-col gap-4">
         {filteredSessions.map((session) => (
           <div
@@ -146,8 +207,9 @@ export default function AdminProgrammePage() {
           </div>
         ))}
       </div>
+      )}
 
-      {/* ── Edit Session Modal (Solid Opaque Background, Scroll Locked) ── */}
+      {/* ── Edit Session Modal ── */}
       {editingSession && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
@@ -252,9 +314,10 @@ export default function AdminProgrammePage() {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
+                disabled={updateMutation.isPending || createMutation.isPending}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
               >
-                <Save className="h-4 w-4" />
+                {(updateMutation.isPending || createMutation.isPending) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 <span>Save Session</span>
               </button>
             </div>

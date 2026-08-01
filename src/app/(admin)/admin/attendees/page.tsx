@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserCheck, Search, QrCode, CheckCircle2, Clock, Filter, ShieldCheck, Sparkles } from "lucide-react";
+import { UserCheck, Search, QrCode, CheckCircle2, Clock, Filter, ShieldCheck, Sparkles, X } from "lucide-react";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 interface Attendee {
@@ -165,8 +165,16 @@ export default function AdminAttendeesPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search Name, Reg ID, Tag, or Chapter..."
-            className="w-full bg-[#14120E] border border-white/10 focus:border-[#C25627] text-white text-xs font-sans py-3.5 pl-11 pr-4 rounded-xl outline-none transition-all"
+            className="w-full bg-[#14120E] border border-white/10 focus:border-[#C25627] text-white text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 hover:text-[#C25627] transition-colors flex items-center justify-center cursor-pointer"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="w-full sm:w-auto overflow-hidden">

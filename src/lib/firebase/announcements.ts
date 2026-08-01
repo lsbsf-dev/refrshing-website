@@ -3,7 +3,7 @@
  * Handlers for retrieving reverse-chronological news notices.
  */
 
-import { collection, doc, getDoc, getDocs, query, where, orderBy, FirestoreDataConverter } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where, orderBy, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./app";
 import { Announcement } from "@/types/announcement";
 
@@ -60,4 +60,22 @@ export async function getAnnouncements(eventId: string): Promise<Announcement[]>
       (a) => a.eventId === eventId && a.status === "published"
     );
   }
+}
+
+export async function updateAnnouncement(announcementId: string, data: Partial<Announcement>): Promise<void> {
+  const ref = doc(db, "announcements", announcementId).withConverter(announcementConverter);
+  await setDoc(ref, data as Announcement, { merge: true });
+}
+
+export async function createAnnouncement(announcement: Omit<Announcement, "id">): Promise<string> {
+  // Let firestore generate the ID for announcements, or use a combination of eventId + timestamp
+  const generatedId = `ann-${Date.now()}`;
+  const ref = doc(db, "announcements", generatedId).withConverter(announcementConverter);
+  await setDoc(ref, announcement as Announcement);
+  return generatedId;
+}
+
+export async function deleteAnnouncement(announcementId: string): Promise<void> {
+  const ref = doc(db, "announcements", announcementId);
+  await updateDoc(ref, { status: "deleted" });
 }

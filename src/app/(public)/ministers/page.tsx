@@ -9,6 +9,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Search, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getMinisters } from "@/lib/firebase/ministers";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
@@ -27,6 +28,7 @@ const tabsConfig: { id: TabType; label: string }[] = [
 
 export default function MinistersPage() {
   const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: ministers = [], isLoading } = useQuery({
     queryKey: ["ministers", ACTIVE_EVENT_ID],
@@ -46,8 +48,9 @@ export default function MinistersPage() {
   });
 
   const filteredMinisters = sortedMinisters.filter((m) => {
-    if (activeTab === "all") return true;
-    return (m.category || "keynote") === activeTab;
+    const matchesTab = activeTab === "all" || (m.category || "keynote") === activeTab;
+    const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTab && matchesSearch;
   });
 
   if (isLoading) {
@@ -93,10 +96,10 @@ export default function MinistersPage() {
         </div>
       </section>
 
-      {/* ── Filter Tabs ── */}
-      <section className="w-full bg-white/95 backdrop-blur-md border-b border-black/10 sticky top-20 lg:top-24 z-30 shadow-sm pt-4 pb-4">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20">
-          <ScrollableTabBar className="gap-3 md:justify-center w-full">
+      {/* ── Filter Tabs & Search ── */}
+      <section className="w-full bg-white/95 backdrop-blur-md border-b border-black/10 sticky top-20 lg:top-24 z-30 shadow-sm py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 flex flex-col md:flex-row items-center justify-between gap-4">
+          <ScrollableTabBar className="gap-3 w-full md:w-auto">
             {tabsConfig.map((tab) => (
               <button
                 key={tab.id}
@@ -110,14 +113,29 @@ export default function MinistersPage() {
                 }`}
               >
                 {tab.label}
-                {activeTab === tab.id && (
-                  <span className="ml-2 text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
-                    {filteredMinisters.length}
-                  </span>
-                )}
               </button>
             ))}
           </ScrollableTabBar>
+
+          {/* Search Bar */}
+          <div className="relative w-full md:w-80 shrink-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A7062]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search ministers..."
+              className="w-full bg-black/5 border border-transparent focus:border-[#C25627] focus:bg-white text-[#0B0907] placeholder:text-[#7A7062] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7A7062] hover:text-[#C25627] transition-colors flex items-center justify-center cursor-pointer"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       </section>
 

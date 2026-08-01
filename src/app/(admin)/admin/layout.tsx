@@ -114,7 +114,7 @@ export default function AdminDashboardLayout({
 
   return (
     <QueryProvider>
-      <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 ${
+      <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 ${isDark ? "dark" : ""} ${
         isDark ? "bg-[#0B0907] text-[#FCFAF6]" : "bg-[#F7F4EE] text-[#0B0907]"
       }`}>
         

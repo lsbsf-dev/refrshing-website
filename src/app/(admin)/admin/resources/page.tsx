@@ -6,12 +6,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { BookOpen, Edit2, Plus, Sparkles, X, Save, FileText, Music } from "lucide-react";
-import seedResources from "@/lib/firebase/seedResources.json";
+import { BookOpen, Edit2, Plus, Sparkles, X, Save, FileText, Music, Search, Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getResources, updateResource } from "@/lib/firebase/resources";
+import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { Resource } from "@/types/resource";
+import { RichTextEditor } from "@/components/shared/RichTextEditor";
 
 export default function AdminResourcesPage() {
-  const [resourcesList, setResourcesList] = useState<Resource[]>(seedResources as unknown as Resource[]);
+  const queryClient = useQueryClient();
+
+  const { data: resourcesList = [], isLoading } = useQuery({
+    queryKey: ["admin", "resources", ACTIVE_EVENT_ID],
+    queryFn: () => getResources(ACTIVE_EVENT_ID),
+  });
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -26,15 +34,21 @@ export default function AdminResourcesPage() {
     };
   }, [editingResource]);
 
-  const handleSaveEdit = (e: React.FormEvent) => {
+  // Mutations
+  const updateMutation = useMutation({
+    mutationFn: (data: Resource) => updateResource(data.id || data.slug, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "resources"] });
+      setEditingResource(null);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    },
+  });
+
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingResource || !editingResource.title.trim()) return;
-    setResourcesList((prev) =>
-      prev.map((r) => (r.id === editingResource.id ? editingResource : r))
-    );
-    setEditingResource(null);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    updateMutation.mutate(editingResource);
   };
 
   return (
@@ -60,6 +74,15 @@ export default function AdminResourcesPage() {
       )}
 
       {/* ── Resources List ── */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : resourcesList.length === 0 ? (
+        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+          <p className="font-sans text-sm text-zinc-500">No resources found.</p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {resourcesList.map((res) => (
           <div
@@ -99,12 +122,13 @@ export default function AdminResourcesPage() {
           </div>
         ))}
       </div>
+      )}
 
-      {/* ── Edit Modal (Solid Opaque Card, Scroll Locked) ── */}
+      {/* ── Edit Resource Modal ── */}
       {editingResource && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
-            onSubmit={handleSaveEdit}
+            onSubmit={handleSave}
             className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
@@ -167,16 +191,13 @@ export default function AdminResourcesPage() {
 
             <div>
               <label className="block text-xs font-sans font-bold uppercase mb-1">
-                Content Body (Markdown / Lyrics) <span className="text-[#C25627]">*</span>
+                Content Body (Rich Text) <span className="text-[#C25627]">*</span>
               </label>
-              <textarea
-                rows={12}
-                required
+              <RichTextEditor
                 value={editingResource.description}
-                onChange={(e) =>
-                  setEditingResource({ ...editingResource, description: e.target.value })
+                onChange={(val) =>
+                  setEditingResource({ ...editingResource, description: val })
                 }
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-mono p-4 rounded-xl outline-none leading-relaxed"
               />
             </div>
 
@@ -190,9 +211,10 @@ export default function AdminResourcesPage() {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
+                disabled={updateMutation.isPending}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
               >
-                <Save className="h-4 w-4" />
+                {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 <span>Save Resource</span>
               </button>
             </div>

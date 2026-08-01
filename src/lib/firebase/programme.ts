@@ -3,7 +3,7 @@
  * Handlers for retrieving session times and daily itineraries.
  */
 
-import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./app";
 import { Session } from "@/types/programme";
 
@@ -113,4 +113,21 @@ export async function getSessionsForMinister(eventId: string, ministerId: string
       (s) => s.eventId === eventId && s.ministerIds.includes(ministerId) && s.status === "published"
     );
   }
+}
+
+export async function updateSession(sessionId: string, data: Partial<Session>): Promise<void> {
+  const ref = doc(db, "sessions", sessionId).withConverter(sessionConverter);
+  await setDoc(ref, data as Session, { merge: true });
+}
+
+export async function createSession(session: Omit<Session, "id">): Promise<string> {
+  const slug = session.slug || session.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const ref = doc(db, "sessions", slug).withConverter(sessionConverter);
+  await setDoc(ref, session as Session);
+  return slug;
+}
+
+export async function deleteSession(sessionId: string): Promise<void> {
+  const ref = doc(db, "sessions", sessionId);
+  await updateDoc(ref, { status: "deleted" });
 }

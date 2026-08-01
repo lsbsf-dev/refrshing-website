@@ -7,7 +7,10 @@
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { Upload, X, Image as ImageIcon, Trash2, Check, RefreshCw } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Trash2, Check, RefreshCw, Loader2 } from "lucide-react";
+import imageCompression from "browser-image-compression";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { storage } from "@/lib/firebase/app";
 
 interface ImageUploaderProps {
   value: string;
@@ -26,17 +29,60 @@ export function ImageUploader({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (file: File) => {
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleFileChange = async (file: File) => {
     if (!file || !file.type.startsWith("image/")) return;
     setUploading(true);
+    setUploadProgress(0);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      onChange(result);
+    try {
+      // 1. Compress Image (Max 1MB, Max width 1200px)
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(file, options);
+
+      // 2. Upload to Firebase Storage
+      // Generate a unique path: public/uploads/{timestamp}-{filename}
+      const uniqueFilename = `${Date.now()}-${compressedFile.name.replace(/[^a-zA-Z0-9.]/g, "")}`;
+      const storageRef = ref(storage, `public/uploads/${uniqueFilename}`);
+      
+      const uploadTask = uploadBytesResumable(storageRef, compressedFile);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error("Upload failed:", error);
+          alert("Image upload failed. Please try again.");
+          setUploading(false);
+        },
+        async () => {
+          // Success
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          onChange(downloadURL);
+          setUploading(false);
+          setUploadProgress(0);
+        }
+      );
+    } catch (error) {
+      console.error("Compression/Upload error:", error);
+      alert("An error occurred while processing the image.");
       setUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDelete = async () => {
+    // If it's a firebase storage URL, we should ideally delete the object from storage
+    // But for safety and simplicity right now, we just clear the field.
+    // The backend sync or a cron job can clean up orphaned images later.
+    onChange("");
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -89,7 +135,7 @@ export function ImageUploader({
             </button>
             <button
               type="button"
-              onClick={() => onChange("")}
+              onClick={handleDelete}
               className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-semibold transition-all cursor-pointer"
               title="Remove photo"
             >
@@ -112,11 +158,11 @@ export function ImageUploader({
           }`}
         >
           <div className={`p-3 rounded-2xl ${isDark ? "bg-[#C25627]/15 text-[#C25627]" : "bg-[#C25627]/10 text-[#C25627]"}`}>
-            <Upload className="h-6 w-6" />
+            {uploading ? <Loader2 className="h-6 w-6 animate-spin" /> : <Upload className="h-6 w-6" />}
           </div>
           <div>
             <span className={`font-sans text-xs font-bold block ${isDark ? "text-white" : "text-zinc-900"}`}>
-              {uploading ? "Uploading Image..." : "Click or Drag Image Here"}
+              {uploading ? `Uploading Image... ${uploadProgress}%` : "Click or Drag Image Here"}
             </span>
             <span className="font-sans text-[11px] text-zinc-400 font-light mt-0.5 block">
               Supports PNG, JPG, WEBP files

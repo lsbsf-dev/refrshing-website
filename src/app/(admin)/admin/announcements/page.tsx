@@ -6,21 +6,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Megaphone, Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Bell } from "lucide-react";
-import seedAnnouncements from "@/lib/firebase/seedAnnouncements.json";
-
-interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  category: string;
-  priority: "urgent" | "high" | "medium" | "normal";
-  status: "published" | "draft";
-}
-
+import { Megaphone, Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Bell, Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAnnouncements, updateAnnouncement, createAnnouncement, deleteAnnouncement } from "@/lib/firebase/announcements";
+import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { Announcement } from "@/types/announcement";
+import { CustomSelect } from "@/components/shared/CustomSelect";
 export default function AdminAnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(seedAnnouncements as unknown as Announcement[]);
+  const queryClient = useQueryClient();
+
+  const { data: announcementsList = [], isLoading } = useQuery({
+    queryKey: ["admin", "announcements", ACTIVE_EVENT_ID],
+    queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -44,46 +42,64 @@ export default function AdminAnnouncementsPage() {
     };
   }, [editingAnn, isNewModalOpen]);
 
-  const filtered = announcements.filter((a) =>
+  const filtered = announcementsList.filter((a) =>
     a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     a.content.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSaveEdit = (e: React.FormEvent) => {
+  // Mutations
+  const updateMutation = useMutation({
+    mutationFn: (data: Announcement) => updateAnnouncement(data.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
+      setEditingAnn(null);
+      triggerSuccessBanner();
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: Omit<Announcement, "id">) => createAnnouncement(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
+      setIsNewModalOpen(false);
+      setNewAnn({ title: "", content: "", category: "General", priority: "normal" });
+      triggerSuccessBanner();
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteAnnouncement(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
+      triggerSuccessBanner();
+    },
+  });
+
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingAnn || !editingAnn.title.trim()) return;
-
-    setAnnouncements((prev) =>
-      prev.map((a) => (a.id === editingAnn.id ? editingAnn : a))
-    );
-    setEditingAnn(null);
-    triggerSuccessBanner();
+    updateMutation.mutate(editingAnn);
   };
 
   const handleCreateNew = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAnn.title.trim()) return;
 
-    const created: Announcement = {
-      id: `ann-${Date.now()}`,
+    createMutation.mutate({
+      eventId: ACTIVE_EVENT_ID,
       title: newAnn.title,
       content: newAnn.content,
-      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      category: newAnn.category,
-      priority: newAnn.priority,
+      publishedAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      category: newAnn.category as any,
+      isUrgent: newAnn.priority === "urgent",
       status: "published",
-    };
-
-    setAnnouncements((prev) => [created, ...prev]);
-    setIsNewModalOpen(false);
-    setNewAnn({ title: "", content: "", category: "General", priority: "normal" });
-    triggerSuccessBanner();
+    });
   };
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to remove this announcement?")) {
-      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
-      triggerSuccessBanner();
+      deleteMutation.mutate(id);
     }
   };
 
@@ -130,11 +146,29 @@ export default function AdminAnnouncementsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Filter announcements..."
-          className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-4 rounded-xl outline-none transition-all"
+          className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 hover:text-[#C25627] transition-colors flex items-center justify-center cursor-pointer"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
       {/* ── Announcements Cards Grid ── */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+          <AlertCircle className="h-10 w-10 text-zinc-400 mx-auto mb-4" />
+          <p className="font-sans text-sm text-zinc-500">No announcements found.</p>
+        </div>
+      ) : (
       <div className="flex flex-col gap-4">
         {filtered.map((ann) => (
           <div
@@ -142,24 +176,23 @@ export default function AdminAnnouncementsPage() {
             className="p-6 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-[#C25627]/40 transition-all shadow-sm"
           >
             <div className="flex flex-col gap-2 flex-1">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="font-sans text-[10px] font-extrabold tracking-widest text-[#C25627] uppercase bg-[#C25627]/10 px-3 py-1 rounded-full">
+              <div className="flex items-center gap-3">
+                <span className={`font-sans text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${
+                  ann.isUrgent
+                    ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                    : "bg-[#C25627]/10 text-[#C25627] border border-[#C25627]/20"
+                }`}>
                   {ann.category}
                 </span>
-                <span
-                  className={`font-mono text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${
-                    ann.priority === "urgent"
-                      ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                      : "bg-emerald-500/10 text-emerald-500"
-                  }`}
-                >
-                  {ann.priority} priority
+                <span className="font-mono text-[10px] text-zinc-400">
+                  {new Date(ann.publishedAt).toLocaleDateString()}
                 </span>
-                <span className="font-mono text-xs text-zinc-400">
-                  {ann.date}
-                </span>
+                {ann.isUrgent && (
+                  <span className="font-sans text-[10px] font-bold text-red-500 flex items-center gap-1 uppercase tracking-wider">
+                    <AlertCircle className="h-3 w-3" /> Urgent
+                  </span>
+                )}
               </div>
-
               <h3 className="font-serif text-xl font-bold mt-1">
                 {ann.title}
               </h3>
@@ -187,12 +220,13 @@ export default function AdminAnnouncementsPage() {
           </div>
         ))}
       </div>
+      )}
 
-      {/* ── Edit Modal ── */}
+      {/* ── Edit Announcement Modal ── */}
       {editingAnn && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
-            onSubmit={handleSaveEdit}
+            onSubmit={handleSave}
             className="w-full max-w-xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
@@ -232,7 +266,7 @@ export default function AdminAnnouncementsPage() {
                   type="text"
                   value={editingAnn.category}
                   onChange={(e) =>
-                    setEditingAnn({ ...editingAnn, category: e.target.value })
+                    setEditingAnn({ ...editingAnn, category: e.target.value as any })
                   }
                   className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
@@ -240,20 +274,18 @@ export default function AdminAnnouncementsPage() {
 
               <div>
                 <label className="block text-xs font-sans font-bold uppercase mb-1">
-                  Priority
+                  Urgency Flag <span className="text-[#C25627]">*</span>
                 </label>
-                <select
-                  value={editingAnn.priority}
-                  onChange={(e) =>
-                    setEditingAnn({ ...editingAnn, priority: e.target.value as any })
+                <CustomSelect
+                  value={editingAnn.isUrgent ? "urgent" : "normal"}
+                  onChange={(val) =>
+                    setEditingAnn({ ...editingAnn, isUrgent: val === "urgent" })
                   }
-                  className="w-full bg-zinc-50 dark:bg-[#1A1813] border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-                >
-                  <option value="normal">Normal</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
+                  options={[
+                    { value: "normal", label: "Normal Priority" },
+                    { value: "urgent", label: "Urgent / Important" },
+                  ]}
+                />
               </div>
             </div>
 
@@ -282,9 +314,10 @@ export default function AdminAnnouncementsPage() {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
+                disabled={updateMutation.isPending}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
               >
-                <Save className="h-4 w-4" />
+                {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 <span>Save Changes</span>
               </button>
             </div>
@@ -334,7 +367,7 @@ export default function AdminAnnouncementsPage() {
                 <input
                   type="text"
                   value={newAnn.category}
-                  onChange={(e) => setNewAnn({ ...newAnn, category: e.target.value })}
+                  onChange={(e) => setNewAnn({ ...newAnn, category: e.target.value as any })}
                   placeholder="General"
                   className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
@@ -342,18 +375,16 @@ export default function AdminAnnouncementsPage() {
 
               <div>
                 <label className="block text-xs font-sans font-bold uppercase mb-1">
-                  Priority
+                  Urgency Flag
                 </label>
-                <select
+                <CustomSelect
                   value={newAnn.priority}
-                  onChange={(e) => setNewAnn({ ...newAnn, priority: e.target.value as any })}
-                  className="w-full bg-zinc-50 dark:bg-[#1A1813] border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-                >
-                  <option value="normal">Normal</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
+                  onChange={(val) => setNewAnn({ ...newAnn, priority: val as any })}
+                  options={[
+                    { value: "normal", label: "Normal Priority" },
+                    { value: "urgent", label: "Urgent / Important" },
+                  ]}
+                />
               </div>
             </div>
 
@@ -381,10 +412,11 @@ export default function AdminAnnouncementsPage() {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
+                disabled={createMutation.isPending}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
               >
-                <Plus className="h-4 w-4" />
-                <span>Publish Announcement</span>
+                {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                <span>Broadcast Announcement</span>
               </button>
             </div>
           </form>
