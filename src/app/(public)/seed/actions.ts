@@ -43,7 +43,6 @@ export async function seedDatabase(
         name: m.name,
         photoUrl: m.photoUrl || "",
         biography: m.biography || "",
-        affiliation: m.affiliation || "",
         status: m.status,
         category: m.category,
       });

@@ -50,8 +50,7 @@ export default function SearchPage() {
   const filteredMinisters = ministers.filter(
     (m) =>
       m.name.toLowerCase().includes(queryVal.toLowerCase()) ||
-      m.biography.toLowerCase().includes(queryVal.toLowerCase()) ||
-      m.affiliation.toLowerCase().includes(queryVal.toLowerCase())
+      m.biography.toLowerCase().includes(queryVal.toLowerCase())
   );
 
   const filteredSessions = sessions.filter(
@@ -179,7 +178,7 @@ export default function SearchPage() {
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
                       <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{m.name}</h3>
-                      <span className="font-mono text-xs text-[#C25627] tracking-widest block uppercase mt-1">{m.affiliation}</span>
+
                       <p className="font-sans text-xs text-zinc-500 font-light mt-3 line-clamp-2">{m.biography}</p>
                     </Link>
                   ))}

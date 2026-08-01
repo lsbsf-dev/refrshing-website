@@ -17,7 +17,6 @@ export const ministerConverter: FirestoreDataConverter<Minister> = {
       name: minister.name,
       photoUrl: minister.photoUrl,
       biography: minister.biography,
-      affiliation: minister.affiliation,
       status: minister.status,
       category: minister.category,
     };
@@ -31,7 +30,6 @@ export const ministerConverter: FirestoreDataConverter<Minister> = {
       name: data.name || "",
       photoUrl: data.photoUrl || "",
       biography: data.biography || "",
-      affiliation: data.affiliation || "",
       status: data.status || "draft",
       category: data.category || "keynote",
     };

@@ -220,7 +220,7 @@ export default function BookletSlugPage({
                     <p className="font-serif text-sm text-[#0B0907] group-hover:text-[#C25627] transition-colors">
                       {minister.name}
                     </p>
-                    <p className="font-sans text-sm text-[#7A7062]">{minister.affiliation}</p>
+
                   </div>
                 </Link>
               ))}

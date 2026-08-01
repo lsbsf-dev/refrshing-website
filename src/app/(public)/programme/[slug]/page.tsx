@@ -201,9 +201,7 @@ export default function SessionSlugPage({
                           >
                             {speaker.name}
                           </Link>
-                          <span className="block font-mono text-xs text-zinc-400 tracking-widest uppercase mt-0.5">
-                            {speaker.affiliation}
-                          </span>
+
                         </div>
                       </div>
                       <Link

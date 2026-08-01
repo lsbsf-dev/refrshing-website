@@ -24,7 +24,6 @@ export default function AdminMinistersPage() {
     name: "",
     photoUrl: "",
     category: "keynote",
-    affiliation: "",
     biography: "",
   });
 
@@ -41,8 +40,7 @@ export default function AdminMinistersPage() {
   }, [editingMinister, isNewModalOpen]);
 
   const filteredMinisters = ministersList.filter((m) =>
-    m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (m.affiliation && m.affiliation.toLowerCase().includes(searchQuery.toLowerCase()))
+    m.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSaveEdit = (e: React.FormEvent) => {
@@ -67,14 +65,13 @@ export default function AdminMinistersPage() {
       name: newMinister.name,
       photoUrl: newMinister.photoUrl || "/pictures/Image 6.jpg",
       biography: newMinister.biography || "",
-      affiliation: newMinister.affiliation || "",
       status: "published",
       category: newMinister.category as any,
     };
 
     setMinistersList((prev) => [created, ...prev]);
     setIsNewModalOpen(false);
-    setNewMinister({ name: "", photoUrl: "", category: "keynote", affiliation: "", biography: "" });
+    setNewMinister({ name: "", photoUrl: "", category: "keynote", biography: "" });
     triggerSuccessBanner();
   };
 
@@ -128,7 +125,7 @@ export default function AdminMinistersPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Filter by minister name or affiliation..."
+          placeholder="Filter by minister name..."
           className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-4 rounded-xl outline-none transition-all"
         />
       </div>
@@ -162,12 +159,7 @@ export default function AdminMinistersPage() {
                 <span className="font-sans text-[10px] font-extrabold tracking-widest text-[#C25627] uppercase bg-[#C25627]/10 px-2.5 py-0.5 rounded-full w-fit mb-1.5">
                   {minister.category === "music" ? "GOSPEL MUSIC" : "SPEAKER"}
                 </span>
-                <h3 className="font-serif text-lg font-bold truncate">
-                  {minister.name}
-                </h3>
-                <p className="font-sans text-xs text-zinc-500 dark:text-white/60 font-light truncate mt-1">
-                  {minister.affiliation || "Minister of God"}
-                </p>
+                <p className="font-serif text-sm font-medium">{minister.name}</p>
               </div>
             </div>
 
@@ -268,21 +260,6 @@ export default function AdminMinistersPage() {
 
             <div>
               <label className="block text-xs font-sans font-bold uppercase mb-1">
-                Affiliation / Church Title <span className="font-mono text-[10px] font-normal text-zinc-400 lowercase">(optional)</span>
-              </label>
-              <input
-                type="text"
-                value={editingMinister.affiliation || ""}
-                onChange={(e) =>
-                  setEditingMinister({ ...editingMinister, affiliation: e.target.value })
-                }
-                placeholder="e.g. Pastor, Golden Gate Baptist Church"
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-sans font-bold uppercase mb-1">
                 Official Biography <span className="font-mono text-[10px] font-normal text-zinc-400 lowercase">(optional)</span>
               </label>
               <textarea
@@ -377,19 +354,6 @@ export default function AdminMinistersPage() {
               onChange={(url) => setNewMinister({ ...newMinister, photoUrl: url })}
               label="Photo Image Upload"
             />
-
-            <div>
-              <label className="block text-xs font-sans font-bold uppercase mb-1">
-                Affiliation / Title <span className="font-mono text-[10px] font-normal text-zinc-400 lowercase">(optional)</span>
-              </label>
-              <input
-                type="text"
-                value={newMinister.affiliation}
-                onChange={(e) => setNewMinister({ ...newMinister, affiliation: e.target.value })}
-                placeholder="e.g. Pastor, Baptist Church Obanikoro"
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-              />
-            </div>
 
             <div>
               <label className="block text-xs font-sans font-bold uppercase mb-1">

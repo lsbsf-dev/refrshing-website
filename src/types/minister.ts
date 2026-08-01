@@ -10,7 +10,6 @@ export interface Minister {
   name: string;
   photoUrl: string;
   biography: string;
-  affiliation: string;
   status: "draft" | "published";
   category: "keynote" | "music" | "panelist";
 }
