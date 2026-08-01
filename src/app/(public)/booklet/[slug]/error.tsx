@@ -1,3 +1,8 @@
+/**
+ * Booklet Error Component
+ *  * Error boundary for booklet detail pages.
+ */
+
 "use client";
 
 import Link from "next/link";

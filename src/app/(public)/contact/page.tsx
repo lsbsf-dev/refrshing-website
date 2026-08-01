@@ -1,3 +1,8 @@
+/**
+ * Contact Page Component
+ *  * Public contact form and general information.
+ */
+
 "use client";
 
 import React, { useState } from "react";

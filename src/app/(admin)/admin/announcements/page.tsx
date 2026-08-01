@@ -1,3 +1,8 @@
+/**
+ * Admin Announcements Page Component
+ *  * Manages announcements for the event.
+ */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

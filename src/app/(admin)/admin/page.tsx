@@ -1,3 +1,8 @@
+/**
+ * Admin Dashboard Page Component
+ *  * Overview, metrics, and quick actions for the admin portal.
+ */
+
 "use client";
 
 import React from "react";

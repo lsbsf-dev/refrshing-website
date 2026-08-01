@@ -1,3 +1,8 @@
+/**
+ * Image Uploader Component
+ *  * Handles image uploads and preview in the admin portal.
+ */
+
 "use client";
 
 import React, { useState, useRef } from "react";

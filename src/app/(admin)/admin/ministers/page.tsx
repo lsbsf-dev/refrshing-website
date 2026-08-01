@@ -1,3 +1,8 @@
+/**
+ * Admin Ministers Page Component
+ *  * Manages minister and speaker profiles.
+ */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

@@ -1,3 +1,8 @@
+/**
+ * Admin Programme Page Component
+ *  * Manages event schedules and sessions.
+ */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

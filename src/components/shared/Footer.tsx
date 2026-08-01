@@ -1,3 +1,8 @@
+/**
+ * Footer Component
+ *  * Global site footer with links and information.
+ */
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";

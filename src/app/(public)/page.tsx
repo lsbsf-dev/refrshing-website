@@ -340,7 +340,6 @@ export default function HomePage() {
               <Link
                 key={min.id}
                 href={`/ministers/${min.slug}`}
-                prefetch={false}
                 className="group flex flex-col bg-white border border-black/10 rounded-2xl overflow-hidden hover:border-[#C25627]/40 hover:shadow-xl transition-all duration-300 p-5 active-press"
               >
                 <div className="flex items-center gap-4">
@@ -423,7 +422,6 @@ export default function HomePage() {
               <Link
                 key={idx}
                 href={`/programme?day=${idx}`}
-                prefetch={false}
                 data-reveal
                 className="group flex flex-col sm:flex-row items-start gap-6 py-6 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left active-press cursor-pointer block"
               >

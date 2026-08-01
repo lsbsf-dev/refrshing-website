@@ -1,3 +1,8 @@
+/**
+ * Admin Resources Page Component
+ *  * Manages booklet resources and digital materials.
+ */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

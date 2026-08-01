@@ -1,3 +1,8 @@
+/**
+ * Admin Users Page Component
+ *  * Manages system users and access control.
+ */
+
 "use client";
 
 import React, { useState } from "react";

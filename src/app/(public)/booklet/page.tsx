@@ -155,7 +155,6 @@ export default function BookletPage() {
                   <Link
                     key={resource.id}
                     href={`/booklet/${resource.slug}`}
-                    prefetch={false}
                     className="group flex flex-col bg-white border border-black/10 rounded-2xl hover:border-[#C25627]/40 hover:shadow-lg transition-all duration-300 p-6 active-press"
                   >
                     {/* Index + category */}

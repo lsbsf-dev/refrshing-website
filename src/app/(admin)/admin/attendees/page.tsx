@@ -1,3 +1,8 @@
+/**
+ * Admin Attendees Page Component
+ *  * Manages attendee records and registrations.
+ */
+
 "use client";
 
 import React, { useState } from "react";

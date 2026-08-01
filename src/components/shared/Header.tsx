@@ -1,3 +1,8 @@
+/**
+ * Header Component
+ *  * Global site header and primary navigation.
+ */
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";

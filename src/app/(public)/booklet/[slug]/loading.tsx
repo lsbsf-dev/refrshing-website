@@ -1,3 +1,8 @@
+/**
+ * Booklet Loading Component
+ *  * Loading state fallback for booklet detail pages.
+ */
+
 export default function BookletSlugLoading() {
   return (
     <div className="w-full flex-1 bg-[#FAF6EE] animate-pulse">

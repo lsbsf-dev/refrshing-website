@@ -1,3 +1,8 @@
+/**
+ * Admin Layout Component
+ *  * Shell and navigation layout for the admin portal.
+ */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

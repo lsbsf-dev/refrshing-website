@@ -1,3 +1,8 @@
+/**
+ * Logos Component
+ *  * Brand logo assets and SVG components.
+ */
+
 import React from "react";
 
 export function RefreshingLogo({ className = "h-9 w-auto" }: { className?: string }) {

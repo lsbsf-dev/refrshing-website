@@ -1,3 +1,8 @@
+/**
+ * Seed Actions
+ *  * Server actions for public data seeding.
+ */
+
 "use server";
 
 import { adminDb } from "@/lib/firebase/admin";

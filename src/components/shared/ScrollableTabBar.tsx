@@ -1,3 +1,8 @@
+/**
+ * Scrollable Tab Bar Component
+ *  * Reusable horizontally scrollable tab navigation.
+ */
+
 "use client";
 
 /**

@@ -1,3 +1,8 @@
+/**
+ * Seed Page Component
+ *  * Public data seeding page.
+ */
+
 "use client";
 
 import React, { useState } from "react";

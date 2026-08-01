@@ -1,3 +1,8 @@
+/**
+ * Admin Seed Page Component
+ *  * Database seeding utilities for admin.
+ */
+
 "use client";
 
 import React, { useState } from "react";

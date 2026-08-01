@@ -1,3 +1,8 @@
+/**
+ * Admin Login Page Component
+ *  * Authentication gateway for the admin portal.
+ */
+
 "use client";
 
 import React, { useState } from "react";

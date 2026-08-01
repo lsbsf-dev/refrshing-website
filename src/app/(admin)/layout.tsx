@@ -1,3 +1,8 @@
+/**
+ * Admin Root Layout Component
+ *  * Top-level layout wrapper for admin routes.
+ */
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

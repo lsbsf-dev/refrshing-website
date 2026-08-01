@@ -1,3 +1,8 @@
+/**
+ * Public Layout Component
+ *  * Shared layout wrapper for public-facing pages.
+ */
+
 import React from "react";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
