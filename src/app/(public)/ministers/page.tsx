@@ -137,6 +137,7 @@ export default function MinistersPage() {
                 <Link
                   key={minister.id}
                   href={`/ministers/${minister.slug}`}
+                  prefetch={false}
                   className="group flex flex-col bg-white border border-black/10 rounded-2xl overflow-hidden hover:border-[#C25627]/40 hover:shadow-xl transition-all duration-300 active-press"
                 >
                   {/* Photo */}
