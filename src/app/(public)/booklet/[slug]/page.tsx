@@ -137,7 +137,7 @@ export default function BookletSlugPage({
             className="inline-flex items-center gap-1.5 font-sans text-xs text-white/40 hover:text-white transition-colors mb-6 active-press"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
-            Back to Camp Guide
+            Back to Resources
           </Link>
           {/* Category */}
           <span className="font-sans text-xs font-bold tracking-widest text-[#DDB94E] uppercase block mb-3">
@@ -267,7 +267,7 @@ export default function BookletSlugPage({
             className="inline-flex items-center gap-2 font-sans text-xs font-bold tracking-widest text-[#C25627] uppercase hover:gap-3 transition-all active-press"
           >
             <BookOpen className="h-4 w-4" />
-            Back to Camp Guide
+            Back to Resources
           </Link>
         </div>
       </section>

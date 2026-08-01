@@ -60,7 +60,7 @@ export function Footer() {
             <Link href="/programme" className="hover:text-primary text-zinc-300 transition-colors active-press">Daily Programme</Link>
             <Link href="/ministers" className="hover:text-primary text-zinc-300 transition-colors active-press">Featured Ministers</Link>
             <Link href="/gallery" className="hover:text-primary text-zinc-300 transition-colors active-press">Photo Gallery</Link>
-            <Link href="/booklet" className="hover:text-primary text-zinc-300 transition-colors active-press">Camp Guide</Link>
+            <Link href="/booklet" className="hover:text-primary text-zinc-300 transition-colors active-press">Resources</Link>
             <Link href="/announcements" className="hover:text-primary text-zinc-300 transition-colors active-press">General Announcements</Link>
           </div>
         </div>

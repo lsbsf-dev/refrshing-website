@@ -69,11 +69,20 @@ export default function BookletPage() {
     return ms;
   });
 
+  // Sort resources so that Worship Lyrics (Hymns/Songs) and rules come first in "All" view
+  const sortedResources = [...filteredResources].sort((a, b) => {
+    const aIsPriority = a.category === "Worship Lyrics" || a.slug === "camp-rules-and-regulations";
+    const bIsPriority = b.category === "Worship Lyrics" || b.slug === "camp-rules-and-regulations";
+    if (aIsPriority && !bIsPriority) return -1;
+    if (!aIsPriority && bIsPriority) return 1;
+    return 0;
+  });
+
   return (
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero ── */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full min-h-[300px] lg:min-h-[400px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-32 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -85,13 +94,13 @@ export default function BookletPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] via-[#0B0907]/30 to-[#0B0907]/80 pointer-events-none" />
         <div className="relative z-10 max-w-7xl mx-auto w-full">
-          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
+          <span className="font-sans text-xs sm:text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
             REFRESHING 2026 — DIGITAL COMPANION
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl font-light text-white uppercase leading-none mb-6">
-            CAMP <span className="text-[#DDB94E] font-normal">GUIDE</span>
+          <h1 className="font-serif text-3xl sm:text-6xl lg:text-7xl font-light text-white uppercase leading-none mb-6">
+            BOOKLET & <span className="text-[#DDB94E] font-normal">RESOURCES</span>
           </h1>
-          <p className="font-sans text-white/50 text-sm max-w-xl font-light leading-relaxed">
+          <p className="font-sans text-white/50 text-xs sm:text-sm max-w-xl font-light leading-relaxed">
             Your complete digital companion for Refreshing 2026 — camp rules, hymns, devotionals, study guides, and all resources for the five days.
           </p>
         </div>
@@ -99,22 +108,22 @@ export default function BookletPage() {
 
       {/* ── Search + Tabs ── */}
       <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Search */}
           <input
             type="search"
-            placeholder="Search the guide..."
+            placeholder="Search resources..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-56 font-sans text-xs border border-black/10 bg-[#FAF6EE] px-3 py-2 outline-none focus:border-[#C25627] transition-colors placeholder:text-[#7A7062]"
+            className="w-full md:w-56 font-sans text-xs border border-black/10 bg-[#FAF6EE] px-3 py-2 outline-none focus:border-[#C25627] transition-colors placeholder:text-[#7A7062] rounded-md"
           />
           {/* Filter tabs */}
-          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide flex-1">
+          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide flex-1 pb-1 md:pb-0">
             {filterTabs.map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => setActiveFilter(id)}
-                className={`flex-shrink-0 font-sans text-sm font-bold tracking-wider uppercase py-2 px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
+                className={`flex-shrink-0 font-sans text-xs sm:text-sm font-bold tracking-wider uppercase py-2 px-3 sm:px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
                   activeFilter === id
                     ? "border-[#C25627] text-[#C25627]"
                     : "border-transparent text-[#7A7062] hover:text-[#0B0907]"
@@ -128,16 +137,16 @@ export default function BookletPage() {
       </section>
 
       {/* ── Content Grid ── */}
-      <section className="w-full py-12 px-4 sm:px-6 md:px-16">
+      <section className="w-full py-10 px-4 sm:px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
-          {filteredResources.length === 0 ? (
+          {sortedResources.length === 0 ? (
             <div className="text-center py-24">
               <BookOpen className="h-10 w-10 text-[#7A7062] mx-auto mb-4 opacity-40" />
               <p className="font-sans text-[#7A7062] text-sm">No results found. Try a different search or filter.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filteredResources.map((resource, idx) => {
+              {sortedResources.map((resource, idx) => {
                 const Icon = categoryIcon[resource.category] || FileText;
                 return (
                   <Link
@@ -147,7 +156,7 @@ export default function BookletPage() {
                   >
                     {/* Index + category */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase font-bold bg-[#C25627]/8 px-2 py-1">
+                      <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase font-bold bg-[#C25627]/8 px-2 py-1 rounded">
                         {resource.category}
                       </span>
                       <span className="font-mono text-sm text-[#7A7062] opacity-40">

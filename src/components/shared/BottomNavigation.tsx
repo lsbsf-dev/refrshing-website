@@ -14,7 +14,7 @@ const tabs = [
   { label: "Home", href: "/", icon: Home },
   { label: "Programme", href: "/programme", icon: Calendar },
   { label: "Ministers", href: "/ministers", icon: Users },
-  { label: "Camp Guide", href: "/booklet", icon: BookOpen },
+  { label: "Resources", href: "/booklet", icon: BookOpen },
   { label: "Search", href: "/search", icon: Search },
 ];
 
@@ -47,7 +47,7 @@ export default function BottomNavigation() {
                 className={`h-5 w-5 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}
                 strokeWidth={isActive ? 2.5 : 1.8}
               />
-              <span className="font-sans text-xs font-semibold tracking-wide uppercase">
+              <span className="font-sans text-[10px] font-bold tracking-tight uppercase">
                 {label}
               </span>
               {isActive && (

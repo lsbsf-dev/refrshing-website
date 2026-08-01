@@ -261,7 +261,7 @@ export default function HomePage() {
                 
                 {/* Photo 1: Image 14 */}
                 <div className="absolute left-0 top-0 w-[60%] aspect-[3/4] z-10 border border-black/15 shadow-2xl rotate-[-3deg] transition-transform duration-500 hover:rotate-0 bg-white p-2.5 rounded-2xl overflow-hidden active-press">
-                  <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
+                  <div className="relative w-full h-full overflow-hidden rounded-xl">
                     <Image
                       src="/pictures/Image 14.jpg"
                       alt="Archival foundations 1986"
@@ -269,23 +269,17 @@ export default function HomePage() {
                       className="object-cover scale-110 -translate-y-2 filter sepia-[0.35] brightness-[0.85] contrast-[1.05]"
                     />
                   </div>
-                  <div className="h-[15%] flex items-center justify-center font-serif text-xs italic tracking-wide text-black/85">
-                    Leaders Camp Brief
-                  </div>
                 </div>
 
                 {/* Photo 2: Image 10 */}
                 <div className="absolute right-0 top-16 w-[60%] aspect-[3/4] z-20 border-4 border-[#FAF6EE] shadow-2xl rotate-[3deg] transition-transform duration-500 hover:rotate-0 bg-[#FAF6EE] p-2.5 rounded-2xl overflow-hidden active-press">
-                  <div className="relative w-full h-[85%] overflow-hidden rounded-xl">
+                  <div className="relative w-full h-full overflow-hidden rounded-xl">
                     <Image
                       src="/pictures/Image 10.jpg"
                       alt="Alumni Coordination"
                       fill
                       className="object-cover scale-115 -translate-y-3 filter saturate-[0.9]"
                     />
-                  </div>
-                  <div className="h-[15%] flex items-center justify-center font-serif text-xs italic tracking-wide text-black/85">
-                    Covenant Renewal Moments
                   </div>
                 </div>
 
@@ -608,9 +602,6 @@ export default function HomePage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-3 left-3 bg-[#C25627] text-white font-mono text-xs font-bold px-3 py-1 uppercase z-10 rounded-full">
-                  FELLOWSHIP JOURNEY
-                </div>
               </div>
 
               {/* Image 13 */}
@@ -621,9 +612,6 @@ export default function HomePage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-3 right-3 bg-[#0B0907] text-white font-mono text-xs font-bold px-3 py-1 uppercase z-10 rounded-full">
-                  COVENANT MOMENTS
-                </div>
               </div>
 
             </div>

@@ -127,11 +127,6 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-65 pointer-events-none" />
                   </div>
-                  <div className="p-6">
-                    <h3 className="font-serif text-lg font-normal text-[#0B0907] uppercase leading-snug">
-                      {photo.altText}
-                    </h3>
-                  </div>
                 </button>
               ))}
             </div>
