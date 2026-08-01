@@ -195,7 +195,7 @@ export default function ProgrammePage() {
     }
   }, []);
 
-  const activeDayLabel = \`Day \${activeDay + 1}\`;
+  const activeDayLabel = `Day ${activeDay + 1}`;
   const dayItems = SCHEDULE[activeDay as keyof typeof SCHEDULE] || [];
 
   return (
@@ -236,16 +236,16 @@ export default function ProgrammePage() {
                 <button
                   key={idx}
                   onClick={() => setActiveDay(idx)}
-                  className={\`flex-shrink-0 text-left font-sans py-3.5 px-6 border rounded-2xl transition-all duration-300 active-press cursor-pointer \${
+                  className={`flex-shrink-0 text-left font-sans py-3.5 px-6 border rounded-2xl transition-all duration-300 active-press cursor-pointer ${
                     isActive 
                       ? "border-[#C25627] bg-[#C25627] shadow-md" 
                       : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5 bg-white/50"
-                  }\`}
+                  }`}
                 >
-                  <span className={\`block font-mono text-xs font-bold tracking-widest mb-0.5 \${isActive ? "text-[#DDB94E]" : "text-[#C25627]"}\`}>
+                  <span className={`block font-mono text-xs font-bold tracking-widest mb-0.5 ${isActive ? "text-[#DDB94E]" : "text-[#C25627]"}`}>
                     {d.label}
                   </span>
-                  <span className={\`block text-sm font-bold uppercase tracking-wider \${isActive ? "text-white" : "text-[#0B0907]"}\`}>
+                  <span className={`block text-sm font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-[#0B0907]"}`}>
                     {d.name}
                   </span>
                 </button>
