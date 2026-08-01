@@ -103,9 +103,7 @@ export default function AdminMinistersPage() {
       category: newMinister.category as any,
       biography: newMinister.biography,
       photoUrl: newMinister.photoUrl || "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61",
-      socialLinks: {},
-      isFeatured: true,
-      displayOrder: ministersList.length,
+      status: "published",
     });
   };
 

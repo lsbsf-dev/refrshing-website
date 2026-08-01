@@ -91,7 +91,7 @@ export async function updateMinister(ministerId: string, data: Partial<Minister>
   await setDoc(ref, data as Minister, { merge: true });
 }
 
-export async function createMinister(minister: Omit<Minister, "id">): Promise<string> {
+export async function createMinister(minister: Omit<Minister, "id" | "slug"> & { slug?: string }): Promise<string> {
   const slug = minister.slug || minister.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const ref = doc(db, "ministers", slug).withConverter(ministerConverter);
   await setDoc(ref, minister as Minister);
