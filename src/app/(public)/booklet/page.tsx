@@ -16,6 +16,7 @@ import { REGISTRATION_URL } from "@/lib/constants";
 import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 import { BookOpen, FileText, Music, BookMarked, Download, ChevronRight } from "lucide-react";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 type FilterTab = "all" | "articles" | "worship" | "rules" | "studies" | "devotionals" | "publications";
 
@@ -107,7 +108,7 @@ export default function BookletPage() {
       </section>
 
       {/* ── Search + Tabs ── */}
-      <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30">
+      <section className="w-full bg-white border-b border-black/5 sticky top-20 lg:top-24 z-30 [padding-top:env(safe-area-inset-top,0px)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Search */}
           <input
@@ -118,20 +119,22 @@ export default function BookletPage() {
             className="w-full md:w-56 font-sans text-xs border border-black/10 bg-[#FAF6EE] px-3 py-2 outline-none focus:border-[#C25627] transition-colors placeholder:text-[#7A7062] rounded-md"
           />
           {/* Filter tabs */}
-          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide flex-1 pb-1 md:pb-0">
-            {filterTabs.map(({ id, label }) => (
-              <button
-                key={id}
-                onClick={() => setActiveFilter(id)}
-                className={`flex-shrink-0 font-sans text-xs sm:text-sm font-bold tracking-wider uppercase py-2 px-3 sm:px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
-                  activeFilter === id
-                    ? "border-[#C25627] text-[#C25627]"
-                    : "border-transparent text-[#7A7062] hover:text-[#0B0907]"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="flex-1 overflow-hidden pb-1 md:pb-0">
+            <ScrollableTabBar className="gap-0">
+              {filterTabs.map(({ id, label }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveFilter(id)}
+                  className={`flex-shrink-0 font-sans text-xs sm:text-sm font-bold tracking-wider uppercase py-3 px-3 sm:px-4 border-b-2 transition-all duration-200 whitespace-nowrap active-press ${
+                    activeFilter === id
+                      ? "border-[#C25627] text-[#C25627]"
+                      : "border-transparent text-[#7A7062] hover:text-[#0B0907]"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </ScrollableTabBar>
           </div>
         </div>
       </section>

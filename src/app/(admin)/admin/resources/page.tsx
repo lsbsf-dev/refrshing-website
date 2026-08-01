@@ -39,7 +39,7 @@ export default function AdminResourcesPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-black/10 dark:border-white/10 pb-6">
         <div>
           <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-1">
-            CAMP GUIDE BOOKLET CONTROL
+            RESOURCES BOOKLET CONTROL
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl font-light uppercase">
             MANAGE <span className="text-[#C25627] font-normal">RESOURCES</span>

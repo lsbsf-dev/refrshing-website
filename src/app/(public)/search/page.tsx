@@ -15,6 +15,7 @@ import { getSessions } from "@/lib/firebase/programme";
 import { getResources } from "@/lib/firebase/resources";
 import { getAnnouncements } from "@/lib/firebase/announcements";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -78,7 +79,7 @@ export default function SearchPage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -94,7 +95,7 @@ export default function SearchPage() {
           <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             CROSS-SITE SEARCH
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
             FINDER <br />
             <span className="text-gradient-gold font-normal font-serif">INDEX</span>
           </h1>
@@ -122,43 +123,45 @@ export default function SearchPage() {
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden">
         <div className="relative z-10 max-w-5xl mx-auto w-full">
           
-          <div className="flex border-b border-black/10 mb-10 overflow-x-auto scrollbar-none gap-8">
-            <button
-              onClick={() => setActiveTab("ministers")}
-              className={`font-serif text-lg pb-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
-                activeTab === "ministers" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
-              }`}
-            >
-              Ministers ({filteredMinisters.length})
-              {activeTab === "ministers" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
-            </button>
-            <button
-              onClick={() => setActiveTab("sessions")}
-              className={`font-serif text-lg pb-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
-                activeTab === "sessions" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
-              }`}
-            >
-              Sessions ({filteredSessions.length})
-              {activeTab === "sessions" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
-            </button>
-            <button
-              onClick={() => setActiveTab("resources")}
-              className={`font-serif text-lg pb-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
-                activeTab === "resources" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
-              }`}
-            >
-              Camp Guide ({filteredResources.length})
-              {activeTab === "resources" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
-            </button>
-            <button
-              onClick={() => setActiveTab("announcements")}
-              className={`font-serif text-lg pb-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
-                activeTab === "announcements" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
-              }`}
-            >
-              Notices ({filteredAnnouncements.length})
-              {activeTab === "announcements" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
-            </button>
+          <div className="border-b border-black/10 mb-10 overflow-hidden">
+            <ScrollableTabBar className="gap-8">
+              <button
+                onClick={() => setActiveTab("ministers")}
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                  activeTab === "ministers" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
+                }`}
+              >
+                Ministers ({filteredMinisters.length})
+                {activeTab === "ministers" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
+              </button>
+              <button
+                onClick={() => setActiveTab("sessions")}
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                  activeTab === "sessions" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
+                }`}
+              >
+                Sessions ({filteredSessions.length})
+                {activeTab === "sessions" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
+              </button>
+              <button
+                onClick={() => setActiveTab("resources")}
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                  activeTab === "resources" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
+                }`}
+              >
+                Resources ({filteredResources.length})
+                {activeTab === "resources" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
+              </button>
+              <button
+                onClick={() => setActiveTab("announcements")}
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                  activeTab === "announcements" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
+                }`}
+              >
+                Notices ({filteredAnnouncements.length})
+                {activeTab === "announcements" && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25627]" />}
+              </button>
+            </ScrollableTabBar>
           </div>
 
           {isLoading ? (
@@ -194,7 +197,7 @@ export default function SearchPage() {
                       href={`/programme/${s.slug}`}
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-wrap justify-between items-center gap-2">
                         <h3 className="font-serif text-xl font-normal text-[#0B0907] uppercase">{s.title}</h3>
                         <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase bg-[#C25627]/10 px-2 py-0.5">{s.day}</span>
                       </div>

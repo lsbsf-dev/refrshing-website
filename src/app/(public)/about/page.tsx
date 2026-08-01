@@ -48,7 +48,7 @@ export default function AboutPage() {
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── HERO ── */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -63,7 +63,7 @@ export default function AboutPage() {
           <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
             REFRESHING 2026 — 40TH ANNIVERSARY
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl font-light text-white uppercase leading-none mb-6">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-7xl font-light text-white uppercase leading-none mb-6">
             OUR <span className="text-[#C25627] font-normal">HERITAGE</span>
           </h1>
           <p className="font-sans text-white/70 text-sm max-w-xl font-light leading-relaxed">
@@ -77,7 +77,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
           {/* Left: Historic photo frame (No sharp corners, NO incorrect tag) */}
-          <div className="lg:col-span-5 relative flex justify-center lg:justify-start">
+          <div className="lg:col-span-5 relative flex justify-center lg:justify-start overflow-hidden py-4">
             <div className="relative w-full max-w-md aspect-[3/4] border border-black/10 shadow-xl bg-white overflow-hidden rotate-[-2deg] hover:rotate-0 transition-transform duration-500 rounded-2xl p-2.5 active-press cursor-pointer">
               <div className="relative w-full h-full overflow-hidden rounded-xl">
                 <Image
@@ -89,7 +89,7 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-
+          
           {/* Right: History & Philosophy narrative */}
           <div className="lg:col-span-7 flex flex-col items-start gap-6 text-left text-[#0B0907]">
             <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
@@ -167,7 +167,7 @@ export default function AboutPage() {
 
       {/* ── BE PART OF KINGDOM HISTORY ── */}
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 sm:p-14 bg-[#0B0907] text-white shadow-2xl rounded-3xl">
+        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-5 sm:p-10 sm:p-14 bg-[#0B0907] text-white shadow-2xl rounded-3xl">
           <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             BE PART OF KINGDOM HISTORY
           </span>

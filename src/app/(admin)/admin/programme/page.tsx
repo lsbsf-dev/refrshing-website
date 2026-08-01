@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Clock, MapPin, Edit2, Plus, Sparkles, X, Save, User } from "lucide-react";
 import seedSessions from "@/lib/firebase/seedSessions.json";
 import { Session } from "@/types/programme";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 export default function AdminProgrammePage() {
   const [sessionsList, setSessionsList] = useState<Session[]>(seedSessions as Session[]);
@@ -70,20 +71,22 @@ export default function AdminProgrammePage() {
       )}
 
       {/* Day Filter Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
-        {daysConfig.map((d) => (
-          <button
-            key={d.id}
-            onClick={() => setSelectedDayFilter(d.id)}
-            className={`px-5 py-2.5 rounded-xl font-sans text-xs font-semibold tracking-wider uppercase transition-all whitespace-nowrap cursor-pointer ${
-              selectedDayFilter === d.id
-                ? "bg-[#C25627] text-white shadow-md font-bold"
-                : "bg-black/5 dark:bg-white/5 text-zinc-600 dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10"
-            }`}
-          >
-            {d.label}
-          </button>
-        ))}
+      <div className="overflow-hidden">
+        <ScrollableTabBar className="gap-2" isDark={true}>
+          {daysConfig.map((d) => (
+            <button
+              key={d.id}
+              onClick={() => setSelectedDayFilter(d.id)}
+              className={`flex-shrink-0 whitespace-nowrap px-5 py-2.5 rounded-xl font-sans text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
+                selectedDayFilter === d.id
+                  ? "bg-[#C25627] text-white shadow-md font-bold"
+                  : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </ScrollableTabBar>
       </div>
 
       {/* ── Sessions List ── */}

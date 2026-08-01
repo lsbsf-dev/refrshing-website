@@ -90,7 +90,7 @@ export default function MinisterDetailPage({
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero banner ── */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -112,7 +112,7 @@ export default function MinisterDetailPage({
           <span className="font-sans text-xs font-bold tracking-widest text-[#DDB94E] uppercase block mb-2 px-3 py-1 bg-[#DDB94E]/10 rounded-full w-fit">
             {minister.category === "music" ? "GOSPEL MUSIC" : "SPEAKER"}
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none">
+          <h1 className="font-serif text-4xl sm:text-6xl font-light text-white uppercase leading-none break-words">
             {minister.name}
           </h1>
         </div>
@@ -150,7 +150,7 @@ export default function MinisterDetailPage({
               <span className="font-sans text-xs text-[#C25627] tracking-widest uppercase font-bold">
                 Biography
               </span>
-              <div className="font-sans text-sm sm:text-base text-[#3D3530] leading-relaxed font-light whitespace-pre-line space-y-4">
+              <div className="font-sans text-sm sm:text-base text-[#3D3530] leading-relaxed font-light whitespace-pre-line space-y-4 break-words">
                 {minister.biography}
               </div>
             </div>

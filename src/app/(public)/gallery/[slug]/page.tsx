@@ -67,7 +67,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src={album.coverImageUrl}
@@ -110,6 +110,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
             </div>
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+              {/* SAFARI-TEST: Verify column ordering at 375px + 768px in iOS Safari and macOS Safari before release */}
               {photos.map((photo) => (
                 <button
                   key={photo.id}

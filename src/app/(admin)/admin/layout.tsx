@@ -100,7 +100,7 @@ export default function AdminDashboardLayout({
     { label: "Ministers", href: "/admin/ministers", icon: Users },
     { label: "Programme", href: "/admin/programme", icon: Calendar },
     { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
-    { label: "Camp Guide", href: "/admin/resources", icon: BookOpen },
+    { label: "Resources", href: "/admin/resources", icon: BookOpen },
     { label: "Attendees", href: "/admin/attendees", icon: UserCheck },
     { label: "Staff & Security", href: "/admin/users", icon: ShieldCheck },
   ];

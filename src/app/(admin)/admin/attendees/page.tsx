@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { UserCheck, Search, QrCode, CheckCircle2, Clock, Filter, ShieldCheck, Sparkles } from "lucide-react";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 interface Attendee {
   id: string;
@@ -163,31 +164,33 @@ export default function AdminAttendeesPage() {
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-          <button
-            onClick={() => setFilterStatus("all")}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-              filterStatus === "all" ? "bg-[#C25627] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-            }`}
-          >
-            All ({totalCount})
-          </button>
-          <button
-            onClick={() => setFilterStatus("checkedIn")}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-              filterStatus === "checkedIn" ? "bg-emerald-600 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-            }`}
-          >
-            Checked-In ({checkedInCount})
-          </button>
-          <button
-            onClick={() => setFilterStatus("pending")}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-              filterStatus === "pending" ? "bg-[#DDB94E] text-[#0B0907] font-bold" : "bg-white/5 text-white/70 hover:bg-white/10"
-            }`}
-          >
-            Pending ({pendingCount})
-          </button>
+        <div className="w-full sm:w-auto overflow-hidden">
+          <ScrollableTabBar className="gap-2" isDark={true}>
+            <button
+              onClick={() => setFilterStatus("all")}
+              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                filterStatus === "all" ? "bg-[#C25627] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+            >
+              All ({totalCount})
+            </button>
+            <button
+              onClick={() => setFilterStatus("checkedIn")}
+              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                filterStatus === "checkedIn" ? "bg-emerald-600 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+            >
+              Checked-In ({checkedInCount})
+            </button>
+            <button
+              onClick={() => setFilterStatus("pending")}
+              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                filterStatus === "pending" ? "bg-[#DDB94E] text-[#0B0907] font-bold" : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+            >
+              Pending ({pendingCount})
+            </button>
+          </ScrollableTabBar>
         </div>
       </div>
 

@@ -166,14 +166,14 @@ export default function AdminAnnouncementsPage() {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setEditingAnn(ann)}
-                className="p-2.5 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-colors cursor-pointer"
+                className="p-3 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-colors cursor-pointer"
                 title="Edit Announcement"
               >
                 <Edit2 className="h-4 w-4 text-[#C25627]" />
               </button>
               <button
                 onClick={() => handleDelete(ann.id)}
-                className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors cursor-pointer"
+                className="p-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors cursor-pointer"
                 title="Delete Announcement"
               >
                 <Trash2 className="h-4 w-4" />

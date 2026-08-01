@@ -175,14 +175,14 @@ export default function AdminMinistersPage() {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => setEditingMinister(minister)}
-                  className="p-2.5 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-colors cursor-pointer active-press"
+                  className="p-3 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-colors cursor-pointer active-press"
                   title="Edit Minister"
                 >
                   <Edit2 className="h-4 w-4 text-[#C25627]" />
                 </button>
                 <button
                   onClick={() => handleDelete(minister.id)}
-                  className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors cursor-pointer active-press"
+                  className="p-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors cursor-pointer active-press"
                   title="Delete Minister"
                 >
                   <Trash2 className="h-4 w-4" />

@@ -14,6 +14,7 @@ import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { REGISTRATION_URL } from "@/lib/constants";
 import seedSessions from "@/lib/firebase/seedSessions.json";
 import { Session } from "@/types/programme";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 interface DayConfig {
   label: string;
@@ -125,7 +126,7 @@ export default function ProgrammePage() {
 
   return (
     <div className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -142,7 +143,7 @@ export default function ProgrammePage() {
           <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase">
             FIVE DAYS IN HIS SANCTUARY
           </span>
-          <h1 className="font-serif text-3xl sm:text-6xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95]">
             DAILY <br />
             <span className="text-gradient-gold font-normal font-serif">JOURNEY</span>
           </h1>
@@ -153,28 +154,30 @@ export default function ProgrammePage() {
       </section>
 
       <section className="relative w-full bg-[#FAF6EE] border-b border-black/5 py-6 px-4 sm:px-6 md:px-16 overflow-hidden z-20">
-        <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto gap-4 md:gap-8 scrollbar-none">
-          {daysConfig.map((d, idx) => {
-            const isActive = idx === activeDay;
-            return (
-              <button
-                key={idx}
-                onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 text-left font-sans py-3 px-6 border rounded-2xl transition-all duration-300 active-press cursor-pointer ${
-                  isActive 
-                    ? "border-[#C25627] bg-[#C25627] shadow-md" 
-                    : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5 bg-white/50"
-                }`}
-              >
-                <span className={`block font-mono text-xs font-bold tracking-widest mb-0.5 ${isActive ? "text-[#DDB94E]" : "text-[#C25627]"}`}>
-                  {d.label}
-                </span>
-                <span className={`block text-sm font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-[#0B0907]"}`}>
-                  {d.name}
-                </span>
-              </button>
-            );
-          })}
+        <div className="max-w-7xl mx-auto">
+          <ScrollableTabBar className="gap-4 md:gap-8 justify-start md:justify-center">
+            {daysConfig.map((d, idx) => {
+              const isActive = idx === activeDay;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setActiveDay(idx)}
+                  className={`flex-shrink-0 text-left font-sans py-3.5 px-6 border rounded-2xl transition-all duration-300 active-press cursor-pointer ${
+                    isActive 
+                      ? "border-[#C25627] bg-[#C25627] shadow-md" 
+                      : "border-black/10 text-zinc-600 hover:text-zinc-900 hover:bg-black/5 bg-white/50"
+                  }`}
+                >
+                  <span className={`block font-mono text-xs font-bold tracking-widest mb-0.5 ${isActive ? "text-[#DDB94E]" : "text-[#C25627]"}`}>
+                    {d.label}
+                  </span>
+                  <span className={`block text-sm font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-[#0B0907]"}`}>
+                    {d.name}
+                  </span>
+                </button>
+              );
+            })}
+          </ScrollableTabBar>
         </div>
       </section>
 
@@ -193,18 +196,18 @@ export default function ProgrammePage() {
           </div>
 
           {sortedSessions.length === 0 ? (
-            <div className="py-16 text-center font-serif text-xl italic text-zinc-400 border-l border-black/10 pl-6 md:pl-12">
+            <div className="py-16 text-center font-serif text-xl italic text-zinc-400 border-l border-black/10 pl-8 md:pl-12">
               No sessions scheduled for this day yet.
             </div>
           ) : (
-            <div className="relative pl-6 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
+            <div className="relative pl-8 md:pl-12 border-l border-black/10 flex flex-col gap-12 text-left">
               {sortedSessions.map((sess) => (
                 <Link 
                   href={`/programme/${sess.slug}`} 
                   key={sess.id} 
-                  className="relative group active-press cursor-pointer block"
+                  className="relative group active-press cursor-pointer block min-h-[44px]"
                 >
-                  <div className="absolute -left-[31px] md:-left-[55px] top-1.5 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10 group-hover:scale-125 transition-transform duration-300">
+                  <div className="absolute -left-[33px] md:-left-[57px] top-1.5 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10 group-hover:scale-125 transition-transform duration-300">
                     <div className="h-1.5 w-1.5 bg-[#C25627]" />
                   </div>
 
@@ -238,7 +241,7 @@ export default function ProgrammePage() {
       </section>
 
       <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
+        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-6 sm:p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
           <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase">
             SECURE YOUR REGISTRATION NOW
           </span>

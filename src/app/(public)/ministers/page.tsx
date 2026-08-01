@@ -15,6 +15,7 @@ import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { REGISTRATION_URL } from "@/lib/constants";
 import seedMinisters from "@/lib/firebase/seedMinisters.json";
 import { Minister } from "@/types/minister";
+import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 type TabType = "all" | "keynote" | "music";
 
@@ -65,10 +66,10 @@ export default function MinistersPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
+    <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907] pb-20 lg:pb-8">
 
       {/* ── Hero ── */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -83,7 +84,7 @@ export default function MinistersPage() {
           <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
             REFRESHING 2026 — SPEAKERS & MINISTERS
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl font-light text-white uppercase leading-none mb-6">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-7xl font-light text-white uppercase leading-none mb-6">
             THE <span className="text-[#C25627] font-normal">MINISTERS</span>
           </h1>
           <p className="font-sans text-white/70 text-sm max-w-xl font-light leading-relaxed">
@@ -93,20 +94,16 @@ export default function MinistersPage() {
       </section>
 
       {/* ── Filter Tabs ── */}
-      <section className="w-full bg-white border-b border-black/10 sticky top-24 lg:top-28 z-30 shadow-xs">
+      <section className="w-full bg-white border-b border-black/10 sticky top-24 lg:top-28 z-30 shadow-xs [padding-top:env(safe-area-inset-top,0px)]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 py-4">
-          <div
-            role="tablist"
-            aria-label="Speaker categories"
-            className="flex items-center gap-3 overflow-x-auto scrollbar-hide"
-          >
+          <ScrollableTabBar className="gap-3">
             {tabsConfig.map((tab) => (
               <button
                 key={tab.id}
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-shrink-0 font-sans text-xs font-semibold tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 active-press cursor-pointer ${
+                className={`flex-shrink-0 font-sans text-xs font-semibold tracking-wider uppercase py-3.5 px-6 rounded-xl transition-all duration-200 active-press cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-[#C25627] text-white shadow-md font-bold"
                     : "bg-black/5 text-[#7A7062] hover:text-[#0B0907] hover:bg-black/10"
@@ -120,7 +117,7 @@ export default function MinistersPage() {
                 )}
               </button>
             ))}
-          </div>
+          </ScrollableTabBar>
         </div>
       </section>
 

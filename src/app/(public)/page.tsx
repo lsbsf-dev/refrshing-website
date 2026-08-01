@@ -110,7 +110,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           SCENE 1: HERO (Explosive - Dynamic Scale & Entrance)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[100dvh] min-h-[650px] flex flex-col justify-between overflow-hidden bg-[#0B0907] text-[#FCFAF6] pt-24 pb-8">
+      <section className="relative w-full h-[100dvh] min-h-[650px] hero-landscape flex flex-col justify-between overflow-hidden bg-[#0B0907] text-[#FCFAF6] pt-24 pb-8">
         
         {/* Worship background opacity */}
         <div className="absolute inset-0 w-full h-full opacity-55 pointer-events-none z-0">
@@ -170,7 +170,7 @@ export default function HomePage() {
             LAGOS STATE BAPTIST STUDENT FELLOWSHIP PRESENTS
           </span>
 
-          <h1 className="font-serif text-3xl xs:text-4xl sm:text-6xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
+          <h1 className="font-serif text-2xl xs:text-4xl sm:text-6xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
             <span className="text-gradient-gold block font-serif">
               THE GREATER
             </span>

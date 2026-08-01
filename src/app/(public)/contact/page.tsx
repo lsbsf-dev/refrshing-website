@@ -33,7 +33,7 @@ export default function ContactPage() {
       {/* ═══════════════════════════════════════
           SCENE 1: CONTACT HERO (Centered & Balanced Height with staggered load animations)
           ═══════════════════════════════════════ */}
-      <section className="relative w-full h-[45dvh] min-h-[380px] flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[380px] hero-landscape flex flex-col justify-center bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-24 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -49,7 +49,7 @@ export default function ContactPage() {
           <span className="font-sans text-sm font-extrabold tracking-[0.35em] text-[#DDB94E] uppercase animate-hero-item delay-100">
             REFRESHING ENQUIRY CHANNELS
           </span>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-[85px] font-bold tracking-tight uppercase select-none leading-[0.95] animate-hero-item delay-200">
             CONTACT <br />
             <span className="text-gradient-gold font-normal font-serif">PORTAL</span>
           </h1>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   <a href={`tel:${chap.phone}`} className="font-mono text-xs text-primary-dark hover:underline mt-1 font-semibold active-press inline-block">
                     {chap.phone}
                   </a>
-                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-zinc-500 hover:text-[#0B0907] transition-colors break-all active-press inline-block">
+                  <a href={`mailto:${chap.email}`} className="font-sans text-xs text-zinc-500 hover:text-[#0B0907] transition-colors break-all break-words active-press inline-block">
                     {chap.email}
                   </a>
                 </div>
@@ -113,7 +113,7 @@ export default function ContactPage() {
 
           {/* Right: Email Form */}
           <div className="lg:col-span-6 w-full">
-            <div className="p-8 md:p-12 border border-black/10 bg-white relative shadow-xl">
+            <div className="p-5 sm:p-8 md:p-12 border border-black/10 bg-white relative shadow-xl">
               <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#E05320] uppercase block mb-6 text-left">
                 SUBMIT AN ENQUIRY
               </span>

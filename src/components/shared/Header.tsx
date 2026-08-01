@@ -174,7 +174,7 @@ export function Header() {
 
         {/* Mobile menu trigger */}
         <div className="lg:hidden flex items-center gap-3 z-50">
-          <Link href="/search" className={`active-press p-2 ${iconColorClass}`}>
+          <Link href="/search" className={`active-press p-2.5 ${iconColorClass}`}>
             <Search className="h-6 w-6" />
           </Link>
           <button

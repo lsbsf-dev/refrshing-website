@@ -190,7 +190,7 @@ export default function AdminUsersPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-white/60">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
                   <span>Email: <strong className="text-white">{member.email}</strong></span>
                   <span className="flex items-center gap-1">
                     MFA Enrolled:

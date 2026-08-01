@@ -391,3 +391,23 @@ html {
   filter: blur(40px);
   pointer-events: none;
 }
+
+/* ─── Scrollbar hide utility (used by ScrollableTabBar and tab strips) ─── */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Hero landscape override ─── */
+/* Reduces hero section height/padding on short landscape mobile viewports
+   (e.g. iPhone SE landscape: 667×375, iPhone 14 landscape: 844×390).
+   Applied via .hero-landscape class on hero <section> elements. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero-landscape {
+    min-height: 220px !important;
+    padding-top: 5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+}
