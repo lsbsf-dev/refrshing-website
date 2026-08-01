@@ -16,6 +16,9 @@ import { getSessions } from "@/lib/firebase/programme";
 import { getMinisters } from "@/lib/firebase/ministers";
 import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import { logAnalyticsEvent } from "@/lib/analytics";
+import seedResources from "@/lib/firebase/seedResources.json";
+import seedSessions from "@/lib/firebase/seedSessions.json";
+import seedMinisters from "@/lib/firebase/seedMinisters.json";
 
 /* ── Simple markdown-to-HTML renderer ─────────────────────────── */
 function renderMarkdown(text: string): string {
@@ -72,6 +75,9 @@ export default function BookletSlugPage({
     queryKey: ["resource", ACTIVE_EVENT_ID, slug],
     queryFn: () => getResourceBySlug(ACTIVE_EVENT_ID, slug),
     staleTime: 6 * 60 * 60 * 1000,
+    initialData: () => (seedResources as unknown as any[]).find(
+      (r) => r.slug === slug && r.eventId === ACTIVE_EVENT_ID
+    ),
   });
 
   const { data: sessions = [] } = useQuery({
@@ -79,6 +85,7 @@ export default function BookletSlugPage({
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
     enabled: !!resource,
     staleTime: 30 * 60 * 1000,
+    initialData: () => seedSessions as any[],
   });
 
   const { data: ministers = [] } = useQuery({
@@ -86,6 +93,7 @@ export default function BookletSlugPage({
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
     enabled: !!resource,
     staleTime: 6 * 60 * 60 * 1000,
+    initialData: () => seedMinisters as any[],
   });
 
   useEffect(() => {
