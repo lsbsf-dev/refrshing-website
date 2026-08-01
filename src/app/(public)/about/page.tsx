@@ -48,7 +48,7 @@ export default function AboutPage() {
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── HERO ── */}
-      <section className="relative w-full h-[45dvh] min-h-[420px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[460px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-52 lg:pt-64 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"

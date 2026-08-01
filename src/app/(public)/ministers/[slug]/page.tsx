@@ -90,7 +90,7 @@ export default function MinisterDetailPage({
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
       {/* ── Hero banner ── */}
-      <section className="relative w-full h-[45dvh] min-h-[420px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-40 lg:pt-48 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
+      <section className="relative w-full h-[45dvh] min-h-[460px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-52 lg:pt-64 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
             src="/pictures/Image 3.jpg"
@@ -155,42 +155,6 @@ export default function MinisterDetailPage({
               </div>
             </div>
 
-            {/* Sessions */}
-            {sessions.length > 0 && (
-              <div className="flex flex-col gap-4 pt-6 border-t border-black/10">
-                <span className="font-sans text-xs text-[#C25627] tracking-widest uppercase font-bold">
-                  Assigned Sessions
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {sessions.map((session) => (
-                    <Link
-                      key={session.id}
-                      href={`/programme/${session.slug}`}
-                      className="group flex flex-col gap-1.5 p-4 bg-white border border-black/10 rounded-xl hover:border-[#C25627]/40 hover:shadow-md transition-all duration-300 active-press"
-                    >
-                      <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase font-bold">
-                        {session.day}
-                      </span>
-                      <h3 className="font-serif text-base font-medium text-[#0B0907] group-hover:text-[#C25627] transition-colors leading-snug">
-                        {session.title}
-                      </h3>
-                      <div className="flex items-center gap-3 font-sans text-xs text-[#7A7062] mt-1">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {session.startTime} – {session.endTime}
-                        </span>
-                        {session.venue && (
-                          <span className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {session.venue}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Articles */}
             {articles.length > 0 && (

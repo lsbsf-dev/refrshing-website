@@ -188,44 +188,6 @@ export default function BookletSlugPage({
         </div>
       </section>
 
-      {/* ── Related Sessions ── */}
-      {relatedSessions.length > 0 && (
-        <section className="w-full py-12 px-4 sm:px-6 md:px-16 bg-white border-t border-black/5">
-          <div className="max-w-4xl mx-auto">
-            <span className="font-sans text-sm font-bold tracking-widest text-[#C25627] uppercase block mb-6">
-              USED IN SESSIONS & SERVICES
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {relatedSessions.map((session) => (
-                <Link
-                  key={session.id}
-                  href={`/programme/${session.slug}`}
-                  className="group flex flex-col gap-2 p-5 border border-black/5 bg-[#FAF6EE] hover:border-[#C25627]/30 transition-all duration-300 active-press"
-                >
-                  <span className="font-mono text-xs text-[#C25627] tracking-widest uppercase">
-                    {session.day}
-                  </span>
-                  <h3 className="font-serif text-base font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors">
-                    {session.title}
-                  </h3>
-                  <div className="flex items-center gap-3 font-sans text-sm text-[#7A7062]">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {session.startTime}
-                    </span>
-                    {session.venue && (
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {session.venue}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── Related Ministers/Authors ── */}
       {relatedMinisters.length > 0 && (
