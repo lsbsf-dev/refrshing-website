@@ -33,30 +33,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const dynamicSessions = [
-    "chapter-leaders-arrival-check-in",
-    "leadership-convocation-alignment",
-    "opening-altar-fire-prayers",
-    "morning-covenant-devotions",
-    "discipleship-cohort-seminars",
-    "campus-strategy-panel",
-    "revival-encounter-session",
-    "general-delegates-arrival-registration",
-    "anniversary-welcome-briefing",
-    "the-first-corporate-altar-meeting",
-    "corporate-morning-devotions",
-    "general-discipleship-seminar",
-    "qa-session-panel-discussions",
-    "communion-service-prophetic-night",
-    "consecration-prayers",
-    "commissioning-sendforth-service",
-    "check-out-departure",
-  ].map((slug) => ({
-    url: `${baseUrl}/programme/${slug}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
 
   const dynamicAlbums = [
     "sanctuary-encounters",
@@ -84,7 +60,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...dynamicMinisters,
-    ...dynamicSessions,
     ...dynamicAlbums,
     ...dynamicResources,
   ];

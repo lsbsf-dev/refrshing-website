@@ -1,145 +1,229 @@
 [
   {
-    "id": "sess-mon-eve",
+    "id": "sess-mon-eve-msg",
     "eventId": "refreshing-2026",
     "slug": "unveiled-glory",
     "day": "Day 1",
-    "title": "Unveiled Glory (Monday Evening Message)",
-    "description": "Scripture Text: 2 Corinthians 3:18\n\nOpening evening message laying the foundation of vertical transformation and beholding the glory of the Lord.",
-    "startTime": "5:00 PM",
-    "endTime": "8:30 PM",
+    "title": "Unveiled Glory (Message)",
+    "description": "Scripture Text: 2 Corinthians 3:18\n\nTo help participants understand that we are created for God's glory and are continually transformed through Christ to reflect His glory.",
+    "startTime": "7:25 PM",
+    "endTime": "8:40 PM",
     "venue": "Main Chapel",
-    "ministerIds": ["rev-ben-banjoko"],
+    "ministerIds": [
+      "rev-ben-banjoko"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-tue-morn",
+    "id": "sess-tue-morn-teach",
     "eventId": "refreshing-2026",
-    "slug": "a-call-to-awakening",
+    "slug": "call-to-awakening",
     "day": "Day 2",
     "title": "A Call to Awakening: A Study of Elijah and Elisha",
-    "description": "Scripture Texts: 2 Kings 2:1–15; Isaiah 52:1\n\nMorning intensive teaching on spiritual succession, mantle reception, and awakening campus altars.",
-    "startTime": "8:30 AM",
-    "endTime": "11:30 AM",
+    "description": "Scripture Texts: 2 Kings 2:1-15; Isaiah 52:1\n\nA call for leaders to rise from complacency and clothe themselves with strength for the next move of God.",
+    "startTime": "10:25 AM",
+    "endTime": "11:55 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["rev-adebisi-ikotun"],
+    "ministerIds": [
+      "rev-adebisi-ikotun"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-tue-aft",
+    "id": "sess-tue-aft-orient",
     "eventId": "refreshing-2026",
-    "slug": "bsf-and-my-life-in-the-baptist-church",
+    "slug": "bsf-and-baptist-church",
     "day": "Day 2",
     "title": "BSF and My Life in the Baptist Church (Orientation)",
-    "description": "Afternoon session focusing on Churchmanship, Baptist identity, and student commitment to the local church body.",
-    "startTime": "2:00 PM",
-    "endTime": "4:30 PM",
+    "description": "Focus: A call to rebuild broken walls.",
+    "startTime": "2:50 PM",
+    "endTime": "4:20 PM",
     "venue": "Auditorium Hall",
-    "ministerIds": ["rev-alade-james"],
+    "ministerIds": [
+      "rev-alade-james"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-tue-night",
+    "id": "sess-tue-night-anoint",
     "eventId": "refreshing-2026",
     "slug": "destined-for-glory",
     "day": "Day 2",
     "title": "Destined for Glory (Anointing Night)",
-    "description": "Scripture Text: 1 Samuel 16:11–13\n\nAnointing service for divine selection, empowerment, and Kingdom alignment.",
-    "startTime": "9:00 PM",
-    "endTime": "4:00 AM",
+    "description": "Text: 1 Samuel 16:11-13\n\nTo experience God's predestined anointing for those who identify with Christ.",
+    "startTime": "12:45 AM",
+    "endTime": "2:20 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["rev-victor-kolawole"],
+    "ministerIds": [
+      "rev-victor-kolawole"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-wed-eve",
+    "id": "sess-wed-morn-heaven",
+    "eventId": "refreshing-2026",
+    "slug": "open-heaven-day3",
+    "day": "Day 3",
+    "title": "Open Heaven",
+    "description": "Morning devotion and prayer session.",
+    "startTime": "9:00 AM",
+    "endTime": "9:40 AM",
+    "venue": "Main Chapel",
+    "ministerIds": [
+      "pst-odunayo-adeyemi"
+    ],
+    "status": "published"
+  },
+  {
+    "id": "sess-wed-eve-msg",
     "eventId": "refreshing-2026",
     "slug": "who-may-ascend",
     "day": "Day 3",
-    "title": "Who May Ascend? (Wednesday Evening Message)",
-    "description": "Scripture Text: Psalm 24:3–10\n\nGeneral conference arrival evening message on clean hands, pure hearts, and ascending the hill of the Lord.",
-    "startTime": "5:30 PM",
-    "endTime": "8:30 PM",
+    "title": "Who May Ascend? (Message)",
+    "description": "Text: Psalm 24:3-10\n\nHoliness and righteousness is the prerequisite for accessing God's glory and presence.",
+    "startTime": "7:40 PM",
+    "endTime": "8:55 PM",
     "venue": "Main Chapel",
-    "ministerIds": ["rev-julius-oluwole"],
+    "ministerIds": [
+      "rev-julius-oluwole"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-thu-morn",
+    "id": "sess-thu-morn-heaven",
+    "eventId": "refreshing-2026",
+    "slug": "open-heaven-day4",
+    "day": "Day 4",
+    "title": "Open Heaven",
+    "description": "Morning devotion and prayer session.",
+    "startTime": "9:00 AM",
+    "endTime": "9:30 AM",
+    "venue": "Main Chapel",
+    "ministerIds": [
+      "pst-adebusola-oguntola"
+    ],
+    "status": "published"
+  },
+  {
+    "id": "sess-thu-morn-teach2",
     "eventId": "refreshing-2026",
     "slug": "the-greater-generation",
     "day": "Day 4",
-    "title": "The Greater Generation (Thursday Morning Teaching)",
-    "description": "Scripture Texts: John 14:12; Haggai 2:9\n\nExpository teaching on greater works, spiritual maturity, and the glory of the present house.",
-    "startTime": "8:30 AM",
-    "endTime": "11:30 AM",
+    "title": "The Greater Generation (Teaching 2)",
+    "description": "Text: John 14:12, Haggai 2:9\n\nA call to do greater works and fufill greater glory.",
+    "startTime": "9:55 AM",
+    "endTime": "11:20 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["rev-enoch-abimbola"],
+    "ministerIds": [
+      "rev-enoch-abimbola"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-thu-aft",
+    "id": "sess-thu-aft-panel",
     "eventId": "refreshing-2026",
-    "slug": "raising-kingdom-influencers",
+    "slug": "academic-seminar",
     "day": "Day 4",
     "title": "Raising Kingdom Influencers in Academics and Career",
-    "description": "Scripture Text: Matthew 5:13–16\n\nAcademic & Career Seminar empowering students and young professionals for salt-and-light influence in academia and secular spaces.",
-    "startTime": "2:00 PM",
-    "endTime": "4:30 PM",
-    "venue": "Multipurpose Hall",
-    "ministerIds": ["prof-yinka-aladesida", "dr-mary-olayanju"],
+    "description": "Text: Matthew 5:13-16\n\nHelping students understand their role as salt and light.",
+    "startTime": "5:00 PM",
+    "endTime": "6:00 PM",
+    "venue": "Auditorium Hall",
+    "ministerIds": [
+      "prof-yinka-aladesida",
+      "dr-mary-olayanju"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-thu-night",
+    "id": "sess-thu-night-refresh",
     "eventId": "refreshing-2026",
-    "slug": "refreshing-night-greater-glory",
+    "slug": "refreshing-night",
     "day": "Day 4",
-    "title": "Greater Glory (Thursday Refreshing Night)",
-    "description": "Scripture Texts: Haggai 2:9; Isaiah 52:1–7\n\nAll-night revival gathering featuring song ministration by Min. Rebecca Olowookere and the main conference theme address by Rev'd. Ebenezer Osundele.",
-    "startTime": "9:00 PM",
-    "endTime": "4:00 AM",
+    "title": "Refreshing Night: Greater Glory",
+    "description": "Texts: Haggai 2:9; Isaiah 52:1-7\n\nA deep encounter with God's refreshing presence and glory.",
+    "startTime": "12:45 AM",
+    "endTime": "2:45 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["rebecca-olowookere", "rev-ebenezer-osundele"],
+    "ministerIds": [
+      "rev-ebenezer-osundele"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-fri-morn",
+    "id": "sess-thu-night-song",
     "eventId": "refreshing-2026",
-    "slug": "arise-pure-and-undefiled",
-    "day": "Day 5",
-    "title": "Arise: Pure & Undefiled (Friday Relationship Seminar)",
-    "description": "Scripture Texts: Psalm 25:3–4; Isaiah 52:1; Isaiah 60:1\n\nPractical seminar on godly relationships, purity, courtship, and building Christian homes.",
-    "startTime": "8:30 AM",
-    "endTime": "11:30 AM",
+    "slug": "song-ministration-day4",
+    "day": "Day 4",
+    "title": "Song Ministration",
+    "description": "Refreshing worship and praise session.",
+    "startTime": "11:40 PM",
+    "endTime": "12:25 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["victoria-olaogun"],
+    "ministerIds": [
+      "rebecca-olowookere"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-fri-aft",
+    "id": "sess-fri-morn-rel",
     "eventId": "refreshing-2026",
-    "slug": "refreshing-at-40-celebration",
+    "slug": "arise-pure-undefiled",
     "day": "Day 5",
-    "title": "Refreshing @40 Anniversary Celebration",
-    "description": "Commemorative 40th anniversary celebration service, heritage remembrance, and anniversary message.",
+    "title": "Arise: Pure & Undefiled (Relationship Seminar)",
+    "description": "Texts: Psalm 25:3-4; Isaiah 52:1; Isaiah 60:1\n\nBringing students into consecration required for carrying God's glory.",
+    "startTime": "10:10 AM",
+    "endTime": "11:10 AM",
+    "venue": "Main Chapel",
+    "ministerIds": [
+      "victoria-olaogun"
+    ],
+    "status": "published"
+  },
+  {
+    "id": "sess-fri-aft-grand",
+    "eventId": "refreshing-2026",
+    "slug": "refreshing-40-grand-celebration",
+    "day": "Day 5",
+    "title": "Refreshing @40 Grand Celebration",
+    "description": "Cake Cutting, Awards, History, etc.",
     "startTime": "2:00 PM",
-    "endTime": "5:00 PM",
-    "venue": "Main Chapel",
-    "ministerIds": ["rev-tunde-babatunde"],
+    "endTime": "6:00 PM",
+    "venue": "Auditorium Hall",
+    "ministerIds": [
+      "rev-tunde-babatunde"
+    ],
     "status": "published"
   },
   {
-    "id": "sess-fri-night",
+    "id": "sess-fri-night-thanks",
     "eventId": "refreshing-2026",
-    "slug": "closing-charge-and-commissioning",
+    "slug": "message-thanksgiving-night",
     "day": "Day 5",
-    "title": "Song Ministration & Closing Charge",
-    "description": "Final night of worship and global commissioning with song ministrations by Ebunolamisings and the Oladosu Twins, culminating in the closing charge by Mr. Sunday Oguntola.",
-    "startTime": "9:00 PM",
-    "endTime": "4:00 AM",
+    "title": "Message (Thanksgiving & Choice Night)",
+    "description": "Closing charge and message.",
+    "startTime": "12:00 AM",
+    "endTime": "1:20 AM",
     "venue": "Main Chapel",
-    "ministerIds": ["ebunolamisings", "oladosu-twins", "bro-sunday-oguntola"],
+    "ministerIds": [
+      "bro-sunday-oguntola"
+    ],
+    "status": "published"
+  },
+  {
+    "id": "sess-fri-night-songs",
+    "eventId": "refreshing-2026",
+    "slug": "song-ministration-thanksgiving",
+    "day": "Day 5",
+    "title": "Song Ministration (Thanksgiving & Choice Night)",
+    "description": "Praise and worship.",
+    "startTime": "11:10 PM",
+    "endTime": "12:00 AM",
+    "venue": "Main Chapel",
+    "ministerIds": [
+      "ebunolamisings",
+      "oladosu-twins"
+    ],
     "status": "published"
   }
 ]

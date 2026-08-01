@@ -155,6 +155,37 @@ export default function MinisterDetailPage({
               </div>
             </div>
 
+            {/* Sessions */}
+            {sessions.length > 0 && (
+              <div className="flex flex-col gap-4 pt-6 border-t border-black/10">
+                <span className="font-sans text-xs text-[#C25627] tracking-widest uppercase font-bold">
+                  Assigned Sessions
+                </span>
+                <div className="flex flex-col gap-3">
+                  {sessions.map((sess) => (
+                    <div
+                      key={sess.id}
+                      className="flex flex-col gap-1.5 p-5 bg-white border border-black/5 rounded-xl shadow-sm hover:border-primary/20 transition-all duration-300"
+                    >
+                      <h3 className="font-serif text-lg font-medium text-[#0B0907]">
+                        {sess.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-4 font-sans text-xs text-zinc-500 font-medium">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3.5 w-3.5 text-primary" />
+                          {sess.day} &bull; {sess.startTime} - {sess.endTime}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5 text-primary" />
+                          {sess.venue}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
 
             {/* Articles */}
             {articles.length > 0 && (

@@ -193,7 +193,7 @@ export default function SearchPage() {
                   {filteredSessions.map((s) => (
                     <Link
                       key={s.id}
-                      href={`/programme/${s.slug}`}
+                      href={`/programme`}
                       className="p-6 bg-white border border-black/5 hover:border-[#C25627]/30 transition-all duration-300 hover:scale-[1.01] block text-left"
                     >
                       <div className="flex flex-wrap justify-between items-center gap-2">
