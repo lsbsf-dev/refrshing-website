@@ -3,7 +3,7 @@
  * Avoids hardcoding shared values across components and layouts.
  */
 
-export const ACTIVE_EVENT_ID = process.env.NEXT_PUBLIC_ACTIVE_EVENT_ID || "refreshing-2026";
+// ACTIVE_EVENT_ID is now fetched dynamically from settings or URL params
 export const REGISTRATION_URL = "https://forms.gle/dsW4cvmXwK61BHt96";
 export const EVENT_THEME = "Greater Glory";
 export const EVENT_EDITION = "Refreshing @40";

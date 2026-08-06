@@ -9,11 +9,12 @@ import React, { useState, useEffect } from "react";
 import { BookOpen, Edit2, Plus, Sparkles, X, Save, FileText, Music, Search, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getResources, updateResource } from "@/lib/firebase/resources";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Resource } from "@/types/resource";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
 
 export default function AdminResourcesPage() {
+  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: resourcesList = [], isLoading } = useQuery({

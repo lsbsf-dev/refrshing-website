@@ -3,7 +3,7 @@
  * Defines the schema structure for a conference edition.
  */
 
-export interface Event {
+export interface AppEvent {
   id: string; // e.g. "refreshing-2026"
   name: string;
   theme: string;
@@ -11,5 +11,8 @@ export interface Event {
   startDate: string; // ISO string representation
   endDate: string;
   venue: string;
-  status: "draft" | "active" | "completed";
+  status: "upcoming" | "ongoing" | "completed";
+  isMilestone: boolean;
+  createdAt?: any;
+  updatedAt?: any;
 }

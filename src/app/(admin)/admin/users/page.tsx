@@ -1,235 +1,379 @@
-/**
- * Admin Users Page Component
- *  * Manages system users and access control.
- */
-
 "use client";
 
 import React, { useState } from "react";
-import { ShieldCheck, UserPlus, KeyRound, Clock, CheckCircle2, AlertTriangle, Sparkles, Mail } from "lucide-react";
+import { Plus, Search, Shield, UserX, Loader2, Sparkles, X, Key, ShieldAlert } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getUsers, provisionAdminAccount, updateUserAccess } from "@/lib/firebase/users";
+import { getEvents } from "@/lib/firebase/events";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
-interface StaffMember {
-  id: string;
-  name: string;
-  email: string;
-  role: "superAdmin" | "eventAdmin" | "registrationStaff" | "checkinStaff";
-  mfaEnrolled: boolean;
-  status: "active" | "invited";
-  assignedEvent: string;
-}
-
-const mockStaff: StaffMember[] = [
-  {
-    id: "user-01",
-    name: "Rev. Tunde Babatunde",
-    email: "superadmin@lsbsf.org",
-    role: "superAdmin",
-    mfaEnrolled: true,
-    status: "active",
-    assignedEvent: "refreshing-2026",
-  },
-  {
-    id: "user-02",
-    name: "Bro. Sunday Oguntola",
-    email: "sunday.oguntola@lsbsf.org",
-    role: "eventAdmin",
-    mfaEnrolled: true,
-    status: "active",
-    assignedEvent: "refreshing-2026",
-  },
-  {
-    id: "user-03",
-    name: "Sis. Timi Idowu",
-    email: "timi.idowu@lsbsf.org",
-    role: "registrationStaff",
-    mfaEnrolled: true,
-    status: "active",
-    assignedEvent: "refreshing-2026",
-  },
-  {
-    id: "user-04",
-    name: "Bro. Emmanuel Adeleke",
-    email: "emmanuel@lsbsf.org",
-    role: "checkinStaff",
-    mfaEnrolled: false,
-    status: "active",
-    assignedEvent: "refreshing-2026",
-  },
-];
-
 export default function AdminUsersPage() {
-  const [staffList, setStaffList] = useState<StaffMember[]>(mockStaff);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<"superAdmin" | "eventAdmin" | "registrationStaff" | "checkinStaff">("checkinStaff");
-  const [successMsg, setSuccessMsg] = useState("");
+  const queryClient = useQueryClient();
 
-  const handleSendInvite = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inviteEmail) return;
+  const { data: usersList = [], isLoading: isLoadingUsers } = useQuery({
+    queryKey: ["admin", "users"],
+    queryFn: getUsers,
+  });
 
-    const newStaff: StaffMember = {
-      id: `user-${Date.now()}`,
-      name: inviteEmail.split("@")[0].toUpperCase(),
-      email: inviteEmail,
-      role: inviteRole,
-      mfaEnrolled: false,
-      status: "invited",
-      assignedEvent: "refreshing-2026",
-    };
+  const { data: eventsList = [] } = useQuery({
+    queryKey: ["admin", "events"],
+    queryFn: getEvents,
+  });
 
-    setStaffList((prev) => [newStaff, ...prev]);
-    setInviteEmail("");
-    setSuccessMsg(`Invite link generated & sent to ${inviteEmail}! Audit log updated.`);
-    setTimeout(() => setSuccessMsg(""), 4000);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
+  
+  const [isProvisionModalOpen, setIsProvisionModalOpen] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
+
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "viewer" as any,
+    allowedEvents: [] as string[],
+  });
+
+  const filteredUsers = usersList.filter((u) => {
+    const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          u.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = filterRole === "all" || u.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
+
+  const triggerSuccessBanner = () => {
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
-  const handleRoleChange = (id: string, newRole: StaffMember["role"]) => {
-    setStaffList((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, role: newRole } : s))
-    );
-    setSuccessMsg("User Custom Claims updated on Firebase Auth!");
-    setTimeout(() => setSuccessMsg(""), 3000);
+  const provisionMutation = useMutation({
+    mutationFn: async (data: typeof newUser) => {
+      const result = await provisionAdminAccount({
+        displayName: data.name,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        allowedEvents: data.allowedEvents,
+      });
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsProvisionModalOpen(false);
+      setNewUser({
+        name: "",
+        email: "",
+        password: "",
+        role: "viewer",
+        allowedEvents: [],
+      });
+      triggerSuccessBanner();
+    },
+    onError: (error: any) => {
+      alert(`Error provisioning account: ${error.message}`);
+    }
+  });
+
+  const toggleAccessMutation = useMutation({
+    mutationFn: (data: { uid: string, isActive: boolean }) => updateUserAccess(data.uid, { isActive: data.isActive }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      triggerSuccessBanner();
+    },
+  });
+
+  const handleProvision = (e: React.FormEvent) => {
+    e.preventDefault();
+    provisionMutation.mutate(newUser);
+  };
+
+  const handleToggleEvent = (eventId: string) => {
+    setNewUser(prev => {
+      const newEvents = prev.allowedEvents.includes(eventId)
+        ? prev.allowedEvents.filter(e => e !== eventId)
+        : [...prev.allowedEvents, eventId];
+      return { ...prev, allowedEvents: newEvents };
+    });
   };
 
   return (
-    <div className="flex flex-col gap-8 text-[#FCFAF6]">
-      
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-1">
-            RBAC CUSTOM CLAIMS & AUDIT LOGS
-          </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-light uppercase text-white">
-            STAFF & <span className="text-[#C25627] font-normal">SECURITY</span>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase">
+            User Access Management
           </h1>
+          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+            Provision admin accounts, assign roles, and manage system access.
+          </p>
         </div>
+        <button
+          onClick={() => setIsProvisionModalOpen(true)}
+          className="px-6 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg transition-all active:scale-95"
+        >
+          <Plus className="h-4 w-4" />
+          <span>Provision Account</span>
+        </button>
       </div>
 
-      {successMsg && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs font-sans font-semibold flex items-center gap-2 animate-fade-in">
-          <Sparkles className="h-4 w-4" />
-          <span>{successMsg}</span>
+      {savedSuccess && (
+        <div className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in">
+          <Sparkles className="h-5 w-5" />
+          <span className="font-sans text-sm font-bold">Operation completed successfully!</span>
         </div>
       )}
 
-      {/* ── Invite Staff Form ── */}
-      <div className="p-6 bg-[#14120E] border border-white/10 rounded-2xl flex flex-col gap-5">
-        <h3 className="font-serif text-xl font-bold text-white flex items-center gap-2">
-          <UserPlus className="h-5 w-5 text-[#C25627]" />
-          <span>Invite New Staff Member</span>
-        </h3>
-
-        <form onSubmit={handleSendInvite} className="grid grid-cols-1 sm:grid-cols-12 gap-4">
-          <div className="sm:col-span-6">
-            <label className="block text-xs font-sans font-bold text-white/70 uppercase mb-1">
-              Staff Email Address
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-              <input
-                type="email"
-                required
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="staff@lsbsf.org"
-                className="w-full bg-white/5 border border-white/10 text-white text-xs font-sans py-3 pl-10 pr-4 rounded-xl outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="sm:col-span-4">
-            <label className="block text-xs font-sans font-bold text-white/70 uppercase mb-1">
-              Assign Role (Custom Claims)
-            </label>
-            <CustomSelect
-              value={inviteRole}
-              onChange={(val) => setInviteRole(val as any)}
-              options={[
-                { value: "superAdmin", label: "Super Admin (Full Control)" },
-                { value: "eventAdmin", label: "Event Admin (Content & Schedule)" },
-                { value: "registrationStaff", label: "Registration Staff" },
-                { value: "checkinStaff", label: "Check-in Staff (QR Scanner)" },
-              ]}
-            />
-          </div>
-
-          <div className="sm:col-span-2 flex items-end">
-            <button
-              type="submit"
-              className="w-full py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-all cursor-pointer shadow-md active-press"
-            >
-              Send Invite
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {/* ── Active Staff Table ── */}
-      <div className="flex flex-col gap-4">
-        <h3 className="font-serif text-xl font-bold text-white">
-          Active Staff & Roles
-        </h3>
-
-        <div className="grid grid-cols-1 gap-4">
-          {staffList.map((member) => (
-            <div
-              key={member.id}
-              className="p-6 bg-[#14120E] border border-white/10 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
-            >
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-3">
-                  <h4 className="font-serif text-lg font-bold text-white">
-                    {member.name}
-                  </h4>
-                  <span
-                    className={`font-mono text-[10px] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full ${
-                      member.role === "superAdmin"
-                        ? "bg-[#C25627]/20 text-[#C25627] border border-[#C25627]/30"
-                        : member.role === "eventAdmin"
-                        ? "bg-[#DDB94E]/20 text-[#DDB94E] border border-[#DDB94E]/30"
-                        : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                    }`}
-                  >
-                    {member.role}
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
-                  <span>Email: <strong className="text-white">{member.email}</strong></span>
-                  <span className="flex items-center gap-1">
-                    MFA Enrolled:
-                    {member.mfaEnrolled ? (
-                      <span className="text-emerald-400 font-bold flex items-center gap-0.5">
-                        <CheckCircle2 className="h-3.5 w-3.5" /> YES
-                      </span>
-                    ) : (
-                      <span className="text-amber-400 font-bold flex items-center gap-0.5">
-                        <AlertTriangle className="h-3.5 w-3.5" /> NO
-                      </span>
-                    )}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CustomSelect
-                  value={member.role}
-                  onChange={(val) => handleRoleChange(member.id, val as any)}
-                  options={[
-                    { value: "superAdmin", label: "superAdmin" },
-                    { value: "eventAdmin", label: "eventAdmin" },
-                    { value: "registrationStaff", label: "registrationStaff" },
-                    { value: "checkinStaff", label: "checkinStaff" },
-                  ]}
-                />
-              </div>
-            </div>
-          ))}
+      {/* Controls */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-[#181612] p-2 border border-black/10 dark:border-white/10 rounded-2xl shadow-sm">
+        <div className="relative w-full">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-transparent border-none text-sm font-sans py-3 pl-10 pr-4 outline-none text-[#0B0907] dark:text-[#FCFAF6] placeholder:text-zinc-500"
+          />
+        </div>
+        <div className="w-full sm:w-64 border-l border-black/5 dark:border-white/5 pl-4">
+          <CustomSelect
+            value={filterRole}
+            onChange={(val) => setFilterRole(val)}
+            options={[
+              { value: "all", label: "All Roles" },
+              { value: "superAdmin", label: "Super Admin" },
+              { value: "eventAdmin", label: "Event Admin" },
+              { value: "editor", label: "Editor (Media)" },
+              { value: "registrationStaff", label: "Registration" },
+              { value: "checkinStaff", label: "Check-in" },
+              { value: "viewer", label: "Viewer (Analytics)" },
+            ]}
+          />
         </div>
       </div>
 
+      {/* Table / List */}
+      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-black/10 dark:border-white/10">
+                <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider">
+                  User Details
+                </th>
+                <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider text-right">
+                  Access
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/5 dark:divide-white/5">
+              {isLoadingUsers ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                    <span className="font-sans text-sm">Loading users...</span>
+                  </td>
+                </tr>
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">
+                    <Shield className="h-8 w-8 mx-auto mb-3 opacity-20" />
+                    <span className="font-sans text-sm">No users found.</span>
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user.id} className={`hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group ${!user.isActive ? "opacity-60" : ""}`}>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-sans text-sm font-bold text-[#0B0907] dark:text-[#FCFAF6]">
+                          {user.name}
+                        </span>
+                        <span className="font-sans text-xs text-black/60 dark:text-white/60">
+                          {user.email}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-sans text-xs font-bold uppercase text-[#DDB94E]">
+                          {user.role.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
+                        {user.allowedEvents?.length > 0 && user.role !== "superAdmin" && (
+                          <span className="font-sans text-[10px] text-zinc-500">
+                            {user.allowedEvents.join(", ")}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full border ${
+                        user.isActive 
+                          ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                          : 'bg-red-500/10 text-red-500 border-red-500/20'
+                      }`}>
+                        {user.isActive ? "Active" : "Revoked"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => toggleAccessMutation.mutate({ uid: user.id, isActive: !user.isActive })}
+                        disabled={toggleAccessMutation.isPending}
+                        className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                          user.isActive 
+                            ? "hover:bg-red-500/10 text-zinc-500 hover:text-red-500"
+                            : "hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-500"
+                        }`}
+                        title={user.isActive ? "Revoke Access" : "Restore Access"}
+                      >
+                        {user.isActive ? <UserX className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ── Provision Modal ── */}
+      {isProvisionModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <form
+            onSubmit={handleProvision}
+            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
+          >
+            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+              <h3 className="font-serif text-2xl font-bold uppercase">
+                PROVISION ACCOUNT
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsProvisionModalOpen(false)}
+                className="p-2 text-zinc-400"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1">
+                  Full Name <span className="text-[#C25627]">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newUser.name}
+                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1">
+                  Email Address <span className="text-[#C25627]">*</span>
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1">
+                  Role <span className="text-[#C25627]">*</span>
+                </label>
+                <CustomSelect
+                  value={newUser.role}
+                  onChange={(val) => setNewUser({ ...newUser, role: val as any, allowedEvents: [] })}
+                  options={[
+                    { value: "superAdmin", label: "Super Admin" },
+                    { value: "eventAdmin", label: "Event Admin" },
+                    { value: "editor", label: "Editor (Media)" },
+                    { value: "registrationStaff", label: "Registration" },
+                    { value: "checkinStaff", label: "Check-in" },
+                    { value: "viewer", label: "Viewer (Analytics)" },
+                  ]}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1 flex items-center gap-2">
+                  <Key className="h-3 w-3" /> Temporary Password <span className="text-[#C25627]">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
+                  placeholder="e.g. TempPass123!"
+                />
+              </div>
+            </div>
+
+            {/* Event Scope Selection (Not needed for superAdmin) */}
+            {newUser.role !== "superAdmin" && (
+              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/10 dark:border-white/10">
+                <label className="block text-xs font-sans font-bold uppercase mb-3">
+                  Scope (Allowed Event Editions)
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {eventsList.map((event) => (
+                    <button
+                      key={event.id}
+                      type="button"
+                      onClick={() => handleToggleEvent(event.id)}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors ${
+                        newUser.allowedEvents.includes(event.id)
+                          ? "bg-[#C25627] text-white border-[#C25627]"
+                          : "bg-white dark:bg-[#181612] text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
+                      }`}
+                    >
+                      {event.name}
+                    </button>
+                  ))}
+                </div>
+                {newUser.allowedEvents.length === 0 && (
+                  <p className="text-[10px] text-red-500 mt-2 font-bold uppercase">
+                    Warning: You must select at least one event scope.
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+              <button
+                type="button"
+                onClick={() => setIsProvisionModalOpen(false)}
+                className="px-6 py-3 bg-zinc-100 dark:bg-white/5 font-sans font-bold text-xs uppercase rounded-full transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={provisionMutation.isPending || (newUser.role !== 'superAdmin' && newUser.allowedEvents.length === 0)}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
+              >
+                {provisionMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
+                <span>Provision User</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

@@ -29,6 +29,7 @@
     "react-quill-new": "^3.8.3",
     "tiptap-markdown": "^0.9.0",
     "turndown": "^7.2.4",
+    "xlsx": "^0.18.5",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -40,5 +41,9 @@
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "tough-cookie": "4.1.3",
+    "@types/tough-cookie": "4.0.5"
   }
 }

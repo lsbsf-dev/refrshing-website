@@ -5,7 +5,7 @@
 
 import { collection, addDoc } from "firebase/firestore";
 import { z } from "zod";
-import { db, ACTIVE_EVENT_ID } from "./app";
+import { db } from "./app";
 
 export const enquirySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -15,12 +15,12 @@ export const enquirySchema = z.object({
 
 export type EnquiryInput = z.infer<typeof enquirySchema>;
 
-export async function submitEnquiry(input: EnquiryInput): Promise<string> {
+export async function submitEnquiry(input: EnquiryInput, eventId: string): Promise<string> {
   const validated = enquirySchema.parse(input);
   
   const payload = {
     ...validated,
-    eventId: ACTIVE_EVENT_ID,
+    eventId,
     submittedAt: new Date().toISOString(),
   };
 

@@ -9,15 +9,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getResources } from "@/lib/firebase/resources";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
-import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 
-export function useResources() {
+export function useResources(eventId: string) {
   return useQuery({
-    queryKey: ["resources", ACTIVE_EVENT_ID],
-    queryFn: () => getResources(ACTIVE_EVENT_ID),
-    staleTime: 6 * 60 * 60 * 1000, // 6 hours
-    initialData: () => seedResources as unknown as Resource[],
+    queryKey: ["resources", eventId],
+    queryFn: () => getResources(eventId),
+    staleTime: 5 * 60 * 1000,
+    initialData: () => [] as Resource[],
   });
 }

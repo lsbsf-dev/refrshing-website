@@ -23,6 +23,4 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-const ACTIVE_EVENT_ID = process.env.NEXT_PUBLIC_ACTIVE_EVENT_ID || "refreshing-2026";
-
-export { app, db, auth, storage, ACTIVE_EVENT_ID };
+export { app, db, auth, storage };

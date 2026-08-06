@@ -5,7 +5,7 @@
 
 import { collection, addDoc } from "firebase/firestore";
 import { z } from "zod";
-import { db, ACTIVE_EVENT_ID } from "./app";
+import { db } from "./app";
 
 export const newsletterSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -13,16 +13,16 @@ export const newsletterSchema = z.object({
 
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
 
-export async function submitNewsletter(input: NewsletterInput): Promise<string> {
-  const validated = newsletterSchema.parse(input);
-  
-  const payload = {
-    ...validated,
-    eventId: ACTIVE_EVENT_ID,
-    subscribedAt: new Date().toISOString(),
-  };
-
-  const ref = collection(db, "newsletter");
-  const docRef = await addDoc(ref, payload);
-  return docRef.id;
+export async function subscribeToNewsletter(data: z.infer<typeof newsletterSchema>, eventId: string) {
+  try {
+    const docRef = await addDoc(collection(db, "newsletter"), {
+      ...data,
+      eventId: eventId,
+      subscribedAt: new Date().toISOString(),
+      status: "active"
+    });
+    return docRef.id;
+  } catch (error) {
+    throw error;
+  }
 }

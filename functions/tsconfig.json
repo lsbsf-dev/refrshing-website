@@ -9,6 +9,10 @@
     "target": "es2022",
     "moduleResolution": "node"
   },
+  "exclude": [
+    "../node_modules/@types/request",
+    "../node_modules/tough-cookie"
+  ],
   "compileOnSave": true,
   "include": [
     "src"

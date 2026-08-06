@@ -7,3 +7,4 @@ export { markCheckedIn } from "./checkin";
 export { syncCheckinView } from "./sync";
 export { auditMinistersWrite, auditSessionsWrite, auditAttendeesWrite } from "./audit";
 export { purgeTrash, pruneVersionHistory } from "./cleanup";
+export { provisionAdminAccount } from "./roles";

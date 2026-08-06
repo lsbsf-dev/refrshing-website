@@ -9,11 +9,12 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Clock, MapPin, Edit2, Plus, Sparkles, X, Save, User, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSessions, updateSession, createSession } from "@/lib/firebase/programme";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Session } from "@/types/programme";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 export default function AdminProgrammePage() {
+  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: sessionsList = [], isLoading } = useQuery({

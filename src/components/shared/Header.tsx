@@ -8,9 +8,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { REGISTRATION_URL } from "@/lib/constants";
+import { EventSwitcher } from "./EventSwitcher";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,6 +19,9 @@ export function Header() {
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const params = useParams();
+  const eventId = (params?.eventId as string) || "";
+  const basePath = eventId ? `/${eventId}` : "";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,18 +59,18 @@ export function Header() {
   }, [mobileMenuOpen]);
 
   const primaryNavLinks = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Programme", href: "/programme" },
-    { label: "Ministers", href: "/ministers" },
-    { label: "Resources", href: "/booklet" },
-    { label: "Gallery", href: "/gallery" },
+    { label: "Home", href: `${basePath}/` },
+    { label: "About", href: `${basePath}/about` },
+    { label: "Programme", href: `${basePath}/programme` },
+    { label: "Ministers", href: `${basePath}/ministers` },
+    { label: "Resources", href: `${basePath}/booklet` },
+    { label: "Gallery", href: `${basePath}/gallery` },
   ];
 
   const secondaryNavLinks = [
-    { label: "Announcements", href: "/announcements" },
-    { label: "Contact", href: "/contact" },
-    { label: "FAQ", href: "/faq" },
+    { label: "Announcements", href: `${basePath}/announcements` },
+    { label: "Contact", href: `${basePath}/contact` },
+    { label: "FAQ", href: `${basePath}/faq` },
   ];
 
   const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks];
@@ -112,7 +116,7 @@ export function Header() {
         </Link>
 
         {/* Center: Streamlined Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-6">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-4">
           {primaryNavLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
             return (
@@ -159,11 +163,15 @@ export function Header() {
           </div>
         </nav>
 
-        {/* Right: Actions */}
-        <div className="hidden lg:flex items-center gap-5 xl:gap-6">
-          {/* Search Trigger */}
-          <Link href="/search" className={`active-press p-2.5 rounded-full hover:bg-white/10 transition-colors ${iconColorClass}`}>
-            <Search className="h-6 w-6" />
+        {/* Right: Event Switcher & Search & CTA */}
+        <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden xl:block">
+            <EventSwitcher />
+          </div>
+          <Link
+            href={`${basePath}/search`}
+            className={`p-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-all active-press border border-white/10 shadow-sm ${iconColorClass}`}
+          >  <Search className="h-6 w-6" />
           </Link>
 
           {/* Register CTA */}

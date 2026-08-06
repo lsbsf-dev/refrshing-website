@@ -9,18 +9,19 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getMinisters } from "@/lib/firebase/ministers";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import seedMinisters from "@/lib/firebase/seedMinisters.json";
 import { Minister } from "@/types/minister";
 
-export function useMinisters() {
+export function useMinisters(eventId: string) {
   return useQuery({
-    queryKey: ["ministers", ACTIVE_EVENT_ID],
-    queryFn: () => getMinisters(ACTIVE_EVENT_ID),
-    staleTime: 6 * 60 * 60 * 1000, // 6 hours
-    initialData: () =>
-      (seedMinisters as Minister[]).filter(
-        (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
-      ),
+    queryKey: ["ministers", eventId],
+    queryFn: () => getMinisters(eventId),
+    staleTime: 5 * 60 * 1000,
+    initialData: () => {
+      const all = seedMinisters as unknown as Minister[];
+      return all.filter(
+        (m) => m.eventId === eventId && m.status === "published"
+      );
+    },
   });
 }

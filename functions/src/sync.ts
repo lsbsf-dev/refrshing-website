@@ -27,14 +27,21 @@ export const syncCheckinView = functions.firestore
     const data = change.after.data();
     if (!data) return;
 
-    // Denormalize ONLY check-in-safe fields.
-    // Explicitly exclude private fields like email, phone, emergencyContact, payments, etc.
+    // Note: checkinView intentionally omits full phone and email fields to reduce PII exposure
+    // for checkinStaff volunteers on shared kiosk devices. Masked phone (last 4 digits) is included
+    // to allow disambiguating same-name attendees without exposing the full number.
+    const phone = data.phone || "";
+    const phoneMasked = phone.length > 4 ? `***-***-${phone.slice(-4)}` : phone;
+
     const checkinSafeData = {
       id: attendeeId,
       name: data.name || "Anonymous",
       photoUrl: data.photoUrl || "",
       ticketStatus: data.ticketStatus || data.registrationStatus || "pending",
       checkedInAt: data.checkedInAt || null,
+      phoneMasked,
+      church: data.church || "",
+      association: data.association || "",
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 

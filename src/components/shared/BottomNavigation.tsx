@@ -7,19 +7,22 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Home, Calendar, Users, BookOpen, Search } from "lucide-react";
-
-const tabs = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Programme", href: "/programme", icon: Calendar },
-  { label: "Ministers", href: "/ministers", icon: Users },
-  { label: "Resources", href: "/booklet", icon: BookOpen },
-  { label: "Search", href: "/search", icon: Search },
-];
 
 export default function BottomNavigation() {
   const pathname = usePathname();
+  const params = useParams();
+  const eventId = (params?.eventId as string) || "";
+  const basePath = eventId ? `/${eventId}` : "";
+
+  const tabs = [
+    { label: "Home", href: `${basePath}/`, icon: Home },
+    { label: "Programme", href: `${basePath}/programme`, icon: Calendar },
+    { label: "Ministers", href: `${basePath}/ministers`, icon: Users },
+    { label: "Resources", href: `${basePath}/booklet`, icon: BookOpen },
+    { label: "Search", href: `${basePath}/search`, icon: Search },
+  ];
 
   return (
     <nav

@@ -9,10 +9,11 @@ import React, { useState, useEffect } from "react";
 import { Megaphone, Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Bell, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAnnouncements, updateAnnouncement, createAnnouncement, deleteAnnouncement } from "@/lib/firebase/announcements";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Announcement } from "@/types/announcement";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 export default function AdminAnnouncementsPage() {
+  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: announcementsList = [], isLoading } = useQuery({

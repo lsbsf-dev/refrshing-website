@@ -9,13 +9,14 @@ import React, { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, Save, X, Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMinisters, updateMinister, createMinister, deleteMinister } from "@/lib/firebase/ministers";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
+import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Minister } from "@/types/minister";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
 export default function AdminMinistersPage() {
+  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: ministersList = [], isLoading } = useQuery({

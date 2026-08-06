@@ -1,272 +1,386 @@
-/**
- * Admin Attendees Page Component
- *  * Manages attendee records and registrations.
- */
-
 "use client";
 
-import React, { useState } from "react";
-import { UserCheck, Search, QrCode, CheckCircle2, Clock, Filter, ShieldCheck, Sparkles, X } from "lucide-react";
-import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
-
-interface Attendee {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  chapter: string;
-  tagNumber: string;
-  checkedIn: boolean;
-  checkInTime?: string;
-  hostelBlock?: string;
-}
-
-const mockAttendees: Attendee[] = [
-  {
-    id: "REF-2026-001",
-    name: "Emmanuel Adeleke",
-    email: "emmanuel@lasu.edu.ng",
-    phone: "+2348012345678",
-    chapter: "LASU BSF (Lagos West)",
-    tagNumber: "TAG-104",
-    checkedIn: true,
-    checkInTime: "Aug 10, 09:15 AM",
-    hostelBlock: "Block A - Room 12",
-  },
-  {
-    id: "REF-2026-002",
-    name: "Timi Idowu",
-    email: "timi.idowu@unilag.edu.ng",
-    phone: "+2348087654321",
-    chapter: "UNILAG BSF (Lagos Central)",
-    tagNumber: "TAG-105",
-    checkedIn: true,
-    checkInTime: "Aug 10, 09:40 AM",
-    hostelBlock: "Block B - Room 08",
-  },
-  {
-    id: "REF-2026-003",
-    name: "Segun Olawoyin",
-    email: "segun@yabatech.edu.ng",
-    phone: "+2348033334444",
-    chapter: "YABATECH BSF (Lagos Central)",
-    tagNumber: "TAG-106",
-    checkedIn: false,
-  },
-  {
-    id: "REF-2026-004",
-    name: "Helen Olanrewaju",
-    email: "helen@fceakoka.edu.ng",
-    phone: "+2348055556666",
-    chapter: "FCE(T) AKOKA BSF (Lagos Central)",
-    tagNumber: "TAG-107",
-    checkedIn: false,
-  },
-  {
-    id: "REF-2026-005",
-    name: "Victor Ogunleye",
-    email: "victor@lasustech.edu.ng",
-    phone: "+2348099998888",
-    chapter: "LASUSTECH BSF (Lagos East)",
-    tagNumber: "TAG-108",
-    checkedIn: true,
-    checkInTime: "Aug 10, 10:20 AM",
-    hostelBlock: "Block C - Room 04",
-  },
-];
+import React, { useState, useRef } from "react";
+import { Upload, Users, Search, Download, CheckCircle, AlertCircle, FileSpreadsheet, Loader2, Sparkles } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getSystemSettings } from "@/lib/firebase/settings";
+import { getEvents } from "@/lib/firebase/events";
+import { CustomSelect } from "@/components/shared/CustomSelect";
+import * as XLSX from "xlsx";
 
 export default function AdminAttendeesPage() {
-  const [attendees, setAttendees] = useState<Attendee[]>(mockAttendees);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"all" | "checkedIn" | "pending">("all");
-  const [lastCheckinName, setLastCheckinName] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const filtered = attendees.filter((a) => {
-    const matchesSearch =
-      a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.tagNumber.toLowerCase().includes(searchQuery.toLowerCase());
-
-    if (filterStatus === "checkedIn") return matchesSearch && a.checkedIn;
-    if (filterStatus === "pending") return matchesSearch && !a.checkedIn;
-    return matchesSearch;
+  const { data: settings } = useQuery({
+    queryKey: ["admin", "settings"],
+    queryFn: getSystemSettings,
   });
 
-  const handleToggleCheckin = (id: string) => {
-    setAttendees((prev) =>
-      prev.map((a) => {
-        if (a.id === id) {
-          const nextState = !a.checkedIn;
-          if (nextState) {
-            setLastCheckinName(a.name);
-            setTimeout(() => setLastCheckinName(null), 3000);
-          }
-          return {
-            ...a,
-            checkedIn: nextState,
-            checkInTime: nextState ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : undefined,
-            hostelBlock: nextState ? "Block A - Allocated" : undefined,
-          };
+  const { data: eventsList = [] } = useQuery({
+    queryKey: ["admin", "events"],
+    queryFn: getEvents,
+  });
+
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [fileError, setFileError] = useState("");
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize selectedEventId once settings load
+  React.useEffect(() => {
+    if (settings && !selectedEventId) {
+      setSelectedEventId(settings.defaultEventId);
+    }
+  }, [settings, selectedEventId]);
+
+  const [pendingImport, setPendingImport] = useState<any[] | null>(null);
+  const [flaggedAttendees, setFlaggedAttendees] = useState<any[]>([]);
+  const [importStats, setImportStats] = useState<{ processed: number, imported: number, skipped: number, rejected: number } | null>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileError("");
+    setImportResult(null);
+    setPendingImport(null);
+    setFlaggedAttendees([]);
+    setImportStats(null);
+
+    if (!selectedEventId) {
+      setFileError("Please select an event edition first.");
+      return;
+    }
+
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    if (!['xlsx', 'xls', 'csv'].includes(fileExt || '')) {
+      setFileError("Invalid file format. Please upload an Excel (.xlsx, .xls) or CSV file.");
+      return;
+    }
+
+    setImporting(true);
+    
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      if (!jsonData || jsonData.length === 0) {
+        throw new Error("The uploaded file is empty or formatted incorrectly.");
+      }
+
+      const attendees = jsonData.map((row: any) => {
+        const getVal = (possibleKeys: string[]) => {
+          const key = Object.keys(row).find(k => possibleKeys.includes(k.toLowerCase().trim()));
+          return key ? row[key]?.toString().trim() : "";
+        };
+
+        const id = getVal(['id', 'registration id', 'registration code', 'code']);
+        const firstName = getVal(['first name', 'firstname', 'first_name']);
+        const lastName = getVal(['last name', 'lastname', 'last_name']);
+        const name = getVal(['name', 'full name', 'fullname']) || `${firstName} ${lastName}`.trim();
+        const email = getVal(['email', 'email address']);
+        const phone = getVal(['phone', 'phone number', 'contact']);
+        const category = getVal(['category', 'role', 'type', 'ticket type']) || 'General';
+        const ticketId = getVal(['ticket id', 'ticket code', 'ticket_id']);
+
+        if (!id) {
+          throw new Error("Missing 'Registration ID' or 'Code' column in one or more rows.");
         }
-        return a;
-      })
-    );
+
+        return {
+          id,
+          name: name || "Unknown Attendee",
+          email,
+          phone,
+          category,
+          ticketId,
+          eventId: selectedEventId
+        };
+      });
+
+      // Step 1: Dry run to detect duplicates
+      const response = await fetch('/api/import/attendees', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ attendees, eventId: selectedEventId, mode: 'dryRun' })
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to process import');
+
+      setImportStats({
+        processed: result.processed,
+        imported: result.imported,
+        skipped: result.skipped,
+        rejected: result.rejected
+      });
+
+      setFlaggedAttendees(result.flagged || []);
+      setPendingImport(attendees);
+
+    } catch (err: any) {
+      console.error(err);
+      setFileError(err.message || "An error occurred during file parsing.");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
-  const totalCount = attendees.length;
-  const checkedInCount = attendees.filter((a) => a.checkedIn).length;
-  const pendingCount = totalCount - checkedInCount;
+  const handleConfirmImport = async () => {
+    if (!pendingImport) return;
+    setImporting(true);
+    
+    try {
+      // In a real app, user might have selected which flagged items to overwrite/ignore.
+      // For now, we filter out all flagged items and only commit the clean ones.
+      const flaggedIds = new Set(flaggedAttendees.map(f => f.id));
+      const cleanAttendees = pendingImport.filter(a => !flaggedIds.has(a.id));
+
+      if (cleanAttendees.length === 0) {
+        setImportResult({ success: 0, errors: ["No valid non-duplicate attendees to import."] });
+        setPendingImport(null);
+        return;
+      }
+
+      // Split into chunks of 500 for the API
+      const chunkSize = 500;
+      let totalImported = 0;
+      let allErrors: string[] = [];
+
+      for (let i = 0; i < cleanAttendees.length; i += chunkSize) {
+        const chunk = cleanAttendees.slice(i, i + chunkSize);
+        const response = await fetch('/api/import/attendees', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ attendees: chunk, eventId: selectedEventId, mode: 'commit' })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Failed to commit chunk');
+        
+        totalImported += result.imported;
+        if (result.errors) allErrors = [...allErrors, ...result.errors];
+      }
+
+      setImportResult({ success: totalImported, errors: allErrors });
+      setPendingImport(null); // Clear the review state
+
+    } catch (err: any) {
+      console.error(err);
+      setFileError(err.message || "An error occurred during import.");
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    const ws = XLSX.utils.json_to_sheet([
+      { 
+        "Registration ID": "REF26-1001", 
+        "Full Name": "John Doe", 
+        "Email": "john@example.com", 
+        "Phone": "+2348000000000",
+        "Category": "VIP",
+        "Ticket ID": "TCK-ABC-123"
+      }
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Template");
+    XLSX.writeFile(wb, "Refreshing_Attendees_Template.xlsx");
+  };
 
   return (
-    <div className="flex flex-col gap-8 text-[#FCFAF6]">
-      
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
-        <div>
-          <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-1">
-            CAMPER ACCREDITATION & CHECK-IN
-          </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-light uppercase text-white">
-            ATTENDEES & <span className="text-[#C25627] font-normal">CHECK-IN</span>
-          </h1>
-        </div>
+    <div className="flex flex-col gap-8 max-w-5xl mx-auto">
+      {/* Header */}
+      <div>
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase flex items-center gap-3">
+          <Users className="h-8 w-8 text-[#C25627]" />
+          Attendee Management
+        </h1>
+        <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          Import and manage registered attendees for conference editions.
+        </p>
       </div>
 
-      {lastCheckinName && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs font-sans font-semibold flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 className="h-4 w-4" />
-          <span>{lastCheckinName} has been successfully checked in and tag verified!</span>
-        </div>
-      )}
-
-      {/* ── Status Metrics ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="p-5 bg-[#14120E] border border-white/10 rounded-2xl flex flex-col justify-between">
-          <span className="font-sans text-xs font-bold text-white/50 uppercase">Total Registrations</span>
-          <span className="font-sans text-3xl font-bold text-white mt-2">{totalCount}</span>
-        </div>
-        <div className="p-5 bg-[#14120E] border border-emerald-500/30 rounded-2xl flex flex-col justify-between">
-          <span className="font-sans text-xs font-bold text-emerald-400 uppercase">Checked-In Campers</span>
-          <span className="font-sans text-3xl font-bold text-emerald-400 mt-2">{checkedInCount}</span>
-        </div>
-        <div className="p-5 bg-[#14120E] border border-[#C25627]/30 rounded-2xl flex flex-col justify-between">
-          <span className="font-sans text-xs font-bold text-[#C25627] uppercase">Pending Arrival</span>
-          <span className="font-sans text-3xl font-bold text-[#C25627] mt-2">{pendingCount}</span>
-        </div>
-      </div>
-
-      {/* ── Search & Filters ── */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="relative w-full sm:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Name, Reg ID, Tag, or Chapter..."
-            className="w-full bg-[#14120E] border border-white/10 focus:border-[#C25627] text-white text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 hover:text-[#C25627] transition-colors flex items-center justify-center cursor-pointer"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-
-        <div className="w-full sm:w-auto overflow-hidden">
-          <ScrollableTabBar className="gap-2" isDark={true}>
-            <button
-              onClick={() => setFilterStatus("all")}
-              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-                filterStatus === "all" ? "bg-[#C25627] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
-            >
-              All ({totalCount})
-            </button>
-            <button
-              onClick={() => setFilterStatus("checkedIn")}
-              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-                filterStatus === "checkedIn" ? "bg-emerald-600 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
-            >
-              Checked-In ({checkedInCount})
-            </button>
-            <button
-              onClick={() => setFilterStatus("pending")}
-              className={`flex-shrink-0 whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-                filterStatus === "pending" ? "bg-[#DDB94E] text-[#0B0907] font-bold" : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
-            >
-              Pending ({pendingCount})
-            </button>
-          </ScrollableTabBar>
-        </div>
-      </div>
-
-      {/* ── Attendee Cards Table ── */}
-      <div className="flex flex-col gap-4">
-        {filtered.map((attendee) => (
-          <div
-            key={attendee.id}
-            className={`p-6 bg-[#14120E] border rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 transition-all shadow-md ${
-              attendee.checkedIn ? "border-emerald-500/40" : "border-white/10"
-            }`}
-          >
-            <div className="flex flex-col gap-2 flex-1">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="font-mono text-xs font-bold text-[#DDB94E] bg-[#DDB94E]/10 border border-[#DDB94E]/20 px-3 py-1 uppercase rounded-full">
-                  {attendee.id}
-                </span>
-                <span className="font-mono text-xs text-white/60 bg-white/5 px-3 py-1 rounded-full">
-                  {attendee.tagNumber}
-                </span>
-                <span className="font-sans text-xs text-white/50">
-                  {attendee.chapter}
-                </span>
-              </div>
-
-              <h3 className="font-serif text-xl font-bold text-white mt-1">
-                {attendee.name}
-              </h3>
-
-              <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
-                <span>Email: <strong className="text-white">{attendee.email}</strong></span>
-                <span>Phone: <strong className="text-white">{attendee.phone}</strong></span>
-                {attendee.hostelBlock && (
-                  <span className="text-emerald-400 font-semibold">{attendee.hostelBlock}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {attendee.checkedIn ? (
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-emerald-400 font-bold uppercase flex items-center gap-1">
-                    <CheckCircle2 className="h-4 w-4" /> Checked-In ({attendee.checkInTime})
-                  </span>
-                  <button
-                    onClick={() => handleToggleCheckin(attendee.id)}
-                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white rounded-xl text-xs font-mono uppercase cursor-pointer"
-                  >
-                    Undo
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => handleToggleCheckin(attendee.id)}
-                  className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-sans font-bold text-xs tracking-wider uppercase rounded-full transition-all active-press flex items-center gap-2 cursor-pointer shadow-lg"
-                >
-                  <UserCheck className="h-4 w-4" />
-                  <span>Mark Checked-In</span>
-                </button>
-              )}
-            </div>
+      {/* Target Event Selector */}
+      <div className="bg-white dark:bg-[#181612] p-4 sm:p-6 border border-black/10 dark:border-white/10 rounded-3xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex-1">
+          <label className="block text-xs font-sans font-bold uppercase mb-2 text-[#0B0907] dark:text-[#FCFAF6]">
+            Target Event Edition
+          </label>
+          <div className="max-w-xs">
+            <CustomSelect
+              value={selectedEventId}
+              onChange={(val) => setSelectedEventId(val)}
+              options={eventsList.map(e => ({ value: e.id, label: e.name }))}
+            />
           </div>
-        ))}
+        </div>
+      </div>
+
+      {/* Import Section */}
+      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
+        <div>
+          <h2 className="font-serif text-xl font-bold uppercase text-[#0B0907] dark:text-[#FCFAF6] mb-1">
+            Batch Import via Excel/CSV
+          </h2>
+          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+            Upload an Excel or CSV file exported from your ticketing system (e.g., Tix.africa) to sync attendees into Firestore.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={handleDownloadTemplate}
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors rounded-xl text-sm font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6]"
+          >
+            <Download className="h-4 w-4 text-[#C25627]" />
+            Download Template
+          </button>
+        </div>
+
+        {/* Dropzone area */}
+        <div 
+          onClick={() => !importing && fileInputRef.current?.click()}
+          className={`border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center gap-4 text-center cursor-pointer transition-all ${
+            importing 
+              ? "border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-white/5 opacity-70 pointer-events-none" 
+              : "border-black/20 dark:border-white/20 hover:border-[#C25627] dark:hover:border-[#C25627] hover:bg-zinc-50 dark:hover:bg-white/5"
+          }`}
+        >
+          {importing ? (
+            <>
+              <div className="bg-[#C25627]/10 p-4 rounded-full">
+                <Loader2 className="h-8 w-8 text-[#C25627] animate-spin" />
+              </div>
+              <div>
+                <p className="font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6] text-lg">
+                  Importing Attendees...
+                </p>
+                <p className="font-sans text-sm text-black/50 dark:text-white/50 mt-1">
+                  Please wait, this might take a few moments.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="bg-[#C25627]/10 p-4 rounded-full group-hover:scale-110 transition-transform">
+                <FileSpreadsheet className="h-8 w-8 text-[#C25627]" />
+              </div>
+              <div>
+                <p className="font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6] text-lg">
+                  Click to browse files
+                </p>
+                <p className="font-sans text-sm text-black/50 dark:text-white/50 mt-1">
+                  Supports .xlsx, .xls, and .csv files up to 10MB
+                </p>
+              </div>
+            </>
+          )}
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload}
+            accept=".xlsx, .xls, .csv" 
+            className="hidden" 
+          />
+        </div>
+
+        {/* Status Messages */}
+        {fileError && (
+          <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+            <p className="font-sans text-sm font-medium">{fileError}</p>
+          </div>
+        )}
+
+        {/* Step 1 Review / Dry Run Results */}
+        {importStats && pendingImport && (
+          <div className="bg-amber-500/10 border border-amber-500/20 p-6 rounded-3xl flex flex-col gap-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-serif text-xl font-bold text-[#0B0907] dark:text-[#FCFAF6]">Review Import</h3>
+                <p className="font-sans text-sm text-amber-700 dark:text-amber-400 mt-1">
+                  Found {pendingImport.length} total rows. {flaggedAttendees.length > 0 ? "Some duplicates detected." : "All clear to import."}
+                </p>
+              </div>
+              <button
+                onClick={handleConfirmImport}
+                disabled={importing}
+                className="bg-[#C25627] hover:bg-[#a1451f] text-white px-6 py-3 rounded-xl font-sans font-bold transition-colors disabled:opacity-50"
+              >
+                {importing ? "Importing..." : `Confirm & Import ${pendingImport.length - flaggedAttendees.length}`}
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-4 gap-4 mt-2">
+              <div className="bg-white dark:bg-[#181612] p-4 rounded-xl border border-black/5 dark:border-white/5 text-center">
+                <p className="text-3xl font-bold font-serif">{importStats.processed}</p>
+                <p className="text-[10px] uppercase font-bold text-zinc-500">Processed</p>
+              </div>
+              <div className="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20 text-center text-emerald-600">
+                <p className="text-3xl font-bold font-serif">{importStats.imported}</p>
+                <p className="text-[10px] uppercase font-bold">Valid</p>
+              </div>
+              <div className="bg-amber-500/10 p-4 rounded-xl border border-amber-500/20 text-center text-amber-600">
+                <p className="text-3xl font-bold font-serif">{importStats.skipped}</p>
+                <p className="text-[10px] uppercase font-bold">Flagged</p>
+              </div>
+              <div className="bg-red-500/10 p-4 rounded-xl border border-red-500/20 text-center text-red-600">
+                <p className="text-3xl font-bold font-serif">{importStats.rejected}</p>
+                <p className="text-[10px] uppercase font-bold">Errors</p>
+              </div>
+            </div>
+
+            {flaggedAttendees.length > 0 && (
+              <div className="mt-4 border-t border-amber-500/20 pt-4">
+                <p className="font-sans text-sm font-bold text-amber-700 dark:text-amber-400 mb-3 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4" />
+                  {flaggedAttendees.length} items will be skipped automatically to prevent duplicates:
+                </p>
+                <ul className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                  {flaggedAttendees.map((f, i) => (
+                    <li key={i} className="text-xs bg-white dark:bg-[#181612] p-3 rounded-lg border border-amber-500/20 flex justify-between">
+                      <span className="font-bold">{f.name}</span>
+                      <span className="text-zinc-500">{f.email || f.phone}</span>
+                      <span className="text-red-500 font-bold">{f.reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Final Success Message */}
+        {importResult && !pendingImport && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-6 rounded-3xl flex flex-col gap-3 animate-fade-in">
+            <div className="flex items-start gap-3">
+              <Sparkles className="h-6 w-6 shrink-0 mt-1" />
+              <div className="font-sans">
+                <p className="text-lg font-bold">Import Completed Successfully!</p>
+                <p className="text-sm mt-1 text-emerald-700 dark:text-emerald-500">
+                  Successfully imported <span className="font-bold">{importResult.success}</span> new attendees into Firestore.
+                </p>
+              </div>
+            </div>
+            {importResult.errors && importResult.errors.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-emerald-500/20">
+                <p className="text-xs font-bold mb-2 uppercase tracking-wider text-emerald-700 dark:text-emerald-500">Errors ({importResult.errors.length}):</p>
+                <ul className="text-xs space-y-2 max-h-32 overflow-y-auto pl-4 list-disc text-emerald-700 dark:text-emerald-500">
+                  {importResult.errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
     </div>

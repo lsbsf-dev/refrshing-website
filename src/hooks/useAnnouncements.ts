@@ -9,15 +9,20 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getAnnouncements } from "@/lib/firebase/announcements";
-import { ACTIVE_EVENT_ID } from "@/lib/firebase/app";
 import seedAnnouncements from "@/lib/firebase/seedAnnouncements.json";
 import { Announcement } from "@/types/announcement";
 
-export function useAnnouncements() {
+
+export function useAnnouncements(eventId: string) {
   return useQuery({
-    queryKey: ["announcements", ACTIVE_EVENT_ID],
-    queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    initialData: () => seedAnnouncements as unknown as Announcement[],
+    queryKey: ["announcements", eventId],
+    queryFn: () => getAnnouncements(eventId),
+    staleTime: 5 * 60 * 1000,
+    initialData: () => {
+      const all = seedAnnouncements as unknown as Announcement[];
+      return all
+        .filter((a) => a.eventId === eventId && a.status === "published")
+        .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    },
   });
 }
