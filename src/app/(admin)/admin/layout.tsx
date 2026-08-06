@@ -120,7 +120,7 @@ export default function AdminDashboardLayout({
         
         {/* ── Single Clean Collapsible Desktop Sidebar (w-60 expanded, w-20 collapsed) ── */}
         <aside
-          className={`hidden lg:flex flex-col border-r shrink-0 p-4 transition-all duration-300 z-30 ${
+          className={`hidden lg:flex flex-col border-r shrink-0 p-4 transition-all duration-300 z-30 sticky top-0 h-screen overflow-y-auto custom-scrollbar ${
             isCollapsed ? "w-20" : "w-60"
           } ${
             isDark ? "bg-[#12100C] border-white/10" : "bg-white border-black/10 shadow-sm"
