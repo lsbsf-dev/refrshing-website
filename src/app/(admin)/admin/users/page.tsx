@@ -170,12 +170,11 @@ export default function AdminUsersPage() {
             onChange={(val) => setFilterRole(val)}
             options={[
               { value: "all", label: "All Roles" },
-              { value: "superAdmin", label: "Super Admin" },
-              { value: "eventAdmin", label: "Event Admin" },
-              { value: "editor", label: "Editor (Media)" },
-              { value: "registrationStaff", label: "Registration" },
-              { value: "checkinStaff", label: "Check-in" },
-              { value: "viewer", label: "Viewer (Analytics)" },
+              { value: "superAdmin", label: "Super Administrator" },
+              { value: "eventAdmin", label: "Event Administrator" },
+              { value: "mediaTeam", label: "Media Team" },
+              { value: "registrationTeam", label: "Registration Team" },
+              { value: "analyticsViewer", label: "Analytics Viewer" },
             ]}
           />
         </div>
@@ -232,7 +231,13 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="font-sans text-xs font-bold uppercase text-[#DDB94E]">
-                          {user.role.replace(/([A-Z])/g, ' $1').trim()}
+                          {{
+                            superAdmin: "Super Administrator",
+                            eventAdmin: "Event Administrator",
+                            mediaTeam: "Media Team",
+                            registrationTeam: "Registration Team",
+                            analyticsViewer: "Analytics Viewer",
+                          }[user.role as string] || user.role}
                         </span>
                         {user.allowedEvents?.length > 0 && user.role !== "superAdmin" && (
                           <span className="font-sans text-[10px] text-zinc-500">
@@ -347,12 +352,11 @@ export default function AdminUsersPage() {
                   value={newUser.role}
                   onChange={(val) => setNewUser({ ...newUser, role: val as any, allowedEvents: [] })}
                   options={[
-                    { value: "superAdmin", label: "Super Admin" },
-                    { value: "eventAdmin", label: "Event Admin" },
-                    { value: "editor", label: "Editor (Media)" },
-                    { value: "registrationStaff", label: "Registration" },
-                    { value: "checkinStaff", label: "Check-in" },
-                    { value: "viewer", label: "Viewer (Analytics)" },
+                    { value: "superAdmin", label: "Super Administrator" },
+                    { value: "eventAdmin", label: "Event Administrator" },
+                    { value: "mediaTeam", label: "Media Team" },
+                    { value: "registrationTeam", label: "Registration Team" },
+                    { value: "analyticsViewer", label: "Analytics Viewer" },
                   ]}
                 />
               </div>
@@ -488,12 +492,11 @@ export default function AdminUsersPage() {
                   value={editingUser.role}
                   onChange={(val) => setEditingUser({ ...editingUser, role: val as any, allowedEvents: [] })}
                   options={[
-                    { value: "superAdmin", label: "Super Admin" },
-                    { value: "eventAdmin", label: "Event Admin" },
-                    { value: "editor", label: "Editor (Media)" },
-                    { value: "registrationStaff", label: "Registration" },
-                    { value: "checkinStaff", label: "Check-in" },
-                    { value: "viewer", label: "Viewer (Analytics)" },
+                    { value: "superAdmin", label: "Super Administrator" },
+                    { value: "eventAdmin", label: "Event Administrator" },
+                    { value: "mediaTeam", label: "Media Team" },
+                    { value: "registrationTeam", label: "Registration Team" },
+                    { value: "analyticsViewer", label: "Analytics Viewer" },
                   ]}
                 />
               </div>
