@@ -49,25 +49,37 @@ export async function POST(req: Request) {
     }
 
     if (action === "update") {
+      console.log("Admin Users API: Starting update for uid:", uid);
       const updateData: any = {};
       if (role) updateData.role = role;
       if (allowedEvents) updateData.allowedEvents = allowedEvents;
       if (displayName) updateData.name = displayName;
       if (email) updateData.email = email;
       
-      await firestore.collection("users").doc(uid).set(updateData, { merge: true });
+      try {
+        console.log("Admin Users API: Updating firestore document...");
+        await firestore.collection("users").doc(uid).set(updateData, { merge: true });
+        console.log("Admin Users API: Firestore update complete.");
+      } catch (e: any) {
+        console.error("Admin Users API: Firestore update failed:", e);
+        return NextResponse.json({ error: "Firestore update failed: " + e.message }, { status: 500 });
+      }
       
       if (displayName || email || password) {
         try {
+          console.log("Admin Users API: Updating auth profile...");
           await auth.updateUser(uid, {
             ...(displayName && { displayName }),
             ...(email && { email }),
             ...(password && { password }),
           });
-        } catch (e) {
-          console.error("Failed to update auth profile:", e);
+          console.log("Admin Users API: Auth update complete.");
+        } catch (e: any) {
+          console.error("Admin Users API: Failed to update auth profile:", e.message);
         }
       }
+      
+      console.log("Admin Users API: Update successful.");
       return NextResponse.json({ success: true });
     }
 
