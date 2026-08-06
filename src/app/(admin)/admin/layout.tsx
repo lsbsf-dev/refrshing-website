@@ -107,7 +107,7 @@ export default function AdminDashboardLayout({
     { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
     { label: "Resources", href: "/admin/resources", icon: BookOpen },
     { label: "Attendees", href: "/admin/attendees", icon: UserCheck },
-    { label: "Staff & Security", href: "/admin/users", icon: ShieldCheck },
+    { label: "Users & Roles", href: "/admin/users", icon: ShieldCheck },
   ];
 
   const isDark = theme === "dark";
