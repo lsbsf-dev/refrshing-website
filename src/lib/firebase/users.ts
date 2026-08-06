@@ -31,21 +31,19 @@ export async function provisionAdminAccount(data: {
 }
 
 export async function getUsers(): Promise<UserMetadata[]> {
-  const ref = collection(db, "users");
-  const snap = await getDocs(query(ref, orderBy("createdAt", "desc")));
-  return snap.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      name: data.name || "",
-      email: data.email || "",
-      role: data.role || "viewer",
-      allowedEvents: data.allowedEvents || [],
-      isActive: data.isActive ?? true,
-      createdAt: data.createdAt?.toDate?.()?.toISOString() || "",
-      tokensValidAfter: data.tokensValidAfter,
-    } as UserMetadata;
-  });
+  const res = await fetch("/api/admin/users");
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.users.map((u: any) => ({
+    id: u.id,
+    name: u.name || "",
+    email: u.email || "",
+    role: u.role || "viewer",
+    allowedEvents: u.allowedEvents || [],
+    isActive: u.isActive ?? true,
+    createdAt: u.createdAt || "",
+    tokensValidAfter: u.tokensValidAfter,
+  }));
 }
 
 export async function updateUserAccess(uid: string, data: Partial<UserMetadata>): Promise<void> {
