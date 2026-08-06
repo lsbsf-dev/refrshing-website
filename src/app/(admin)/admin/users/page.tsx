@@ -102,7 +102,7 @@ export default function AdminUsersPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase">
-            User Access Management
+            Staff & Security
           </h1>
           <p className="font-sans text-sm text-black/60 dark:text-white/60">
             Provision admin accounts, assign roles, and manage system access.

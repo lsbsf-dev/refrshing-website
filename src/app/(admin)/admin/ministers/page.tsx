@@ -13,6 +13,7 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Minister } from "@/types/minister";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
+import toast from "react-hot-toast";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
 export default function AdminMinistersPage() {
@@ -67,8 +68,12 @@ export default function AdminMinistersPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "ministers"] });
       setEditingMinister(null);
-      triggerSuccessBanner();
+      toast.success("Minister updated successfully!");
     },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update minister. Check permissions or network.");
+    }
   });
 
   const createMutation = useMutation({
@@ -77,16 +82,24 @@ export default function AdminMinistersPage() {
       queryClient.invalidateQueries({ queryKey: ["admin", "ministers"] });
       setIsNewModalOpen(false);
       setNewMinister({ name: "", category: "keynote", biography: "", photoUrl: "" });
-      triggerSuccessBanner();
+      toast.success("Minister created successfully!");
     },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to create minister.");
+    }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteMinister(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "ministers"] });
-      triggerSuccessBanner();
+      toast.success("Minister deleted successfully!");
     },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to delete minister.");
+    }
   });
 
   const handleSave = (e: React.FormEvent) => {
@@ -134,13 +147,6 @@ export default function AdminMinistersPage() {
           <span>New Minister</span>
         </button>
       </div>
-
-      {savedSuccess && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-500 text-xs font-sans font-semibold flex items-center gap-2 animate-fade-in">
-          <Sparkles className="h-4 w-4" />
-          <span>Directory updated successfully!</span>
-        </div>
-      )}
 
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-[#14120E] p-4 rounded-2xl border border-black/10 dark:border-white/10">
@@ -201,7 +207,7 @@ export default function AdminMinistersPage() {
               <div className="h-16 w-16 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 relative shrink-0 border border-black/10 dark:border-white/10">
                 {minister.photoUrl ? (
                   <img
-                    src={minister.photoUrl}
+                    src={encodeURI(minister.photoUrl)}
                     alt={minister.name}
                     className="object-cover object-top w-full h-full"
                   />

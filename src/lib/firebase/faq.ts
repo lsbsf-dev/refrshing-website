@@ -39,12 +39,10 @@ export async function getFAQs(eventId: string): Promise<FAQ[]> {
       orderBy("order", "asc")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedFaqs as FAQ[]).filter((f) => f.eventId === eventId);
-    }
+    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getFAQs failed, using fallback static data:", error);
-    return (seedFaqs as FAQ[]).filter((f) => f.eventId === eventId);
+    console.warn("Firestore query getFAQs failed:", error);
+    return [];
   }
 }

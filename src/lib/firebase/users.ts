@@ -13,12 +13,22 @@ export interface UserMetadata {
   tokensValidAfter?: number;
 }
 
-const functions = getFunctions(app);
-
-export const provisionAdminAccount = httpsCallable<
-  { email: string; password?: string; displayName: string; role: string; allowedEvents?: string[] },
-  { success: boolean; uid: string }
->(functions, "provisionAdminAccount");
+export async function provisionAdminAccount(data: {
+  email: string;
+  password?: string;
+  displayName: string;
+  role: string;
+  allowedEvents?: string[];
+}): Promise<{ data: { success: boolean; uid: string } }> {
+  const res = await fetch("/api/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "provision", ...data }),
+  });
+  if (!res.ok) throw new Error("Failed to provision user");
+  const json = await res.json();
+  return { data: json };
+}
 
 export async function getUsers(): Promise<UserMetadata[]> {
   const ref = collection(db, "users");
@@ -39,9 +49,10 @@ export async function getUsers(): Promise<UserMetadata[]> {
 }
 
 export async function updateUserAccess(uid: string, data: Partial<UserMetadata>): Promise<void> {
-  // Only superAdmins can do this; it's protected by firestore.rules
-  const ref = doc(db, "users", uid);
-  await updateDoc(ref, {
-    ...data,
+  const res = await fetch("/api/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "update", uid, role: data.role, allowedEvents: data.allowedEvents }),
   });
+  if (!res.ok) throw new Error("Failed to update user");
 }

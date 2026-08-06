@@ -12,6 +12,7 @@ import { getResources, updateResource } from "@/lib/firebase/resources";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Resource } from "@/types/resource";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
+import { CustomSelect } from "@/components/shared/CustomSelect";
 
 export default function AdminResourcesPage() {
   const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
@@ -23,6 +24,19 @@ export default function AdminResourcesPage() {
   });
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const categories = ["All", ...Array.from(new Set(resourcesList.map((r) => r.category)))];
+
+  const filteredResources = resourcesList.filter((res) => {
+    const matchesSearch =
+      res.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      res.author.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || res.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   useEffect(() => {
     if (editingResource) {
@@ -74,18 +88,39 @@ export default function AdminResourcesPage() {
         </div>
       )}
 
+      {/* ── Search & Filter ── */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="Search resources by title or author..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm outline-none focus:border-[#C25627] transition-colors"
+          />
+        </div>
+        <div className="w-full sm:w-56 shrink-0">
+          <CustomSelect
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+            options={categories.map((cat) => ({ value: cat, label: cat }))}
+          />
+        </div>
+      </div>
+
       {/* ── Resources List ── */}
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
         </div>
-      ) : resourcesList.length === 0 ? (
+      ) : filteredResources.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
-          <p className="font-sans text-sm text-zinc-500">No resources found.</p>
+          <p className="font-sans text-sm text-zinc-500">No resources found matching your search.</p>
         </div>
       ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {resourcesList.map((res) => (
+        {filteredResources.map((res) => (
           <div
             key={res.id}
             className="p-6 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-2xl flex flex-col justify-between gap-5 hover:border-[#C25627]/40 transition-all shadow-sm"

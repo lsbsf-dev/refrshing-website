@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 };
 
 import { QueryProvider } from "@/components/shared/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -45,6 +46,13 @@ export default function RootLayout({
       <body className={`${inter.variable} ${cormorant.variable} min-h-full flex flex-col font-sans`}>
         <QueryProvider>
           {children}
+          <Toaster 
+            position="top-right" 
+            toastOptions={{ 
+              className: 'font-sans text-sm',
+              duration: 4000,
+            }} 
+          />
         </QueryProvider>
       </body>
     </html>

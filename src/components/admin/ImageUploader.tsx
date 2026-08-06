@@ -45,32 +45,27 @@ export function ImageUploader({
       };
       const compressedFile = await imageCompression(file, options);
 
-      // 2. Upload to Firebase Storage
-      // Generate a unique path: public/uploads/{timestamp}-{filename}
-      const uniqueFilename = `${Date.now()}-${compressedFile.name.replace(/[^a-zA-Z0-9.]/g, "")}`;
-      const storageRef = ref(storage, `public/uploads/${uniqueFilename}`);
-      
-      const uploadTask = uploadBytesResumable(storageRef, compressedFile);
+      // 2. Upload to Local Repo via API Route
+      const formData = new FormData();
+      formData.append("file", compressedFile);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setUploadProgress(progress);
-        },
-        (error) => {
-          console.error("Upload failed:", error);
-          alert("Image upload failed. Please try again.");
-          setUploading(false);
-        },
-        async () => {
-          // Success
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          onChange(downloadURL);
-          setUploading(false);
-          setUploadProgress(0);
-        }
-      );
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Upload failed on server");
+      }
+
+      const data = await res.json();
+      onChange(data.url);
+      setUploading(false);
+      setUploadProgress(100);
+      
+      // Simulate progress for UI feedback since fetch doesn't have native progress easily exposed
+      setTimeout(() => setUploadProgress(0), 1000);
+
     } catch (error) {
       console.error("Compression/Upload error:", error);
       alert("An error occurred while processing the image.");

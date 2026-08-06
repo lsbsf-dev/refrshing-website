@@ -151,6 +151,63 @@ service cloud.firestore {
         // Direct writes blocked: check-in is performed exclusively via the markCheckedIn Cloud Function
         allow write: if false;
       }
+
+      // Committee Members Subcollection
+      match /committeeMembers/{memberId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Homepage Settings Subcollection
+      match /homepageSettings/{settingId} {
+        allow read: if true; // Always public since it powers the homepage
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // About Settings Subcollection
+      match /aboutSettings/{settingId} {
+        allow read: if true; // Public for about page
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Bible Studies Subcollection
+      match /bibleStudies/{studyId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Articles Subcollection
+      match /articles/{articleId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Devotionals Subcollection
+      match /devotionals/{devotionalId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Advertisements Subcollection
+      match /advertisements/{adId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+
+      // Downloads Subcollection
+      match /downloads/{downloadId} {
+        allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId);
+      }
+    }
+
+    // ==========================================
+    // GLOBAL PROGRAMME CONTENT
+    // ==========================================
+    
+    match /timelineEntries/{entryId} {
+      allow read: if isPublished() || isSuperAdmin();
+      allow write: if isSuperAdmin();
     }
 
     // ==========================================

@@ -68,17 +68,11 @@ export async function getAlbums(eventId: string): Promise<GalleryAlbum[]> {
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedAlbums as GalleryAlbum[]).filter(
-        (a) => a.eventId === eventId && a.status === "published"
-      );
-    }
+    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getAlbums failed, using fallback static data:", error);
-    return (seedAlbums as GalleryAlbum[]).filter(
-      (a) => a.eventId === eventId && a.status === "published"
-    );
+    console.warn("Firestore query getAlbums failed:", error);
+    return [];
   }
 }
 

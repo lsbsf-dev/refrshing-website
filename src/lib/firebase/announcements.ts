@@ -48,17 +48,11 @@ export async function getAnnouncements(eventId: string): Promise<Announcement[]>
       orderBy("publishedAt", "desc")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedAnnouncements as unknown as Announcement[]).filter(
-        (a) => a.eventId === eventId && a.status === "published"
-      );
-    }
+    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getAnnouncements failed, using fallback static data:", error);
-    return (seedAnnouncements as unknown as Announcement[]).filter(
-      (a) => a.eventId === eventId && a.status === "published"
-    );
+    console.warn("Firestore query getAnnouncements failed:", error);
+    return [];
   }
 }
 

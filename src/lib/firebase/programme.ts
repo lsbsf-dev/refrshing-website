@@ -51,17 +51,11 @@ export async function getSessions(eventId: string): Promise<Session[]> {
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedSessions as Session[]).filter(
-        (s) => s.eventId === eventId && s.status === "published"
-      );
-    }
+    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getSessions failed, using fallback static data:", error);
-    return (seedSessions as Session[]).filter(
-      (s) => s.eventId === eventId && s.status === "published"
-    );
+    console.warn("Firestore query getSessions failed:", error);
+    return [];
   }
 }
 
@@ -75,19 +69,11 @@ export async function getSessionBySlug(eventId: string, slug: string): Promise<S
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      const fallback = (seedSessions as Session[]).find(
-        (s) => s.eventId === eventId && s.slug === slug && s.status === "published"
-      );
-      return fallback || null;
-    }
+    if (snap.empty) return null;
     return snap.docs[0].data();
   } catch (error) {
-    console.warn("Firestore query getSessionBySlug failed, using fallback static data:", error);
-    const fallback = (seedSessions as Session[]).find(
-      (s) => s.eventId === eventId && s.slug === slug && s.status === "published"
-    );
-    return fallback || null;
+    console.warn("Firestore query getSessionBySlug failed:", error);
+    return null;
   }
 }
 
@@ -101,17 +87,11 @@ export async function getSessionsForMinister(eventId: string, ministerId: string
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    if (snap.empty) {
-      return (seedSessions as Session[]).filter(
-        (s) => s.eventId === eventId && s.ministerIds.includes(ministerId) && s.status === "published"
-      );
-    }
+    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getSessionsForMinister failed, using fallback static data:", error);
-    return (seedSessions as Session[]).filter(
-      (s) => s.eventId === eventId && s.ministerIds.includes(ministerId) && s.status === "published"
-    );
+    console.warn("Firestore query getSessionsForMinister failed:", error);
+    return [];
   }
 }
 

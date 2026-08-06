@@ -18,7 +18,7 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find((o) => o.value === value) || options[0];
+  const selectedOption = options.find((o) => o.value === value) || options[0] || { label: "Select...", value: "" };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,9 +35,10 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-zinc-50 dark:bg-[#1A1813] border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none flex items-center justify-between hover:border-[#C25627]/40 transition-colors cursor-pointer"
+        disabled={options.length === 0}
+        className="w-full bg-zinc-50 dark:bg-[#1A1813] border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none flex items-center justify-between hover:border-[#C25627]/40 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <span className="truncate">{selectedOption.label}</span>
+        <span className="truncate">{selectedOption?.label || "Select..."}</span>
         <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 

@@ -1,0 +1,30 @@
+import { NextResponse } from "next/server";
+import { firestore } from "@/lib/firebase/admin";
+
+export async function POST(req: Request) {
+  try {
+    const data = await req.json();
+    const { action, ministerId, payload } = data;
+
+    if (action === "create") {
+      const slug = payload.slug || payload.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      await firestore.collection("ministers").doc(slug).set(payload);
+      return NextResponse.json({ success: true, slug });
+    }
+
+    if (action === "update") {
+      await firestore.collection("ministers").doc(ministerId).set(payload, { merge: true });
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === "delete") {
+      await firestore.collection("ministers").doc(ministerId).update({ status: "deleted" });
+      return NextResponse.json({ success: true });
+    }
+
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  } catch (error: any) {
+    console.error("Admin Ministers API Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

@@ -43,7 +43,19 @@ const pillars = [
   }
 ];
 
-export default function AboutPage() {
+import { TimelineSection } from "@/components/public/TimelineSection";
+import { CommitteeSection } from "@/components/public/CommitteeSection";
+import { getEventScopedDocs, AboutSettings } from "@/lib/firebase/cms";
+import { useQuery } from "@tanstack/react-query";
+
+export default function AboutPage({ params }: { params: { eventId: string } }) {
+  const { data: settingsDocs = [] } = useQuery({
+    queryKey: ["public", "aboutSettings", params.eventId],
+    queryFn: () => getEventScopedDocs<AboutSettings>(params.eventId, "aboutSettings"),
+    staleTime: 5 * 60 * 1000,
+  });
+  const settings = settingsDocs[0] || null;
+
   return (
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
 
@@ -91,33 +103,48 @@ export default function AboutPage() {
           </div>
           
           {/* Right: History & Philosophy narrative */}
-          <div className="lg:col-span-7 flex flex-col items-start gap-6 text-left text-[#0B0907]">
-            <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
-              OUR PHILOSOPHY
-            </span>
-            <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-tight leading-tight uppercase text-[#0B0907]">
-              CHRISTIAN WITNESS IN <br />
-              <span className="font-serif italic font-normal text-[#C25627]">HIGHER EDUCATION</span>
-            </h2>
-            <div className="h-[1px] w-20 bg-[#C25627] my-1" />
-            <p className="font-sans text-zinc-700 text-sm sm:text-base leading-relaxed font-light">
-              The Nigerian Baptist Convention’s Christian witness and ministry in institutions of higher learning are in response to the Lord’s command to make the gospel known to all persons.
-            </p>
-            <p className="font-sans text-zinc-700 text-sm sm:text-base leading-relaxed font-light">
-              Because schools are engaged in the quest for knowledge and truth of which God is the Source, the Christian perspective is essential to realize the ultimate in education. The unique nature of the student life and campus community demands a specialized ministry of the church to the individual need of students for redemption and Christian nurture within that community.
-            </p>
+          <div className="lg:col-span-7 flex flex-col items-start gap-10 text-left text-[#0B0907]">
+            
+            {settings?.visionHtml && (
+              <div className="w-full">
+                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                  OUR VISION
+                </span>
+                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.visionHtml }} />
+              </div>
+            )}
 
-            <div className="mt-4 pt-6 border-t border-black/10 w-full flex flex-col gap-3">
-              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase">
-                A LEGACY OF COVENANT AND FIRE
-              </span>
-              <p className="font-sans text-zinc-700 text-sm sm:text-base leading-relaxed font-light">
-                Since its inception in 1986, the Lagos State Baptist Student Fellowship (LSBSF) has served as a central pillar for student ministry across the state. What began as a passionate network of prayer movements has grown into a unified, transformative force.
-              </p>
-              <p className="font-sans text-zinc-700 text-sm sm:text-base leading-relaxed font-light">
-                Through our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth. As we reach this historic 40th anniversary, we celebrate the lives transformed, the ministries birthed, and the enduring global legacy built by those who came before us.
-              </p>
-            </div>
+            {settings?.missionHtml && (
+              <div className="w-full pt-6 border-t border-black/10">
+                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                  OUR MISSION
+                </span>
+                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.missionHtml }} />
+              </div>
+            )}
+
+            {settings?.aboutLsbsfHtml && (
+              <div className="w-full pt-6 border-t border-black/10">
+                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                  ABOUT LSBSF
+                </span>
+                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.aboutLsbsfHtml }} />
+              </div>
+            )}
+
+            {settings?.historyHtml && (
+              <div className="w-full pt-6 border-t border-black/10">
+                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                  OUR HISTORY
+                </span>
+                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.historyHtml }} />
+              </div>
+            )}
+            
+            {!settings && (
+              <p className="text-zinc-500 italic">About page content has not been configured yet.</p>
+            )}
+            
           </div>
 
         </div>
@@ -164,6 +191,56 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* ── THEME ARCHIVE ── */}
+      {settings?.themeArchive && settings.themeArchive.length > 0 && (
+        <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden">
+          <div className="relative z-10 max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-3">
+                OUR JOURNEY
+              </span>
+              <h2 className="font-serif text-3xl sm:text-5xl font-light text-white uppercase leading-none">
+                PREVIOUS <span className="text-[#C25627] font-normal font-serif">THEMES</span>
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...settings.themeArchive]
+                .sort((a, b) => parseInt(b.year || "0") - parseInt(a.year || "0"))
+                .map(theme => (
+                <div key={theme.id} className="flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-colors">
+                  {theme.imageUrl && (
+                    <div className="relative w-full aspect-video">
+                      <Image src={theme.imageUrl} alt={theme.theme} fill className="object-cover" />
+                    </div>
+                  )}
+                  <div className="p-6 sm:p-8 flex flex-col gap-4">
+                    <span className="font-mono text-xs font-bold text-[#DDB94E] border border-[#DDB94E]/20 bg-[#DDB94E]/10 px-3 py-1 rounded-full w-fit">
+                      {theme.year}
+                    </span>
+                    <div>
+                      <h3 className="font-serif text-2xl font-bold text-white uppercase">{theme.theme}</h3>
+                      {theme.scripture && <span className="font-sans text-xs font-bold text-[#C25627] tracking-widest uppercase mt-1 block">{theme.scripture}</span>}
+                    </div>
+                    {theme.description && (
+                      <p className="font-sans text-sm text-white/70 leading-relaxed font-light mt-2 line-clamp-4">
+                        {theme.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── TIMELINE ── */}
+      <TimelineSection />
+
+      {/* ── COMMITTEE ── */}
+      <CommitteeSection eventId={params.eventId} />
 
       {/* ── BE PART OF KINGDOM HISTORY ── */}
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">

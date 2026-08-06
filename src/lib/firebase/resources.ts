@@ -51,23 +51,10 @@ export async function getResources(eventId: string): Promise<Resource[]> {
       where("status", "==", "published")
     );
     const snap = await getDocs(q);
-    const firestoreDocs = snap.empty ? [] : snap.docs.map((doc) => doc.data());
-    const seedDocs = (seedResources as unknown as Resource[]).filter(
-      (r) => r.eventId === eventId && r.status === "published"
-    );
-    // Combine results, ensuring all seed items are represented if not present in Firestore yet
-    const merged = [...firestoreDocs];
-    for (const s of seedDocs) {
-      if (!merged.some((m) => m.slug === s.slug || m.id === s.id)) {
-        merged.push(s);
-      }
-    }
-    return merged;
+    return snap.empty ? [] : snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getResources failed, using fallback static data:", error);
-    return (seedResources as unknown as Resource[]).filter(
-      (r) => r.eventId === eventId && r.status === "published"
-    );
+    console.warn("Firestore query getResources failed:", error);
+    return [];
   }
 }
 
@@ -84,16 +71,10 @@ export async function getResourceBySlug(eventId: string, slug: string): Promise<
     if (!snap.empty) {
       return snap.docs[0].data();
     }
-    const fallback = (seedResources as unknown as Resource[]).find(
-      (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
-    );
-    return fallback || null;
+    return null;
   } catch (error) {
-    console.warn("Firestore query getResourceBySlug failed, using fallback static data:", error);
-    const fallback = (seedResources as unknown as Resource[]).find(
-      (r) => r.eventId === eventId && r.slug === slug && r.status === "published"
-    );
-    return fallback || null;
+    console.warn("Firestore query getResourceBySlug failed:", error);
+    return null;
   }
 }
 

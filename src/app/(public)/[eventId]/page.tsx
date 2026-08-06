@@ -10,16 +10,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getMinisters } from "@/lib/firebase/ministers";
+import { getEventScopedDocs, HomepageSettings, Article } from "@/lib/firebase/cms";
+import { getEventById } from "@/lib/firebase/events";
 import { useParams } from "next/navigation";
 import { REGISTRATION_URL } from "@/lib/constants";
 import seedMinisters from "@/lib/firebase/seedMinisters.json";
 import { Minister } from "@/types/minister";
+import { Announcement } from "@/types/announcement";
 
 export default function HomePage() {
   const params = useParams();
   const ACTIVE_EVENT_ID = params?.eventId as string;
   const pageRef = useRef<HTMLDivElement>(null);
   const [daysLeft, setDaysLeft] = useState<number>(0);
+
+  const { data: settingsDocs = [] } = useQuery({
+    queryKey: ["public", "homepageSettings", ACTIVE_EVENT_ID],
+    queryFn: () => getEventScopedDocs<HomepageSettings>(ACTIVE_EVENT_ID, "homepageSettings"),
+    staleTime: 5 * 60 * 1000,
+  });
+  const settings = settingsDocs[0] || null;
 
   const { data: ministers = [] } = useQuery({
     queryKey: ["ministers", ACTIVE_EVENT_ID],
@@ -29,6 +39,18 @@ export default function HomePage() {
       (seedMinisters as Minister[]).filter(
         (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
       ),
+  });
+
+  const { data: announcements = [] } = useQuery({
+    queryKey: ["public", "announcements", ACTIVE_EVENT_ID],
+    queryFn: () => getEventScopedDocs<Announcement>(ACTIVE_EVENT_ID, "announcements"),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const { data: articles = [] } = useQuery({
+    queryKey: ["public", "articles", ACTIVE_EVENT_ID],
+    queryFn: () => getEventScopedDocs<Article>(ACTIVE_EVENT_ID, "articles"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const testimonies = [
@@ -90,8 +112,18 @@ export default function HomePage() {
     },
   ];
 
+  const { data: eventData } = useQuery({
+    queryKey: ["event", ACTIVE_EVENT_ID],
+    queryFn: () => getEventById(ACTIVE_EVENT_ID),
+    staleTime: 6 * 60 * 60 * 1000,
+  });
+
   useEffect(() => {
-    const target = new Date("2026-08-10T08:00:00Z").getTime();
+    // Fallback to hardcoded if not loaded/set
+    const target = eventData?.startDate 
+      ? new Date(eventData.startDate).getTime() 
+      : new Date("2026-08-10T08:00:00Z").getTime();
+      
     const updateTime = () => {
       const now = new Date().getTime();
       const diff = target - now;
@@ -104,11 +136,56 @@ export default function HomePage() {
     updateTime();
     const interval = setInterval(updateTime, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [eventData?.startDate]);
+
+  const [showMilestoneOverlay, setShowMilestoneOverlay] = useState(false);
+  useEffect(() => {
+    if (settings?.milestoneOverlayEnabled) {
+      const dismissed = localStorage.getItem("milestone_dismissed");
+      if (!dismissed) {
+        setShowMilestoneOverlay(true);
+      }
+    }
+  }, [settings?.milestoneOverlayEnabled]);
+
+  const dismissMilestone = () => {
+    setShowMilestoneOverlay(false);
+    localStorage.setItem("milestone_dismissed", "true");
+  };
+
+  const isAnniversaryVisible = (() => {
+    if (!settings?.anniversaryBannerEnabled || !settings.anniversary) return false;
+    const now = new Date().getTime();
+    const start = settings.anniversary.displayStart ? new Date(settings.anniversary.displayStart).getTime() : 0;
+    const end = settings.anniversary.displayEnd ? new Date(settings.anniversary.displayEnd).getTime() : Infinity;
+    return now >= start && now <= end;
+  })();
 
   return (
     <div ref={pageRef} className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20">
       
+      {/* MILESTONE OVERLAY MODAL */}
+      {showMilestoneOverlay && settings?.milestone && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-[#0B0907] border border-[#C25627]/30 text-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-500">
+            <button onClick={dismissMilestone} className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-[#C25627] transition-colors">✕</button>
+            {settings.milestone.imageUrl && (
+              <div className="relative w-full h-48 sm:h-64">
+                <Image src={settings.milestone.imageUrl} alt="Milestone Celebration" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] to-transparent" />
+              </div>
+            )}
+            <div className={`p-8 text-center ${settings.milestone.imageUrl ? '-mt-10 relative z-10' : ''}`}>
+              <h2 className="font-serif text-3xl font-bold uppercase text-[#DDB94E] mb-4">Celebration!</h2>
+              <p className="font-sans text-lg text-white/90 leading-relaxed font-light">{settings.milestone.text}</p>
+              <button onClick={dismissMilestone} className="mt-8 px-8 py-3 bg-[#C25627] hover:bg-[#a1451f] text-white font-bold rounded-xl transition-colors uppercase tracking-widest text-sm">
+                Enter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ═══════════════════════════════════════
           SCENE 1: HERO (Explosive - Dynamic Scale & Entrance)
           ═══════════════════════════════════════ */}
@@ -117,7 +194,7 @@ export default function HomePage() {
         {/* Worship background opacity */}
         <div className="absolute inset-0 w-full h-full opacity-55 pointer-events-none z-0">
           <Image
-            src="/pictures/Image 3.jpg"
+            src={settings?.heroBackgroundImageUrl || "/pictures/Image 3.jpg"}
             alt="Worship active hands backdrop"
             fill
             priority
@@ -173,17 +250,23 @@ export default function HomePage() {
           </span>
 
           <h1 className="font-serif text-2xl xs:text-4xl sm:text-6xl md:text-[95px] lg:text-[115px] font-bold tracking-tight leading-[0.95] text-white uppercase select-none animate-hero-item delay-200">
-            <span className="text-gradient-gold block font-serif">
-              THE GREATER
-            </span>
-            <span className="text-gradient-gold block font-serif">
-              GLORY
-            </span>
+            {settings?.heroTitle ? (
+              settings.heroTitle.split(" ").map((word, i) => (
+                <span key={i} className="text-gradient-gold block font-serif">
+                  {word}
+                </span>
+              ))
+            ) : (
+              <>
+                <span className="text-gradient-gold block font-serif">THE GREATER</span>
+                <span className="text-gradient-gold block font-serif">GLORY</span>
+              </>
+            )}
           </h1>
 
           <div className="max-w-xl border-l-2 border-[#C25627] pl-4 sm:pl-6 my-2 animate-hero-item delay-300">
             <p className="font-serif text-sm sm:text-base md:text-lg italic text-white/95 leading-relaxed font-light">
-              &ldquo;The glory of this present house will be greater than the glory of the former house,&rdquo; says the Lord Almighty.
+              {settings?.heroSubtitle || "“The glory of this present house will be greater than the glory of the former house,” says the Lord Almighty."}
             </p>
           </div>
 
@@ -196,6 +279,29 @@ export default function HomePage() {
         </div>
 
       </section>
+
+      {/* ANNIVERSARY BANNER (If enabled & within dates) */}
+      {isAnniversaryVisible && settings?.anniversary && (
+        <section className="relative w-full py-16 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-[#C25627]/20 flex items-center justify-center min-h-[300px]">
+          {settings.anniversary.backgroundImageUrl && (
+            <div className="absolute inset-0 opacity-30">
+              <Image src={settings.anniversary.backgroundImageUrl} alt="Anniversary Background" fill className="object-cover" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0907] to-transparent pointer-events-none" />
+          
+          <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-4">
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase text-gradient-gold">
+              {settings.anniversary.title}
+            </h2>
+            {settings.anniversary.subtitle && (
+              <p className="font-sans text-lg sm:text-xl text-white/90 font-light max-w-2xl mx-auto leading-relaxed italic">
+                {settings.anniversary.subtitle}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════
           SCENE 2: THEME (Scripture Art Card with Extra Spacing)
@@ -338,7 +444,10 @@ export default function HomePage() {
 
           {/* Compact Cards — Controlled Image Size, No Long Bio Paragraph */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {ministers.slice(0, 3).map((min) => (
+            {(settings?.featuredMinisters?.length 
+              ? ministers.filter(m => settings.featuredMinisters.includes(m.id))
+              : ministers.slice(0, 3)
+            ).map((min) => (
               <Link
                 key={min.id}
                 href={`/ministers/${min.slug}`}
@@ -348,7 +457,7 @@ export default function HomePage() {
                   {/* Controlled Avatar Picture */}
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#0B0907] flex-shrink-0 border border-black/10">
                     <Image
-                      src={min.photoUrl || "/pictures/Image 6.jpg"}
+                      src={encodeURI(min.photoUrl || "/pictures/Image 6.jpg")}
                       alt={min.name}
                       fill
                       className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"
@@ -384,6 +493,62 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FEATURED ANNOUNCEMENT & ARTICLES */}
+      {(settings?.featuredAnnouncement || (settings?.featuredArticles?.length ?? 0) > 0) && (
+        <section className="relative w-full py-16 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-[#FCFAF6] overflow-hidden border-t border-white/5">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+            
+            {/* Announcement */}
+            {settings?.featuredAnnouncement && (
+              <div className="flex flex-col gap-6 border border-white/10 p-8 rounded-3xl bg-white/5">
+                <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
+                  Featured Announcement
+                </span>
+                {(() => {
+                  const ann = announcements.find(a => a.id === settings.featuredAnnouncement);
+                  if (!ann) return <p className="text-white/60 text-sm">Announcement not found.</p>;
+                  return (
+                    <>
+                      <h3 className="font-serif text-3xl text-white">{ann.title}</h3>
+                      <p className="font-sans text-white/80 leading-relaxed font-light line-clamp-3">{ann.content}</p>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* Articles */}
+            {settings?.featuredArticles && settings.featuredArticles.length > 0 && (
+              <div className="flex flex-col gap-6">
+                <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
+                  Featured Articles
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {settings.featuredArticles.map(articleId => {
+                    const art = articles.find(a => a.id === articleId);
+                    if (!art) return null;
+                    return (
+                      <Link key={art.id} href={`/${ACTIVE_EVENT_ID}/programme/articles/${art.slug}`} className="group flex flex-col gap-4 active-press">
+                        {art.coverImageUrl && (
+                          <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white/5">
+                            <Image src={art.coverImageUrl} alt={art.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="font-serif text-lg text-white group-hover:text-[#DDB94E] transition-colors">{art.title}</h4>
+                          <span className="text-xs text-white/50 block mt-1">{art.author}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
+          </div>
+        </section>
+      )}
+
       {/* ═══════════════════════════════════════
           SCENE 5: PROGRAMME JOURNEY
           ═══════════════════════════════════════ */}
@@ -401,12 +566,14 @@ export default function HomePage() {
             </h2>
             
             {/* Countdown Accent Highlight */}
-            <div className="flex items-center gap-3 mt-4 border-l border-[#C25627]/30 pl-4 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#C25627] animate-pulse" />
-              <span className="font-serif text-sm italic text-[#4A4032]">
-                We gather in <span className="text-3xl font-bold text-[#C25627] mx-1 align-middle leading-none">{daysLeft}</span> days.
-              </span>
-            </div>
+            {(settings?.showCountdown ?? true) && (
+              <div className="flex items-center gap-3 mt-4 border-l border-[#C25627]/30 pl-4 py-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#C25627] animate-pulse" />
+                <span className="font-serif text-sm italic text-[#4A4032]">
+                  We gather in <span className="text-3xl font-bold text-[#C25627] mx-1 align-middle leading-none">{daysLeft}</span> days.
+                </span>
+              </div>
+            )}
 
             <Link
               href="/programme"
@@ -520,8 +687,8 @@ export default function HomePage() {
             {/* Image 5 */}
             <div data-reveal className="w-full md:col-span-4 relative aspect-video overflow-hidden border border-black/10 group bg-white md:rotate-[-2deg] transition-transform duration-500 hover:rotate-0 h-[180px] sm:h-[260px] md:h-auto shadow-md active-press cursor-pointer rounded-2xl">
               <Image
-                src="/pictures/Image 5.jpg"
-                alt="Fellowship grid"
+                src={settings?.featuredGalleryImages?.[0] || "/pictures/Image 5.jpg"}
+                alt="Gallery preview 1"
                 fill
                 className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
               />
@@ -530,8 +697,8 @@ export default function HomePage() {
             {/* Image 8 */}
             <div data-reveal className="w-full md:col-span-5 relative aspect-square overflow-hidden border border-black/10 group md:-translate-y-8 z-10 bg-white md:rotate-[1deg] transition-transform duration-500 hover:rotate-0 h-[220px] sm:h-[300px] md:h-auto shadow-lg active-press cursor-pointer rounded-2xl">
               <Image
-                src="/pictures/Image 8.jpg"
-                alt="Worship details"
+                src={settings?.featuredGalleryImages?.[1] || "/pictures/Image 8.jpg"}
+                alt="Gallery preview 2"
                 fill
                 className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
               />
@@ -541,16 +708,16 @@ export default function HomePage() {
             <div className="w-full md:col-span-3 flex flex-col gap-6">
               <div data-reveal className="relative aspect-[4/3] w-full overflow-hidden border border-black/10 group bg-white md:rotate-[3deg] transition-transform duration-500 hover:rotate-0 h-[160px] sm:h-[220px] md:h-auto shadow-md active-press cursor-pointer rounded-2xl">
                 <Image
-                  src="/pictures/Image 9.jpg"
-                  alt="Worship congregation scale"
+                  src={settings?.featuredGalleryImages?.[2] || "/pictures/Image 9.jpg"}
+                  alt="Gallery preview 3"
                   fill
                   className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
                 />
               </div>
               <div data-reveal className="relative aspect-[3/4] w-[90%] border border-black/10 group bg-white md:rotate-[-4deg] transition-transform duration-500 hover:rotate-0 self-center h-[200px] sm:h-[280px] md:h-auto shadow-md active-press cursor-pointer rounded-2xl overflow-hidden">
                 <Image
-                  src="/pictures/Image 12.jpg"
-                  alt="Altar prayers scale"
+                  src={settings?.featuredGalleryImages?.[3] || "/pictures/Image 12.jpg"}
+                  alt="Gallery preview 4"
                   fill
                   className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
                 />
@@ -664,41 +831,43 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           SCENE 10: REGISTRATION CTA
           ═══════════════════════════════════════ */}
-      <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        
-        <div className="relative z-10 max-w-2xl mx-auto">
+      {(settings?.showRegistrationButton ?? true) && (
+        <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
           
-          <div data-reveal className="w-full border border-dashed border-[#DDB94E]/40 bg-[#15130F] text-white p-8 sm:p-12 md:p-16 flex flex-col items-center gap-6 text-center shadow-2xl relative rounded-3xl active-press">
+          <div className="relative z-10 max-w-2xl mx-auto">
             
-            <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
-              CAMP REGISTRATION VOUCHER
-            </span>
+            <div data-reveal className="w-full border border-dashed border-[#DDB94E]/40 bg-[#15130F] text-white p-8 sm:p-12 md:p-16 flex flex-col items-center gap-6 text-center shadow-2xl relative rounded-3xl active-press">
+              
+              <span className="font-sans text-sm font-extrabold tracking-[0.3em] text-[#DDB94E] uppercase">
+                CAMP REGISTRATION VOUCHER
+              </span>
 
-            <h2 className="font-serif text-4xl sm:text-6xl font-light tracking-tight text-white uppercase leading-none mt-2">
-              Arise & <span className="font-serif italic font-extralight text-[#DDB94E]">Shine</span>
-            </h2>
+              <h2 className="font-serif text-4xl sm:text-6xl font-light tracking-tight text-white uppercase leading-none mt-2">
+                Arise & <span className="font-serif italic font-extralight text-[#DDB94E]">Shine</span>
+              </h2>
 
-            <p className="font-sans text-white/70 text-xs sm:text-sm leading-relaxed max-w-md font-light">
-              Bring your expectations, your heart, and your fellowship. Registration is required for hostel placements.
-            </p>
+              <p className="font-sans text-white/70 text-xs sm:text-sm leading-relaxed max-w-md font-light">
+                Bring your expectations, your heart, and your fellowship. Registration is required for hostel placements.
+              </p>
 
-            <div className="h-[1px] w-full bg-white/10 my-4" />
+              <div className="h-[1px] w-full bg-white/10 my-4" />
 
-            <div className="w-full flex justify-center">
-              <a
-                href={REGISTRATION_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-10 py-4 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs tracking-widest uppercase transition-all duration-300 rounded-full active-press shadow-lg"
-              >
-                Register Now
-              </a>
+              <div className="w-full flex justify-center">
+                <a
+                  href={settings?.registrationLink || REGISTRATION_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-10 py-4 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs tracking-widest uppercase transition-all duration-300 rounded-full active-press shadow-lg"
+                >
+                  Register Now
+                </a>
+              </div>
+
             </div>
 
           </div>
-
-        </div>
-      </section>
+        </section>
+      )}
 
     </div>
   );
