@@ -53,14 +53,16 @@ export async function POST(req: Request) {
       if (role) updateData.role = role;
       if (allowedEvents) updateData.allowedEvents = allowedEvents;
       if (displayName) updateData.name = displayName;
+      if (email) updateData.email = email;
       
       await firestore.collection("users").doc(uid).set(updateData, { merge: true });
       
-      if (displayName || email) {
+      if (displayName || email || password) {
         try {
           await auth.updateUser(uid, {
             ...(displayName && { displayName }),
             ...(email && { email }),
+            ...(password && { password }),
           });
         } catch (e) {
           console.error("Failed to update auth profile:", e);

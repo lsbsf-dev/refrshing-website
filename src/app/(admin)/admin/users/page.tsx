@@ -39,6 +39,7 @@ export default function AdminUsersPage() {
     id: "",
     name: "",
     email: "",
+    password: "",
     role: "viewer" as any,
     allowedEvents: [] as string[],
   });
@@ -94,6 +95,8 @@ export default function AdminUsersPage() {
   const editMutation = useMutation({
     mutationFn: (data: typeof editingUser) => updateUserAccess(data.id, { 
       name: data.name, 
+      email: data.email,
+      password: data.password || undefined,
       role: data.role, 
       allowedEvents: data.allowedEvents 
     }),
@@ -255,6 +258,7 @@ export default function AdminUsersPage() {
                               id: user.id,
                               name: user.name,
                               email: user.email,
+                              password: "",
                               role: user.role,
                               allowedEvents: user.allowedEvents || [],
                             });
@@ -450,6 +454,31 @@ export default function AdminUsersPage() {
                   value={editingUser.name}
                   onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
                   className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1 flex items-center gap-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={editingUser.email}
+                  onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-sans font-bold uppercase mb-1 flex items-center gap-2">
+                  <Key className="h-3 w-3" /> New Password (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={editingUser.password}
+                  onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
+                  placeholder="Leave blank to keep current"
                 />
               </div>
               

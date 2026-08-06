@@ -46,11 +46,19 @@ export async function getUsers(): Promise<UserMetadata[]> {
   }));
 }
 
-export async function updateUserAccess(uid: string, data: Partial<UserMetadata>): Promise<void> {
+export async function updateUserAccess(uid: string, data: Partial<UserMetadata> & { password?: string }): Promise<void> {
   const res = await fetch("/api/admin/users", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "update", uid, role: data.role, allowedEvents: data.allowedEvents }),
+    body: JSON.stringify({ 
+      action: "update", 
+      uid, 
+      role: data.role, 
+      allowedEvents: data.allowedEvents,
+      displayName: data.name,
+      email: data.email,
+      password: data.password
+    }),
   });
   if (!res.ok) throw new Error("Failed to update user");
 }
