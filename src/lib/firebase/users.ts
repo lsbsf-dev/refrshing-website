@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { db, app } from "./app";
+import { db, app, auth } from "./app";
 
 export interface UserMetadata {
   id: string;
@@ -13,6 +13,13 @@ export interface UserMetadata {
   tokensValidAfter?: number;
 }
 
+async function getAuthHeaders() {
+  const user = auth.currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { "Authorization": `Bearer ${token}` };
+}
+
 export async function provisionAdminAccount(data: {
   email: string;
   password?: string;
@@ -20,9 +27,10 @@ export async function provisionAdminAccount(data: {
   role: string;
   allowedEvents?: string[];
 }): Promise<{ data: { success: boolean; uid: string } }> {
+  const headers = await getAuthHeaders();
   const res = await fetch("/api/admin/users", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify({ action: "provision", ...data }),
   });
   if (!res.ok) throw new Error("Failed to provision user");
@@ -31,7 +39,10 @@ export async function provisionAdminAccount(data: {
 }
 
 export async function getUsers(): Promise<UserMetadata[]> {
-  const res = await fetch("/api/admin/users");
+  const headers = await getAuthHeaders();
+  const res = await fetch("/api/admin/users", {
+    headers: { ...headers }
+  });
   if (!res.ok) return [];
   const data = await res.json();
   return data.users.map((u: any) => ({
@@ -47,9 +58,10 @@ export async function getUsers(): Promise<UserMetadata[]> {
 }
 
 export async function updateUserAccess(uid: string, data: Partial<UserMetadata> & { password?: string }): Promise<void> {
+  const headers = await getAuthHeaders();
   const res = await fetch("/api/admin/users", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify({ 
       action: "update", 
       uid, 
