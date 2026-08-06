@@ -49,10 +49,23 @@ export async function POST(req: Request) {
     }
 
     if (action === "update") {
-      await firestore.collection("users").doc(uid).set({
-        role,
-        allowedEvents,
-      }, { merge: true });
+      const updateData: any = {};
+      if (role) updateData.role = role;
+      if (allowedEvents) updateData.allowedEvents = allowedEvents;
+      if (displayName) updateData.name = displayName;
+      
+      await firestore.collection("users").doc(uid).set(updateData, { merge: true });
+      
+      if (displayName || email) {
+        try {
+          await auth.updateUser(uid, {
+            ...(displayName && { displayName }),
+            ...(email && { email }),
+          });
+        } catch (e) {
+          console.error("Failed to update auth profile:", e);
+        }
+      }
       return NextResponse.json({ success: true });
     }
 

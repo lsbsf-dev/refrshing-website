@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Search, Shield, UserX, Loader2, Sparkles, X, Key, ShieldAlert } from "lucide-react";
+import { Plus, Search, Shield, UserX, Loader2, Sparkles, X, Key, ShieldAlert, Pencil } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers, provisionAdminAccount, updateUserAccess } from "@/lib/firebase/users";
 import { getEvents } from "@/lib/firebase/events";
@@ -30,6 +30,15 @@ export default function AdminUsersPage() {
     name: "",
     email: "",
     password: "",
+    role: "viewer" as any,
+    allowedEvents: [] as string[],
+  });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState({
+    id: "",
+    name: "",
+    email: "",
     role: "viewer" as any,
     allowedEvents: [] as string[],
   });
@@ -80,6 +89,22 @@ export default function AdminUsersPage() {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       triggerSuccessBanner();
     },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: (data: typeof editingUser) => updateUserAccess(data.id, { 
+      name: data.name, 
+      role: data.role, 
+      allowedEvents: data.allowedEvents 
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsEditModalOpen(false);
+      triggerSuccessBanner();
+    },
+    onError: (error: any) => {
+      alert(`Error updating account: ${error.message}`);
+    }
   });
 
   const handleProvision = (e: React.FormEvent) => {
@@ -223,18 +248,36 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => toggleAccessMutation.mutate({ uid: user.id, isActive: !user.isActive })}
-                        disabled={toggleAccessMutation.isPending}
-                        className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
-                          user.isActive 
-                            ? "hover:bg-red-500/10 text-zinc-500 hover:text-red-500"
-                            : "hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-500"
-                        }`}
-                        title={user.isActive ? "Revoke Access" : "Restore Access"}
-                      >
-                        {user.isActive ? <UserX className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingUser({
+                              id: user.id,
+                              name: user.name,
+                              email: user.email,
+                              role: user.role,
+                              allowedEvents: user.allowedEvents || [],
+                            });
+                            setIsEditModalOpen(true);
+                          }}
+                          className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
+                          title="Edit User"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => toggleAccessMutation.mutate({ uid: user.id, isActive: !user.isActive })}
+                          disabled={toggleAccessMutation.isPending}
+                          className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                            user.isActive 
+                              ? "hover:bg-red-500/10 text-zinc-500 hover:text-red-500"
+                              : "hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-500"
+                          }`}
+                          title={user.isActive ? "Revoke Access" : "Restore Access"}
+                        >
+                          {user.isActive ? <UserX className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -369,6 +412,115 @@ export default function AdminUsersPage() {
               >
                 {provisionMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
                 <span>Provision User</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      {/* ── Edit Modal ── */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              editMutation.mutate(editingUser);
+            }}
+            className="bg-white dark:bg-[#0B0907] border border-black/10 dark:border-white/10 rounded-3xl p-6 w-full max-w-lg shadow-2xl flex flex-col gap-6 animate-slide-up"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase">Edit User</h2>
+                <p className="font-sans text-xs text-black/50 dark:text-white/50 mt-1">Update roles and event scopes</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors text-black dark:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-sans font-bold uppercase mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={editingUser.name}
+                  onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                />
+              </div>
+              
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-sans font-bold uppercase mb-1">Role / Access Level</label>
+                <CustomSelect
+                  value={editingUser.role}
+                  onChange={(val) => setEditingUser({ ...editingUser, role: val as any, allowedEvents: [] })}
+                  options={[
+                    { value: "superAdmin", label: "Super Admin" },
+                    { value: "eventAdmin", label: "Event Admin" },
+                    { value: "editor", label: "Editor (Media)" },
+                    { value: "registrationStaff", label: "Registration" },
+                    { value: "checkinStaff", label: "Check-in" },
+                    { value: "viewer", label: "Viewer (Analytics)" },
+                  ]}
+                />
+              </div>
+            </div>
+
+            {/* Event Scope Selection */}
+            {editingUser.role !== "superAdmin" && (
+              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/10 dark:border-white/10">
+                <label className="block text-xs font-sans font-bold uppercase mb-3">
+                  Scope (Allowed Event Editions)
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {eventsList.map((event) => (
+                    <button
+                      key={event.id}
+                      type="button"
+                      onClick={() => {
+                        setEditingUser(prev => {
+                          const newEvents = prev.allowedEvents.includes(event.id)
+                            ? prev.allowedEvents.filter(e => e !== event.id)
+                            : [...prev.allowedEvents, event.id];
+                          return { ...prev, allowedEvents: newEvents };
+                        });
+                      }}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors ${
+                        editingUser.allowedEvents.includes(event.id)
+                          ? "bg-[#C25627] text-white border-[#C25627]"
+                          : "bg-white dark:bg-[#181612] text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
+                      }`}
+                    >
+                      {event.name}
+                    </button>
+                  ))}
+                </div>
+                {editingUser.allowedEvents.length === 0 && (
+                  <p className="text-[10px] text-red-500 mt-2 font-bold uppercase">
+                    Warning: You must select at least one event scope.
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-6 py-3 bg-zinc-100 dark:bg-white/5 font-sans font-bold text-xs uppercase rounded-full transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={editMutation.isPending || (editingUser.role !== 'superAdmin' && editingUser.allowedEvents.length === 0)}
+                className="px-8 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
+              >
+                {editMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
+                <span>Save Changes</span>
               </button>
             </div>
           </form>
