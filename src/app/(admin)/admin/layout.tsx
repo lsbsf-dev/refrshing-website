@@ -73,6 +73,28 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     );
   }
 
+  useEffect(() => {
+    if (!profile || isLoginPage || pathname === "/admin/unauthorized" || pathname === "/admin" || pathname === "/admin/seed") return;
+
+    // Map routes to required read permissions
+    const routePermissions: Record<string, string> = {
+      "/admin/ministers": Permissions.Ministers.Read,
+      "/admin/programme": Permissions.Programme.Read,
+      "/admin/announcements": Permissions.Announcements.Read,
+      "/admin/resources": Permissions.Resources.Read,
+      "/admin/attendees": Permissions.Registrations.Read,
+      "/admin/users": Permissions.Users.Read,
+    };
+
+    const matchedRoute = Object.keys(routePermissions).find(route => pathname.startsWith(route));
+    if (matchedRoute) {
+      const requiredPerm = routePermissions[matchedRoute] as any;
+      if (!hasPermission(profile.role, requiredPerm)) {
+        router.push("/admin/unauthorized");
+      }
+    }
+  }, [pathname, profile, isLoginPage, router]);
+
   if (!profile) return null; // handled by AuthProvider redirect
 
   const navItems = [
@@ -292,6 +314,30 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex items-center gap-3">
+              
+              {/* Active Event Context Switcher */}
+              <div className="relative">
+                <select
+                  value={activeEvent}
+                  onChange={(e) => setActiveEvent(e.target.value)}
+                  className={`appearance-none px-4 py-2 pr-8 rounded-xl border text-xs font-sans font-bold uppercase tracking-wider outline-none cursor-pointer transition-colors ${
+                    isDark
+                      ? "bg-[#1A1813] border-white/15 text-[#C25627] hover:border-[#C25627]/50"
+                      : "bg-white border-black/10 text-[#C25627] hover:border-[#C25627]/50 shadow-sm"
+                  }`}
+                >
+                  {profile?.allowedEvents?.map(event => (
+                    <option key={event} value={event}>{event.replace("-", " ")}</option>
+                  ))}
+                  {(!profile?.allowedEvents || profile.allowedEvents.length === 0) && (
+                    <option value="refreshing-2026">REFRESHING 2026</option>
+                  )}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#C25627]">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
+
               {/* Light / Dark Mode Toggle */}
               <button
                 onClick={toggleTheme}
