@@ -25,37 +25,46 @@ export default function AdminLoginPage() {
     setErrorMsg("");
 
     try {
-      if (email === "admin@lsbsf.org" || email.includes("admin")) {
-        // Quick admin access mode for immediate demonstration
-        localStorage.setItem("lsbsf_admin_session", JSON.stringify({
-          email: email || "admin@lsbsf.org",
-          role: "superAdmin",
-          authTime: new Date().toISOString(),
-        }));
-        // Set a dummy session cookie so Next.js middleware allows routing
-        document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
-        router.push("/admin");
-        return;
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      const currentUser = auth.currentUser;
+      if (!currentUser) throw new Error("Authentication failed");
+
+      // Fetch authentic role from server
+      const res = await fetch("/api/admin/auth/me", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid: currentUser.uid })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to fetch user profile");
       }
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const profile = await res.json();
+
+      // Store ONLY the basic identity in localStorage to bootstrap the session
+      // We do NOT store permissions here. The app will rely on this identity
+      // to re-fetch the profile on load if needed, or we just trust the identity payload.
       localStorage.setItem("lsbsf_admin_session", JSON.stringify({
-        email,
-        role: "superAdmin",
+        uid: profile.uid,
+        email: profile.email,
+        name: profile.name,
+        role: profile.role, // We store role for basic UI routing fast-path, but permissions come from code
+        activeEvent: profile.allowedEvents?.[0] || "refreshing-2026",
+        allowedEvents: profile.allowedEvents || [],
         authTime: new Date().toISOString(),
       }));
+      
+      // Set a generic session cookie so Next.js middleware allows routing
+      document.cookie = "session=authenticated_admin; path=/; max-age=86400";
+      
       router.push("/admin");
     } catch (err: any) {
       console.error("Login error:", err);
-      // Fallback demo passkey so the admin is never locked out
-      localStorage.setItem("lsbsf_admin_session", JSON.stringify({
-        email: email || "admin@lsbsf.org",
-        role: "superAdmin",
-        authTime: new Date().toISOString(),
-      }));
-      // Set a dummy session cookie so Next.js middleware allows routing
-      document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
-      router.push("/admin");
+      setErrorMsg(err.message || "Invalid credentials or unauthorized access.");
+      // NO DEMO FALLBACK!
     } finally {
       setLoading(false);
     }

@@ -30,15 +30,13 @@ import {
 } from "lucide-react";
 import { QueryProvider } from "@/components/shared/QueryProvider";
 
-export default function AdminDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { AuthProvider, useAuth } from "@/lib/contexts/AuthContext";
+import { hasPermission, Permissions } from "@/lib/permissions";
+
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [adminUser, setAdminUser] = useState<{ email: string; role: string } | null>(null);
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const { profile, activeEvent, setActiveEvent, isLoading, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -46,31 +44,11 @@ export default function AdminDashboardLayout({
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    // Theme initialization
     const savedTheme = localStorage.getItem("admin_theme") as "dark" | "light";
     if (savedTheme) {
       setTheme(savedTheme);
     }
   }, []);
-
-  useEffect(() => {
-    if (isLoginPage) {
-      setCheckingAuth(false);
-      return;
-    }
-
-    const stored = localStorage.getItem("lsbsf_admin_session");
-    if (!stored) {
-      router.push("/admin/login");
-    } else {
-      try {
-        setAdminUser(JSON.parse(stored));
-      } catch (e) {
-        setAdminUser({ email: "admin@lsbsf.org", role: "superAdmin" });
-      }
-      setCheckingAuth(false);
-    }
-  }, [pathname, isLoginPage, router]);
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -78,16 +56,11 @@ export default function AdminDashboardLayout({
     localStorage.setItem("admin_theme", nextTheme);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("lsbsf_admin_session");
-    router.push("/admin/login");
-  };
-
   if (isLoginPage) {
-    return <QueryProvider>{children}</QueryProvider>;
+    return <>{children}</>;
   }
 
-  if (checkingAuth) {
+  if (isLoading) {
     return (
       <div className={`min-h-screen flex items-center justify-center font-sans ${theme === "dark" ? "bg-[#0B0907] text-white" : "bg-[#FAF6EE] text-[#0B0907]"}`}>
         <div className="flex flex-col items-center gap-3">
@@ -100,21 +73,28 @@ export default function AdminDashboardLayout({
     );
   }
 
+  if (!profile) return null; // handled by AuthProvider redirect
+
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Ministers", href: "/admin/ministers", icon: Users },
-    { label: "Programme", href: "/admin/programme", icon: Calendar },
-    { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
-    { label: "Resources", href: "/admin/resources", icon: BookOpen },
-    { label: "Attendees", href: "/admin/attendees", icon: UserCheck },
-    { label: "Users & Roles", href: "/admin/users", icon: ShieldCheck },
+    ...(hasPermission(profile.role, Permissions.Ministers.Read) 
+      ? [{ label: "Ministers", href: "/admin/ministers", icon: Users }] : []),
+    ...(hasPermission(profile.role, Permissions.Programme.Read) 
+      ? [{ label: "Programme", href: "/admin/programme", icon: Calendar }] : []),
+    ...(hasPermission(profile.role, Permissions.Announcements.Read) 
+      ? [{ label: "Announcements", href: "/admin/announcements", icon: Megaphone }] : []),
+    ...(hasPermission(profile.role, Permissions.Resources.Read) 
+      ? [{ label: "Resources", href: "/admin/resources", icon: BookOpen }] : []),
+    ...(hasPermission(profile.role, Permissions.Registrations.Read) 
+      ? [{ label: "Attendees", href: "/admin/attendees", icon: UserCheck }] : []),
+    ...(hasPermission(profile.role, Permissions.Users.Read) 
+      ? [{ label: "Users & Roles", href: "/admin/users", icon: ShieldCheck }] : []),
   ];
 
   const isDark = theme === "dark";
 
   return (
-    <QueryProvider>
-      <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 ${isDark ? "dark" : ""} ${
+    <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 ${isDark ? "dark" : ""} ${
         isDark ? "bg-[#0B0907] text-[#FCFAF6]" : "bg-[#F7F4EE] text-[#0B0907]"
       }`}>
         
@@ -199,15 +179,15 @@ export default function AdminDashboardLayout({
               {!isCollapsed && (
                 <div className="flex flex-col min-w-0">
                   <span className={`font-sans text-xs font-bold truncate max-w-[120px] ${isDark ? "text-white" : "text-zinc-900"}`}>
-                    {adminUser?.email || "admin@lsbsf.org"}
+                    {profile?.email || "admin@lsbsf.org"}
                   </span>
                   <span className="font-mono text-[9px] text-[#DDB94E] uppercase font-semibold">
-                    SUPER ADMIN
+                    {profile?.role.replace(/([A-Z])/g, " $1").trim().toUpperCase()}
                   </span>
                 </div>
               )}
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 title="Sign Out"
                 className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer rounded-lg active-press"
               >
@@ -277,7 +257,7 @@ export default function AdminDashboardLayout({
               })}
             </nav>
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="py-3.5 bg-red-500/10 text-red-500 rounded-xl font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-auto"
             >
               <LogOut className="h-4 w-4" />
@@ -349,10 +329,17 @@ export default function AdminDashboardLayout({
           <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto">
             {children}
           </main>
-
         </div>
+    </div>
+  );
+}
 
-      </div>
+export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryProvider>
+      <AuthProvider>
+        <AdminLayoutContent>{children}</AdminLayoutContent>
+      </AuthProvider>
     </QueryProvider>
   );
 }
