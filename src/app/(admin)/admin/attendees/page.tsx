@@ -207,22 +207,7 @@ export default function AdminAttendeesPage() {
         </p>
       </div>
 
-      {/* Target Event Selector */}
-      <div className="bg-white dark:bg-[#181612] p-4 sm:p-6 border border-black/10 dark:border-white/10 rounded-3xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex-1">
-          <label className="block text-xs font-sans font-bold uppercase mb-2 text-[#0B0907] dark:text-[#FCFAF6]">
-            Target Event Edition
-          </label>
-          <div className="max-w-xs">
-            <CustomSelect
-              value={selectedEventId}
-              onChange={(val) => setSelectedEventId(val)}
-              options={eventsList.map(e => ({ value: e.id, label: e.name }))}
-            />
-          </div>
-        </div>
-      </div>
-
+      {/* Target Event Selector (Removed) */}
       {/* Import Section */}
       <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
         <div>

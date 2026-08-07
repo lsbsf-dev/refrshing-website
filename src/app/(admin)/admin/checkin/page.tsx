@@ -98,14 +98,6 @@ export default function AdminCheckInPage() {
             Search for attendees by name, phone (last 4), church, or ID.
           </p>
         </div>
-        
-        <div className="w-full sm:w-64">
-          <CustomSelect
-            value={selectedEventId}
-            onChange={(val) => setSelectedEventId(val)}
-            options={eventsList.map(e => ({ value: e.id, label: e.name }))}
-          />
-        </div>
       </div>
 
       {/* Search Input */}
