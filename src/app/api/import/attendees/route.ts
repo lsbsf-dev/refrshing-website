@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     };
 
     const batch = adminDb.batch();
+    const processedAttendees: any[] = []; // Track attendees processed in this batch to catch in-file duplicates
 
     attendees.forEach((attendee: any) => {
       try {
@@ -39,21 +40,43 @@ export async function POST(request: Request) {
           return;
         }
 
-        // Duplicate Detection Logic (Phone) OR (Email) OR (Name AND (Phone OR Email))
-        const isDuplicate = existingAttendees.some(existing => {
-          const samePhone = existing.phone && attendee.phone && existing.phone === attendee.phone;
-          const sameEmail = existing.email && attendee.email && existing.email.toLowerCase() === attendee.email.toLowerCase();
-          const sameName = existing.name && attendee.name && existing.name.toLowerCase() === attendee.name.toLowerCase();
+        // 1. Required Field Validation
+        if (!attendee.name || attendee.name.trim() === '') {
+          result.rejected++;
+          result.errors.push(`Missing Full Name for attendee ID ${attendee.id}`);
+          return;
+        }
+
+        const hasEmail = attendee.email && attendee.email.trim() !== '';
+        const hasPhone = attendee.phone && attendee.phone.trim() !== '';
+
+        if (!hasEmail && !hasPhone) {
+          result.rejected++;
+          result.errors.push(`Missing both Email and Phone for attendee ID ${attendee.id} (${attendee.name})`);
+          return;
+        }
+
+        // 2. Duplicate Detection Logic (Phone) OR (Email) OR (Name AND (Phone OR Email))
+        // We must check against BOTH Firestore data AND the rows we've already processed in this same batch
+        const checkDuplicateAgainst = (existing: any) => {
+          const samePhone = !!existing.phone && !!attendee.phone && existing.phone === attendee.phone;
+          const sameEmail = !!existing.email && !!attendee.email && existing.email.toLowerCase() === attendee.email.toLowerCase();
+          const sameName = !!existing.name && !!attendee.name && existing.name.toLowerCase() === attendee.name.toLowerCase();
 
           return samePhone || sameEmail || (sameName && (samePhone || sameEmail));
-        });
+        };
 
-        // Also check if the ID already exists in DB
-        const idExists = existingAttendees.some(e => e.id === attendee.id);
+        const isDuplicateInDb = existingAttendees.some(checkDuplicateAgainst);
+        const isDuplicateInBatch = processedAttendees.some(checkDuplicateAgainst);
+        
+        // Also check if the ID already exists in DB or batch
+        const idExistsInDb = existingAttendees.some(e => e.id === attendee.id);
+        const idExistsInBatch = processedAttendees.some(e => e.id === attendee.id);
 
-        if (isDuplicate || idExists) {
+        if (isDuplicateInDb || isDuplicateInBatch || idExistsInDb || idExistsInBatch) {
           result.skipped++;
-          result.flagged.push({ ...attendee, reason: idExists ? "ID already exists" : "Possible Duplicate" });
+          const reason = (idExistsInDb || idExistsInBatch) ? "ID already exists" : "Possible Duplicate";
+          result.flagged.push({ ...attendee, reason });
           return; // Skip from batch
         }
 
@@ -70,6 +93,8 @@ export async function POST(request: Request) {
           });
         }
         
+        // Add to processed so subsequent rows in this same file can be compared against it
+        processedAttendees.push(attendee);
         result.imported++;
       } catch (err: any) {
         result.rejected++;
