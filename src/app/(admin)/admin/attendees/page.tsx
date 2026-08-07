@@ -94,7 +94,7 @@ export default function AdminAttendeesPage() {
 
         return {
           id,
-          name: name || "Unknown Attendee",
+          name: name,
           email,
           phone,
           category,
