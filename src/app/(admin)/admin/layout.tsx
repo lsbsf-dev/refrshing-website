@@ -56,23 +56,6 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     localStorage.setItem("admin_theme", nextTheme);
   };
 
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className={`min-h-screen flex items-center justify-center font-sans ${theme === "dark" ? "bg-[#0B0907] text-white" : "bg-[#FAF6EE] text-[#0B0907]"}`}>
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[#C25627] border-t-transparent rounded-full animate-spin" />
-          <span className="font-mono text-xs opacity-60 uppercase tracking-widest">
-            Verifying Admin Session...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
   useEffect(() => {
     if (!profile || isLoginPage || pathname === "/admin/unauthorized" || pathname === "/admin" || pathname === "/admin/seed") return;
 
@@ -94,6 +77,23 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       }
     }
   }, [pathname, profile, isLoginPage, router]);
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  if (isLoading) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center font-sans ${theme === "dark" ? "bg-[#0B0907] text-white" : "bg-[#FAF6EE] text-[#0B0907]"}`}>
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-[#C25627] border-t-transparent rounded-full animate-spin" />
+          <span className="font-mono text-xs opacity-60 uppercase tracking-widest">
+            Verifying Admin Session...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   if (!profile) return null; // handled by AuthProvider redirect
 
