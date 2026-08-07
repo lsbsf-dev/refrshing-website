@@ -1,4 +1,4 @@
-import { firestore } from "./admin";
+import { firestore } from "./firebase/admin";
 
 export interface AuditLogEntry {
   userId: string;
