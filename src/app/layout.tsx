@@ -42,8 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className={`${inter.variable} ${cormorant.variable} min-h-full flex flex-col font-sans`}>
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${inter.variable} ${cormorant.variable} min-h-full flex flex-col font-sans`}>
         <QueryProvider>
           {children}
           <Toaster 
