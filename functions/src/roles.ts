@@ -13,7 +13,7 @@ export const provisionAdminAccount = functions.https.onCall(async (data, context
   }
 
   const callerToken = context.auth.token;
-  if (callerToken.role !== "superAdmin" || !callerToken.mfaEnrolled) {
+  if (callerToken.role !== "superAdmin") {
     throw new functions.https.HttpsError("permission-denied", "Only Super Administrators can provision accounts.");
   }
 
@@ -37,11 +37,7 @@ export const provisionAdminAccount = functions.https.onCall(async (data, context
     });
 
     // 3. Set Custom Claims
-    const claims = {
-      role,
-      allowedEvents,
-      mfaEnrolled: false, // Must be enrolled by the user later
-    };
+    const claims = { role, allowedEvents };
     await admin.auth().setCustomUserClaims(userRecord.uid, claims);
 
     // 4. Create Metadata Document

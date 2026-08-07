@@ -14,13 +14,13 @@ export default function HomepageAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: settingsDocs = [], isLoading: isLoadingSettings } = useQuery({
+  const { data: settingsDocs = [], isLoading: isLoadingSettings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "homepageSettings", selectedEventId],
     queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings"),
     enabled: !!selectedEventId,
   });
 
-  const { data: ministers = [] } = useQuery({
+  const { data: ministers = [], isError: isMinistersError, error: ministersError } = useQuery({
     queryKey: ["admin", "ministers", selectedEventId],
     queryFn: () => getEventScopedDocs<Minister>(selectedEventId, "ministers"),
     enabled: !!selectedEventId,
@@ -36,6 +36,13 @@ export default function HomepageAdminPage() {
     showCountdown: false,
     blocks: []
   };
+
+  // Show a short loading spinner for up to 3 seconds, then reveal the UI regardless of data state
+  const [showSpinner, setShowSpinner] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowSpinner(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const [form, setForm] = useState<HomepageSettings>(defaultSettings);
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -87,10 +94,23 @@ export default function HomepageAdminPage() {
 
   if (!selectedEventId) return null;
 
-  if (isLoadingSettings) {
+  if (showSpinner && isLoadingSettings) {
     return (
       <div className="flex items-center justify-center p-12 bg-[#FAF9F6] min-h-[50vh]">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+      </div>
+    );
+  }
+
+  if (isSettingsError || isMinistersError) {
+    return (
+      <div className="flex items-center justify-center p-12 bg-[#FAF9F6] min-h-[50vh]">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl flex flex-col items-center justify-center text-center max-w-md">
+          <p className="font-sans font-bold text-lg mb-2">Failed to load homepage settings</p>
+          <p className="text-sm">
+            {((settingsError || ministersError) as Error)?.message || "Permission Denied or Unknown Error"}
+          </p>
+        </div>
       </div>
     );
   }

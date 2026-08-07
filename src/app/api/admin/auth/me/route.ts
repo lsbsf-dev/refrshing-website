@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { firestore } from "@/lib/firebase/admin";
+import { firestore, auth } from "@/lib/firebase/admin";
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +22,8 @@ export async function POST(req: Request) {
     if (userData?.isActive === false) {
       return NextResponse.json({ error: "Your access has been revoked" }, { status: 403 });
     }
+
+    const authUser = await auth.getUser(uid);
 
     return NextResponse.json({
       uid: userDoc.id,

@@ -18,17 +18,17 @@ export default function AdminAttendeesPage() {
   const [activeTab, setActiveTab] = useState<"directory" | "import">("directory");
   const queryClient = useQueryClient();
 
-  const { data: settings } = useQuery({
+  const { data: settings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "settings"],
     queryFn: getSystemSettings,
   });
 
-  const { data: eventsList = [] } = useQuery({
+  const { data: eventsList = [], isError: isEventsError, error: eventsError } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
   });
 
-  const { data: allAssociations = [] } = useQuery({
+  const { data: allAssociations = [], isError: isAssocError, error: assocError } = useQuery({
     queryKey: ["admin", "all_associations"],
     queryFn: async () => {
        const res = await getDocs(collection(db, "associations"));
@@ -253,6 +253,15 @@ export default function AdminAttendeesPage() {
           Import and manage registered attendees for conference editions.
         </p>
       </div>
+
+      {(isSettingsError || isEventsError || isAssocError) && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          <p className="font-sans text-sm font-medium">
+            Failed to load required data: {((settingsError || eventsError || assocError) as Error)?.message || "Permission Denied or Unknown Error"}
+          </p>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex items-center gap-4 border-b border-black/10 dark:border-white/10 pb-4">

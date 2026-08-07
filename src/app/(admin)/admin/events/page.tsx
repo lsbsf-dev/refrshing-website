@@ -10,7 +10,7 @@ import { CustomSelect } from "@/components/shared/CustomSelect";
 export default function AdminEventsPage() {
   const queryClient = useQueryClient();
 
-  const { data: eventsList = [], isLoading } = useQuery({
+  const { data: eventsList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
   });
@@ -186,6 +186,12 @@ export default function AdminEventsPage() {
                   <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
                     <span className="font-sans text-sm">Loading events...</span>
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-red-500 bg-red-500/10 border-y border-red-500/20">
+                    <span className="font-sans text-sm font-bold">Failed to load events: {(error as Error)?.message || "Permission Denied or Unknown Error"}</span>
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (

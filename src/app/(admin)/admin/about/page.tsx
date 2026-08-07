@@ -13,7 +13,7 @@ export default function AboutAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: settingsDocs = [], isLoading } = useQuery({
+  const { data: settingsDocs = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "aboutSettings", selectedEventId],
     queryFn: () => getEventScopedDocs<AboutSettings>(selectedEventId, "aboutSettings"),
     enabled: !!selectedEventId,
@@ -79,6 +79,17 @@ export default function AboutAdminPage() {
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl flex flex-col items-center justify-center text-center max-w-md">
+          <p className="font-sans font-bold text-lg mb-2">Failed to load about settings</p>
+          <p className="text-sm">{(error as Error)?.message || "Permission Denied or Unknown Error"}</p>
+        </div>
       </div>
     );
   }

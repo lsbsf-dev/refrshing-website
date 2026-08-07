@@ -121,11 +121,7 @@ export const acceptInvite = functions.https.onCall(async (data, context) => {
   });
 
   // 2. Set Custom Claims (MFA set to false initially)
-  await admin.auth().setCustomUserClaims(uid, {
-    role,
-    allowedEvents,
-    mfaEnrolled: false,
-  });
+  await admin.auth().setCustomUserClaims(uid, { role, allowedEvents });
 
   // 3. Mark invite as used
   await inviteRef.update({ used: true });
@@ -149,37 +145,7 @@ export const acceptInvite = functions.https.onCall(async (data, context) => {
 /**
  * Callable function to verify client-side TOTP MFA enrollment and activate the claim.
  */
-export const verifyMFAEnrollment = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "Auth required.");
-  }
-
-  const uid = context.auth.uid;
-  const token = context.auth.token;
-  const db = admin.firestore();
-
-  // Note: Validate MFA factors on user record
-  const userRecord = await admin.auth().getUser(uid);
-  if (!userRecord.multiFactor || !userRecord.multiFactor.enrolledFactors.length) {
-    throw new functions.https.HttpsError(
-      "failed-precondition",
-      "No MFA factors enrolled for this user."
-    );
-  }
-
-  // Set custom claims mfaEnrolled: true
-  await admin.auth().setCustomUserClaims(uid, {
-    role: token.role,
-    allowedEvents: token.allowedEvents,
-    mfaEnrolled: true,
-  });
-
-  await logAudit(db, "user_mfa_enrolled", uid, token.email || "unknown", {
-    role: token.role,
-  });
-
-  return { success: true, message: "MFA enrollment claim updated." };
-});
+// MFA enrollment functionality removed per spec; no longer needed.
 
 /**
  * Set user role claims manually (superAdmin-only).
@@ -200,7 +166,7 @@ export const setUserRole = functions.https.onCall(async (data, context) => {
   await admin.auth().setCustomUserClaims(targetUid, {
     role,
     allowedEvents,
-    mfaEnrolled: false, // Reset MFA claim so they must enroll if they are upgraded
+// mfaEnrolled claim removed as MFA is not required
   });
 
   await db.collection("users").doc(targetUid).update({

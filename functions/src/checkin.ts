@@ -26,11 +26,10 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
   const token = context.auth.token;
   const role = token.role as string;
   const allowedEvents = (token.allowedEvents || []) as string[];
-  const mfaEnrolled = token.mfaEnrolled === true;
 
-  // 2. Validate permissions
-  const isSuper = role === "superAdmin" && mfaEnrolled;
-  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId) && mfaEnrolled;
+  // 2. Validate permissions (MFA removed)
+  const isSuper = role === "superAdmin";
+  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId);
   const isRegStaff = role === "registrationStaff" && allowedEvents.includes(eventId);
   const isCheckin = role === "checkinStaff" && allowedEvents.includes(eventId);
 
@@ -108,10 +107,10 @@ export const undoCheckIn = functions.https.onCall(async (data, context) => {
   const token = context.auth.token;
   const role = token.role as string;
   const allowedEvents = (token.allowedEvents || []) as string[];
-  const mfaEnrolled = token.mfaEnrolled === true;
 
-  const isSuper = role === "superAdmin" && mfaEnrolled;
-  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId) && mfaEnrolled;
+  // Permission checks (MFA removed)
+  const isSuper = role === "superAdmin";
+  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId);
   const isRegStaff = role === "registrationStaff" && allowedEvents.includes(eventId);
   const isCheckin = role === "checkinStaff" && allowedEvents.includes(eventId);
 

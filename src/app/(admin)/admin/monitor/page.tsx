@@ -21,6 +21,7 @@ export default function AdminMonitorPage() {
 
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [conference, setConference] = useState("all");
@@ -67,8 +68,10 @@ export default function AdminMonitorPage() {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Attendee));
       setAttendees(data);
       setLoading(false);
-    }, (error) => {
-      console.error("Error listening to attendees:", error);
+      setError(null);
+    }, (err) => {
+      console.error("Error listening to attendees:", err);
+      setError(err.message || "Failed to load attendees");
       setLoading(false);
     });
 
@@ -114,6 +117,10 @@ export default function AdminMonitorPage() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-zinc-400"></span>
             </span>
             Connecting...
+          </div>
+        ) : error ? (
+          <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-600 dark:text-red-400 rounded-full text-sm font-bold border border-red-500/20">
+            Error: {error}
           </div>
         ) : (
           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-sm font-bold">

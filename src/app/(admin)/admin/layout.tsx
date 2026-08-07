@@ -58,7 +58,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    if (!profile || isLoginPage || pathname === "/admin/unauthorized" || pathname === "/admin" || pathname === "/admin/seed") return;
+    if (!profile || isLoginPage || pathname === "/admin/unauthorized" || pathname === "/admin" || pathname === "/admin/seed" || pathname === "/admin/mfa-enroll") return;
+
+    // MFA enforcement removed (no longer required)
 
     // Map routes to required read permissions
     const routePermissions: Record<string, string> = {

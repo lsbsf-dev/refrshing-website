@@ -17,7 +17,7 @@ export default function AdminProgrammePage() {
   const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: sessionsList = [], isLoading } = useQuery({
+  const { data: sessionsList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
   });
@@ -151,6 +151,11 @@ export default function AdminProgrammePage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : isError ? (
+        <div className="text-center py-20 bg-red-500/10 border border-red-500/20 rounded-3xl text-red-500 p-6">
+          <p className="font-sans font-bold text-lg mb-2">Failed to load sessions</p>
+          <p className="text-sm">{(error as Error)?.message || "Permission Denied or Unknown Error"}</p>
         </div>
       ) : filteredSessions.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">

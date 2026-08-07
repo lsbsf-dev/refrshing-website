@@ -9,7 +9,7 @@ import { CustomSelect } from "@/components/shared/CustomSelect";
 import { Search, ChevronRight, X, FileCheck, FileX, Loader2 } from "lucide-react";
 
 export function AttendeeDirectory({ eventId }: { eventId: string }) {
-  const { data: attendees = [], isLoading } = useQuery({
+  const { data: attendees = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "attendees", eventId],
     queryFn: () => getAttendees(eventId),
     enabled: !!eventId
@@ -148,6 +148,12 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
                   <td colSpan={7} className="px-6 py-12 text-center text-zinc-500">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
                     Loading attendees...
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-red-500 bg-red-500/10 border border-red-500/20 font-bold">
+                    Failed to load attendees: {(error as Error)?.message || "Permission Denied or Unknown Error"}
                   </td>
                 </tr>
               ) : filteredAttendees.length === 0 ? (

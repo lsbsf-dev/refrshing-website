@@ -7,14 +7,14 @@ import { getAttendees, Attendee } from "@/lib/firebase/attendees";
 import { BarChart3, RefreshCw, Loader2, Users } from "lucide-react";
 
 export default function AdminAnalyticsPage() {
-  const { data: settings } = useQuery({
+  const { data: settings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "settings"],
     queryFn: getSystemSettings,
   });
 
   const eventId = settings?.defaultEventId;
 
-  const { data: attendees = [], isLoading, isFetching, refetch } = useQuery({
+  const { data: attendees = [], isLoading, isFetching, refetch, isError: isAttendeesError, error: attendeesError } = useQuery({
     queryKey: ["admin", "analytics", eventId],
     queryFn: () => getAttendees(eventId as string),
     enabled: !!eventId,
@@ -88,6 +88,13 @@ export default function AdminAnalyticsPage() {
         <div className="py-20 text-center text-zinc-500 flex flex-col items-center">
           <Loader2 className="h-8 w-8 animate-spin mb-4" />
           <p>Analyzing registration data...</p>
+        </div>
+      ) : (isSettingsError || isAttendeesError) ? (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl flex flex-col items-center justify-center py-20 text-center">
+          <p className="font-sans font-bold text-lg mb-2">Failed to load analytics</p>
+          <p className="text-sm">
+            {((settingsError || attendeesError) as Error)?.message || "Permission Denied or Unknown Error"}
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-8">

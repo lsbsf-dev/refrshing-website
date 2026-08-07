@@ -18,15 +18,13 @@ service cloud.firestore {
     // Role Checks (Enforcing Session Validity)
     function isSuperAdmin() {
       return isSessionValid() && 
-        request.auth.token.role == 'superAdmin' && 
-        request.auth.token.mfaEnrolled == true;
+        request.auth.token.role == 'superAdmin';
     }
 
     function isEventAdmin(eventId) {
       return isSessionValid() && 
         request.auth.token.role == 'eventAdmin' && 
-        eventId in request.auth.token.allowedEvents && 
-        request.auth.token.mfaEnrolled == true;
+        eventId in request.auth.token.allowedEvents;
     }
 
     function isEditor(eventId) {

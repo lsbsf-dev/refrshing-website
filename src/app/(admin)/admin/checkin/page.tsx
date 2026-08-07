@@ -11,12 +11,12 @@ import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { db } from "@/lib/db";
 
 export default function AdminCheckInPage() {
-  const { data: settings } = useQuery({
+  const { data: settings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "settings"],
     queryFn: getSystemSettings,
   });
 
-  const { data: eventsList = [] } = useQuery({
+  const { data: eventsList = [], isError: isEventsError, error: eventsError } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
   });
@@ -69,6 +69,15 @@ export default function AdminCheckInPage() {
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto pb-10">
       
+      {(isSettingsError || isEventsError) && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          <p className="font-sans text-sm font-medium">
+            Failed to load required data: {((settingsError || eventsError) as Error)?.message || "Permission Denied or Unknown Error"}
+          </p>
+        </div>
+      )}
+
       {/* Offline Banner */}
       {!isOnline && (
         <div className="bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 p-3 rounded-xl flex items-center gap-3 animate-fade-in shadow-sm">
