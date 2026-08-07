@@ -363,7 +363,7 @@ export async function GET(request: Request) {
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
     const snapshot = await adminDb.collection('events').doc(eventId).collection('attendees').get();
     return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map(d => d.data()) });
-  } catch(e) {
+  } catch(e: any) {
     return NextResponse.json({ error: e.message });
   }
 }
