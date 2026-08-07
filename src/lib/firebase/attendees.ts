@@ -1,35 +1,72 @@
-import { collection, doc, getDoc, getDocs, updateDoc, setDoc, query, where, orderBy, FirestoreDataConverter } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, updateDoc, setDoc, query, where, orderBy, FirestoreDataConverter, Timestamp } from "firebase/firestore";
 import { db } from "./app";
 
 export interface Attendee {
   id: string; // Registration Code (e.g. REF26-1001)
-  name: string;
-  email: string;
-  phone: string;
-  category: string;
-  ticketId: string;
-  eventId: string;
-  checkedIn: boolean;
-  checkInTime: string | null;
-  checkInLocation: string | null;
-  checkInMethod: string | null;
-  createdAt: string;
-  updatedAt: string;
+  eventId: "refreshing-2026";
+  
+  // Identity
+  fullName: string;
+  email: string; // Now optional/nullable in the type if we wanted to relax it, but the user said "email is explicitly captured and required" in their list: "Automatically captured from the Google account/form submission, Required". So we keep it required.
+  phoneNumber: string;
+  memberStatus: "Member" | "Executive";
+  
+  // Hierarchy
+  conferenceId: "lagos_east" | "lagos_west" | "lagos_central" | "campus_fellowship" | "other";
+  conferenceName: string;
+  
+  associationId?: string;
+  associationName?: string;
+  
+  churchId?: string;
+  churchName?: string;
+  
+  campusFellowshipId?: string;
+  campusFellowshipName?: string;
+  otherSchool?: string;
+  
+  expectation?: string;
+  
+  // Attendance
+  checkIn: {
+    checkedIn: boolean;
+    checkedInAt?: Timestamp;
+    checkedInBy?: string;
+  };
+  
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Payment information is protected and stored in a subcollection:
+// /events/{eventId}/attendees/{attendeeId}/payment/record
+export interface AttendeePayment {
+  hasPaid: boolean;
+  verificationStatus: "pending" | "verified" | "rejected";
+  receiptUrl?: string; // Protected, only viewed in detail panel
+  verifiedAt?: Timestamp;
+  verifiedBy?: string;
 }
 
 export const attendeeConverter: FirestoreDataConverter<Attendee> = {
   toFirestore(attendee: Attendee) {
     return {
-      name: attendee.name,
-      email: attendee.email,
-      phone: attendee.phone,
-      category: attendee.category,
-      ticketId: attendee.ticketId,
       eventId: attendee.eventId,
-      checkedIn: attendee.checkedIn,
-      checkInTime: attendee.checkInTime,
-      checkInLocation: attendee.checkInLocation,
-      checkInMethod: attendee.checkInMethod,
+      fullName: attendee.fullName,
+      email: attendee.email,
+      phoneNumber: attendee.phoneNumber,
+      memberStatus: attendee.memberStatus,
+      conferenceId: attendee.conferenceId,
+      conferenceName: attendee.conferenceName,
+      associationId: attendee.associationId || null,
+      associationName: attendee.associationName || null,
+      churchId: attendee.churchId || null,
+      churchName: attendee.churchName || null,
+      campusFellowshipId: attendee.campusFellowshipId || null,
+      campusFellowshipName: attendee.campusFellowshipName || null,
+      otherSchool: attendee.otherSchool || null,
+      expectation: attendee.expectation || null,
+      checkIn: attendee.checkIn,
       createdAt: attendee.createdAt,
       updatedAt: attendee.updatedAt,
     };
@@ -38,18 +75,24 @@ export const attendeeConverter: FirestoreDataConverter<Attendee> = {
     const data = snapshot.data(options);
     return {
       id: snapshot.id,
-      name: data.name || "Unknown",
+      eventId: data.eventId,
+      fullName: data.fullName || "Unknown",
       email: data.email || "",
-      phone: data.phone || "",
-      category: data.category || "General",
-      ticketId: data.ticketId || "",
-      eventId: data.eventId || "",
-      checkedIn: data.checkedIn || false,
-      checkInTime: data.checkInTime || null,
-      checkInLocation: data.checkInLocation || null,
-      checkInMethod: data.checkInMethod || null,
-      createdAt: data.createdAt || "",
-      updatedAt: data.updatedAt || "",
+      phoneNumber: data.phoneNumber || "",
+      memberStatus: data.memberStatus || "Member",
+      conferenceId: data.conferenceId,
+      conferenceName: data.conferenceName,
+      associationId: data.associationId || undefined,
+      associationName: data.associationName || undefined,
+      churchId: data.churchId || undefined,
+      churchName: data.churchName || undefined,
+      campusFellowshipId: data.campusFellowshipId || undefined,
+      campusFellowshipName: data.campusFellowshipName || undefined,
+      otherSchool: data.otherSchool || undefined,
+      expectation: data.expectation || undefined,
+      checkIn: data.checkIn || { checkedIn: false },
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   },
 };
@@ -59,8 +102,8 @@ export const attendeeConverter: FirestoreDataConverter<Attendee> = {
  */
 export async function getAttendees(eventId: string): Promise<Attendee[]> {
   const ref = collection(db, "events", eventId, "attendees").withConverter(attendeeConverter);
-  const snap = await getDocs(query(ref, orderBy("name", "asc")));
-  return snap.docs.map((doc) => doc.data());
+  const snap = await getDocs(query(ref));
+  return snap.docs.map((doc) => doc.data()).sort((a, b) => a.fullName.localeCompare(b.fullName));
 }
 
 /**
@@ -79,6 +122,15 @@ export async function updateAttendee(eventId: string, code: string, data: Partia
   const ref = doc(db, "events", eventId, "attendees", code);
   await updateDoc(ref, {
     ...data,
-    updatedAt: new Date().toISOString(),
+    updatedAt: Timestamp.now(),
   });
+}
+
+/**
+ * Get protected payment record for an attendee
+ */
+export async function getAttendeePayment(eventId: string, code: string): Promise<AttendeePayment | null> {
+  const ref = doc(db, "events", eventId, "attendees", code, "payment", "record");
+  const snap = await getDoc(ref);
+  return snap.exists() ? (snap.data() as AttendeePayment) : null;
 }

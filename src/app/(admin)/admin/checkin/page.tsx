@@ -45,10 +45,11 @@ export default function AdminCheckInPage() {
     if (!searchInput.trim()) return true;
     const term = searchInput.toLowerCase();
     return (
-      a.name.toLowerCase().includes(term) ||
+      a.fullName.toLowerCase().includes(term) ||
       (a.phoneMasked && a.phoneMasked.toLowerCase().includes(term)) ||
-      (a.church && a.church.toLowerCase().includes(term)) ||
-      (a.association && a.association.toLowerCase().includes(term)) ||
+      (a.churchName && a.churchName.toLowerCase().includes(term)) ||
+      (a.associationName && a.associationName.toLowerCase().includes(term)) ||
+      (a.campusFellowshipName && a.campusFellowshipName.toLowerCase().includes(term)) ||
       a.id.toLowerCase().includes(term)
     );
   });
@@ -136,14 +137,14 @@ export default function AdminCheckInPage() {
                 {filteredAttendees.slice(0, 50).map((attendee) => (
                   <tr key={attendee.id} className="hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-[#0B0907] dark:text-[#FCFAF6]">{attendee.name}</div>
+                      <div className="font-bold text-[#0B0907] dark:text-[#FCFAF6]">{attendee.fullName}</div>
                     </td>
                     <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">
                       <div>{attendee.phoneMasked || "-"}</div>
-                      <div className="text-xs">{attendee.church || attendee.association || "-"}</div>
+                      <div className="text-xs">{attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "-"}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-bold text-[#C25627] capitalize">{attendee.ticketStatus}</div>
+                      <div className="font-bold text-[#C25627] capitalize">{attendee.memberStatus}</div>
                       <div className="font-mono text-xs text-zinc-500">{attendee.id}</div>
                     </td>
                     <td className="px-6 py-4 text-right">

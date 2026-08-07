@@ -38,13 +38,14 @@ export function useOfflineSync(eventId: string) {
         return {
           id: doc.id,
           eventId,
-          name: data.name || "Anonymous",
+          fullName: data.fullName || "Anonymous",
           photoUrl: data.photoUrl || "",
-          ticketStatus: data.ticketStatus || "pending",
+          memberStatus: data.memberStatus || "Member",
           checkedInAt: data.checkedInAt || null,
           phoneMasked: data.phoneMasked || "",
-          church: data.church || "",
-          association: data.association || ""
+          churchName: data.churchName || "",
+          associationName: data.associationName || "",
+          campusFellowshipName: data.campusFellowshipName || ""
         };
       });
 

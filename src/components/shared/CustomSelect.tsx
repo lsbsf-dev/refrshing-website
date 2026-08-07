@@ -12,13 +12,16 @@ interface CustomSelectProps {
   value: string;
   onChange: (value: string) => void;
   options: Option[];
+  placeholder?: string;
+  disabled?: boolean;
+  error?: boolean;
 }
 
-export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
+export function CustomSelect({ value, onChange, options, placeholder, disabled, error }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find((o) => o.value === value) || options[0] || { label: "Select...", value: "" };
+  const selectedOption = value ? options.find((o) => o.value === value) : null;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,10 +38,12 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        disabled={options.length === 0}
-        className="w-full bg-zinc-50 dark:bg-[#1A1813] border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none flex items-center justify-between hover:border-[#C25627]/40 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={disabled || options.length === 0}
+        className={`w-full bg-zinc-50 dark:bg-[#1A1813] border text-xs font-sans py-3 px-4 rounded-xl outline-none flex items-center justify-between transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+          error ? 'border-red-500 text-red-500' : 'border-zinc-300 dark:border-white/10 hover:border-[#C25627]/40'
+        }`}
       >
-        <span className="truncate">{selectedOption?.label || "Select..."}</span>
+        <span className="truncate">{selectedOption?.label || placeholder || "Select..."}</span>
         <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 

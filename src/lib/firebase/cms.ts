@@ -15,39 +15,49 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // TYPES
 // ==========================================
 
-// 0. Homepage Settings
-export interface HomepageSettings extends BaseEventScopedDoc {
-  // FR-HOME-01: Hero Content
+export type BlockVariant = 'default' | 'editorial' | 'immersive';
+
+export interface HeroBlockConfig {
   heroTitle: string;
   heroSubtitle: string;
   heroBackgroundImageUrl: string;
+}
 
-  // FR-HOME-02: Toggles & Actions
+export interface AnniversaryBlockConfig {
+  title: string;
+  subtitle: string;
+  backgroundImageUrl: string;
+  displayStart: string; // ISO string
+  displayEnd: string;   // ISO string
+}
+
+export interface GalleryBlockConfig {
+  images: string[];
+}
+
+export interface FeaturedMinistersConfig {
+  ministerIds: string[];
+}
+
+export interface RichTextConfig {
+  contentHtml: string;
+}
+
+export type HomepageBlock =
+  | { id: string; type: 'hero'; label: string; enabled: boolean; variant?: BlockVariant; config: HeroBlockConfig }
+  | { id: string; type: 'anniversary'; label: string; enabled: boolean; variant?: BlockVariant; config: AnniversaryBlockConfig }
+  | { id: string; type: 'gallery'; label: string; enabled: boolean; variant?: BlockVariant; config: GalleryBlockConfig }
+  | { id: string; type: 'featured_ministers'; label: string; enabled: boolean; variant?: BlockVariant; config: FeaturedMinistersConfig }
+  | { id: string; type: 'rich_text'; label: string; enabled: boolean; variant?: BlockVariant; config: RichTextConfig };
+
+export interface HomepageSettings extends BaseEventScopedDoc {
+  // Global Settings
   showRegistrationButton: boolean;
   registrationLink: string;
   showCountdown: boolean;
   
-  // FR-HOME-04 & FR-HOME-05
-  anniversaryBannerEnabled: boolean;
-  anniversary: {
-    title: string;
-    subtitle: string;
-    backgroundImageUrl: string;
-    displayStart: string; // ISO string
-    displayEnd: string;   // ISO string
-  };
-
-  milestoneOverlayEnabled: boolean;
-  milestone: {
-    text: string;
-    imageUrl: string;
-  };
-  
-  // FR-HOME-06: Featured Content Slots
-  featuredMinisters: string[];
-  featuredAnnouncement: string;
-  featuredGalleryImages: string[];
-  featuredArticles: string[];
+  // Dynamic Layout (Order is determined entirely by array index)
+  blocks: HomepageBlock[];
 }
 
 export interface ThemeArchiveEntry {
@@ -167,6 +177,18 @@ export async function setEventScopedDoc<T extends { id: string }>(eventId: strin
     (payload as any).createdAt = serverTimestamp();
   }
   await setDoc(doc(db, "events", eventId, collectionName, data.id), payload, { merge: true });
+}
+
+export async function setHomepageSettings(eventId: string, data: HomepageSettings, saveVersion: boolean = false): Promise<void> {
+  await setEventScopedDoc(eventId, "homepageSettings", data);
+  if (saveVersion) {
+    const versionRef = doc(collection(db, "events", eventId, "homepageSettings", data.id, "versions"));
+    await setDoc(versionRef, {
+      ...data,
+      versionId: versionRef.id,
+      savedAt: serverTimestamp()
+    });
+  }
 }
 
 export async function deleteEventScopedDoc(eventId: string, collectionName: string, id: string): Promise<void> {

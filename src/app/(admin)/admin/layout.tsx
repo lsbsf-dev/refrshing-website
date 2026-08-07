@@ -27,6 +27,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  QrCode,
 } from "lucide-react";
 import { QueryProvider } from "@/components/shared/QueryProvider";
 
@@ -66,6 +67,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       "/admin/announcements": Permissions.Announcements.Read,
       "/admin/resources": Permissions.Resources.Read,
       "/admin/attendees": Permissions.Registrations.Read,
+      "/admin/checkin": Permissions.Registrations.CheckIn,
       "/admin/users": Permissions.Users.Read,
     };
 
@@ -109,6 +111,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       ? [{ label: "Resources", href: "/admin/resources", icon: BookOpen }] : []),
     ...(hasPermission(profile.role, Permissions.Registrations.Read) 
       ? [{ label: "Attendees", href: "/admin/attendees", icon: UserCheck }] : []),
+    ...(hasPermission(profile.role, Permissions.Registrations.CheckIn) 
+      ? [{ label: "Check-In", href: "/admin/checkin", icon: QrCode }] : []),
     ...(hasPermission(profile.role, Permissions.Users.Read) 
       ? [{ label: "Users & Roles", href: "/admin/users", icon: ShieldCheck }] : []),
   ];
@@ -220,7 +224,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* ── Mobile Sidebar Header ── */}
-        <div className={`lg:hidden border-b p-4 flex items-center justify-between z-30 ${
+        <div className={`lg:hidden border-b p-4 flex items-center justify-between z-40 sticky top-0 ${
           isDark ? "bg-[#12100C] border-white/10" : "bg-white border-black/10 shadow-xs"
         }`}>
           <Link href="/admin" className="flex items-center gap-2">

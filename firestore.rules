@@ -35,9 +35,9 @@ service cloud.firestore {
         eventId in request.auth.token.allowedEvents;
     }
 
-    function isRegistrationStaff(eventId) {
+    function isRegistrationTeam(eventId) {
       return isSessionValid() && 
-        request.auth.token.role == 'registrationStaff' && 
+        (request.auth.token.role == 'registrationTeam' || request.auth.token.role == 'registrationStaff') && 
         eventId in request.auth.token.allowedEvents;
     }
 
@@ -141,13 +141,19 @@ service cloud.firestore {
 
       // Registrations & Attendees (Strict privacy gating)
       match /attendees/{attendeeId} {
-        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId) || isViewer(eventId);
-        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId);
+        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationTeam(eventId) || isViewer(eventId);
+        allow write: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationTeam(eventId);
+        
+        // Protected Payment Evidence Subcollection
+        match /payment/{docId} {
+          allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationTeam(eventId);
+          allow write: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationTeam(eventId);
+        }
       }
 
       // Check-in view (Denormalized public-safe details for checkin staff)
       match /checkinView/{attendeeId} {
-        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationStaff(eventId) || isCheckinStaff(eventId) || isViewer(eventId);
+        allow read: if isSuperAdmin() || isEventAdmin(eventId) || isRegistrationTeam(eventId) || isCheckinStaff(eventId) || isViewer(eventId);
         // Direct writes blocked: check-in is performed exclusively via the markCheckedIn Cloud Function
         allow write: if false;
       }
@@ -204,6 +210,16 @@ service cloud.firestore {
     // ==========================================
     // GLOBAL PROGRAMME CONTENT
     // ==========================================
+    
+    match /associations/{id} {
+      allow read: if isSessionValid();
+      allow write: if isSuperAdmin();
+    }
+
+    match /churches/{id} {
+      allow read: if isSessionValid();
+      allow write: if isSuperAdmin();
+    }
     
     match /timelineEntries/{entryId} {
       allow read: if isPublished() || isSuperAdmin();

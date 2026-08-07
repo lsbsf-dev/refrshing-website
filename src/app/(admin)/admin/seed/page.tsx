@@ -19,7 +19,7 @@ export default function AdminSeedPage() {
   const runDatabaseSeed = async () => {
     setSeeding(true);
     setCompleted(false);
-    setSeedLogs(["Initializing Firestore Connection...", "Validating collection paths..."]);
+    setSeedLogs(["Initializing Database Connection...", "Validating collection paths..."]);
 
     setTimeout(() => {
       setSeedLogs((prev) => [
@@ -76,7 +76,7 @@ export default function AdminSeedPage() {
               <span>Official Conference Dataset</span>
             </h3>
             <p className="font-sans text-xs text-white/70 font-light max-w-xl leading-relaxed">
-              Click below to sync the official JSON dataset (16 Ministers, 11 Sessions, and 7 Booklet Resources) to Firestore.
+              Click below to sync the official JSON dataset (16 Ministers, 11 Sessions, and 7 Booklet Resources) to the database.
             </p>
           </div>
 

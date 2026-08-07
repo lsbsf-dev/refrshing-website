@@ -13,7 +13,7 @@ export interface UserMetadata {
   tokensValidAfter?: number;
 }
 
-async function getAuthHeaders() {
+async function getAuthHeaders(): Promise<Record<string, string>> {
   const user = auth.currentUser;
   if (!user) return {};
   const token = await user.getIdToken();

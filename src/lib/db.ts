@@ -3,13 +3,14 @@ import Dexie, { type EntityTable } from 'dexie';
 export interface LocalAttendee {
   id: string; // The attendeeId / registration code
   eventId: string;
-  name: string;
+  fullName: string;
   photoUrl?: string;
-  ticketStatus: string;
+  memberStatus: string;
   checkedInAt: string | null;
   phoneMasked: string;
-  church: string;
-  association: string;
+  churchName?: string;
+  associationName?: string;
+  campusFellowshipName?: string;
 }
 
 export interface CheckinQueueItem {
@@ -28,7 +29,7 @@ export class RefreshingDB extends Dexie {
   constructor() {
     super('RefreshingDB');
     this.version(1).stores({
-      attendees: 'id, eventId, name', // Primary key and indexed props
+      attendees: 'id, eventId, fullName', // Primary key and indexed props
       checkinQueue: '++id, eventId, status' // Primary key and indexed props
     });
   }

@@ -63,23 +63,27 @@ export default function AdminLoginPage() {
       router.push("/admin");
     } catch (err: any) {
       console.error("Login error:", err);
-      setErrorMsg(err.message || "Invalid credentials or unauthorized access.");
+      
+      let friendlyError = "Invalid credentials or unauthorized access.";
+      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+        friendlyError = "The email or password you entered is incorrect.";
+      } else if (err.code === "auth/too-many-requests") {
+        friendlyError = "Too many failed attempts. Please try again later.";
+      } else if (err.message && err.message.includes("auth/")) {
+        // Fallback for any other firebase errors so we don't show raw strings
+        friendlyError = "An authentication error occurred. Please check your credentials.";
+      } else if (err.message) {
+        friendlyError = err.message;
+      }
+      
+      setErrorMsg(friendlyError);
       // NO DEMO FALLBACK!
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickDemo = () => {
-    localStorage.setItem("lsbsf_admin_session", JSON.stringify({
-      email: "superadmin@lsbsf.org",
-      role: "superAdmin",
-      authTime: new Date().toISOString(),
-    }));
-    // Set a dummy session cookie so Next.js middleware allows routing
-    document.cookie = "session=demo_bypass_session; path=/; max-age=86400";
-    router.push("/admin");
-  };
+  // Quick Demo Access removed as per security requirements
 
   return (
     <div className="min-h-screen w-full bg-[#0B0907] text-[#FCFAF6] flex flex-col justify-center items-center px-4 sm:px-6 relative overflow-hidden">
@@ -169,24 +173,11 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Quick Demo Access Button */}
-        <div className="mt-6 pt-6 border-t border-white/10 flex flex-col items-center gap-3 text-center">
-          <span className="font-sans text-xs text-white/50">
-            Instant Access Mode for Conference Staff
-          </span>
-          <button
-            type="button"
-            onClick={handleQuickDemo}
-            className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/15 text-[#DDB94E] font-sans font-semibold text-xs tracking-wider uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer active-press"
-          >
-            <KeyRound className="h-4 w-4 text-[#DDB94E]" />
-            <span>Launch Super Admin Demo</span>
-          </button>
-        </div>
+
 
         <div className="mt-6 text-center flex items-center justify-center gap-1 text-[11px] text-white/40">
           <ShieldCheck className="h-3.5 w-3.5 text-[#DDB94E]" />
-          <span>Secured with Firebase Auth & Role-Based Access</span>
+          <span>Secured with Role-Based Access</span>
         </div>
       </div>
     </div>
