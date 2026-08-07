@@ -50,7 +50,10 @@ service cloud.firestore {
 
     function isViewer(eventId) {
       return isSessionValid() && 
-        request.auth.token.role == 'viewer' && 
+        (request.auth.token.role == 'viewer' || 
+         request.auth.token.role == 'registrationTeam' || 
+         request.auth.token.role == 'registrationStaff' || 
+         request.auth.token.role == 'checkinStaff') && 
         eventId in request.auth.token.allowedEvents;
     }
 
