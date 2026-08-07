@@ -21,7 +21,7 @@ export default function AdminCheckInPage() {
     queryFn: getEvents,
   });
 
-  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [selectedEventId, setSelectedEventId] = useState<string>("refreshing-2026");
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {

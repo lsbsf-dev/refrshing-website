@@ -21,7 +21,7 @@ export default function AdminAttendeesPage() {
     queryFn: getEvents,
   });
 
-  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [selectedEventId, setSelectedEventId] = useState<string>("refreshing-2026");
   const [fileError, setFileError] = useState("");
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null);
