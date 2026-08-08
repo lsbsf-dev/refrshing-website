@@ -118,7 +118,7 @@ export function HomepageBlockRenderer({
                 <Link key={min.id} href={`/${eventId}/ministers/${min.slug}`} className="group flex flex-col bg-white border border-black/10 rounded-2xl overflow-hidden hover:border-[#C25627]/40 hover:shadow-xl transition-all duration-300 p-5 active-press">
                   <div className="flex items-center gap-4">
                     <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#0B0907] flex-shrink-0 border border-black/10">
-                      <Image src={encodeURI(min.photoUrl || "/pictures/Image 6.jpg")} alt={min.name} fill className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500" />
+                      <Image src={min.photoUrl || "/pictures/Image 6.jpg"} alt={min.name} fill className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500" />
                     </div>
                     <div className="flex flex-col text-left justify-center flex-1">
                       <span className="font-sans text-[10px] font-extrabold tracking-widest text-[#C25627] uppercase bg-[#C25627]/10 px-2.5 py-0.5 rounded-full w-fit mb-1">

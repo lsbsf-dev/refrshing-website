@@ -160,7 +160,7 @@ export default function MinistersPage() {
                   <div className="relative w-full aspect-[3/4] bg-[#0B0907] overflow-hidden rounded-t-2xl">
                     {minister.photoUrl ? (
                       <Image
-                        src={encodeURI(minister.photoUrl)}
+                        src={minister.photoUrl}
                         alt={minister.name}
                         fill
                         className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"

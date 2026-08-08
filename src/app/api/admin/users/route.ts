@@ -52,6 +52,11 @@ export async function POST(req: Request) {
         createdAt: new Date().toISOString()
       };
 
+      await auth.setCustomUserClaims(userRecord.uid, {
+        role: newRecord.role,
+        allowedEvents: newRecord.allowedEvents
+      });
+
       await firestore.collection("users").doc(userRecord.uid).set(newRecord, { merge: true });
 
       await logAudit({
@@ -97,6 +102,16 @@ export async function POST(req: Request) {
         console.log("Admin Users API: Updating firestore document...");
         await firestore.collection("users").doc(uid).set(updateData, { merge: true });
         console.log("Admin Users API: Firestore update complete.");
+
+        if (role || allowedEvents) {
+           const mergedRole = role || beforeData.role;
+           const mergedEvents = allowedEvents || beforeData.allowedEvents || [];
+           console.log("Admin Users API: Updating custom claims...");
+           await auth.setCustomUserClaims(uid, {
+             role: mergedRole,
+             allowedEvents: mergedEvents
+           });
+        }
 
         await logAudit({
           userId: callerProfile.id,

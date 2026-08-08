@@ -129,7 +129,7 @@ export default function MinisterDetailPage({
             <div className="relative w-full max-w-sm mx-auto lg:max-w-none aspect-[3/4] bg-[#0B0907] rounded-2xl overflow-hidden shadow-xl border border-black/10">
               {minister.photoUrl ? (
                 <Image
-                  src={encodeURI(minister.photoUrl)}
+                  src={minister.photoUrl}
                   alt={minister.name}
                   fill
                   className="object-cover object-top"
