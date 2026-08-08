@@ -49,7 +49,7 @@ export const provisionAdminAccount = functions.https.onCall(async (data, context
       allowedEvents,
       isActive: true,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      tokensValidAfter: new Date().getTime(),
+      tokensValidAfter: Math.floor(Date.now() / 1000),
     });
 
     // 5. Audit Log

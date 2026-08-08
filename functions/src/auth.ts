@@ -132,7 +132,7 @@ export const acceptInvite = functions.https.onCall(async (data, context) => {
     email,
     role,
     allowedEvents,
-    tokensValidAfter: admin.firestore.FieldValue.serverTimestamp(),
+    tokensValidAfter: Math.floor(Date.now() / 1000),
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   });
 
@@ -215,7 +215,7 @@ export const revokeUserAccess = functions.https.onCall(async (data, context) => 
 
   // 3. Update tokensValidAfter in Firestore user doc to invalidate active browser sessions
   await db.collection("users").doc(targetUid).update({
-    tokensValidAfter: admin.firestore.FieldValue.serverTimestamp(),
+    tokensValidAfter: Math.floor(Date.now() / 1000),
   });
 
   // 4. Log audit trail

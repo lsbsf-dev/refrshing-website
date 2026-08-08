@@ -118,7 +118,7 @@ export function Header() {
         {/* Center: Streamlined Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-4">
           {primaryNavLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+            const isActive = pathname === link.href || (link.href !== `${basePath}/` && link.href !== "/" && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.label}
@@ -205,7 +205,7 @@ export function Header() {
         <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-32 pb-8 overflow-y-auto animate-fade-in text-white">
           <nav className="flex flex-col gap-5 text-left mb-8">
             {allNavLinks.map((link) => {
-              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              const isActive = pathname === link.href || (link.href !== `${basePath}/` && link.href !== "/" && pathname.startsWith(link.href));
               return (
                 <Link
                   key={link.label}

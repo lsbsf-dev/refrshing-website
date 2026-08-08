@@ -29,8 +29,8 @@ export async function POST(req: Request) {
       uid: userDoc.id,
       name: userData?.name || "",
       email: userData?.email || "",
-      role: userData?.role || "viewer",
-      allowedEvents: userData?.allowedEvents || [],
+      role: authUser.customClaims?.role || "viewer",
+      allowedEvents: authUser.customClaims?.allowedEvents || [],
     });
   } catch (error: any) {
     console.error("Auth Session API Error:", error);

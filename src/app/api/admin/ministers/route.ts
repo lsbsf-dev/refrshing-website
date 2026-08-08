@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { firestore } from "@/lib/firebase/admin";
+import { verifyApiRequest } from "@/lib/api-auth";
+import { Permissions } from "@/lib/permissions";
 
 export async function POST(req: Request) {
   try {
+    await verifyApiRequest(req, Permissions.Ministers.Write);
     const data = await req.json();
     const { action, ministerId, payload } = data;
 

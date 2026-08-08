@@ -6,12 +6,19 @@ service cloud.firestore {
     // SECURITY UTILITIES & ROLE RESOLUTIONS
     // ==========================================
 
+    function getTokensValidAfterSeconds(uid) {
+      let userDoc = get(/databases/$(database)/documents/users/$(uid));
+      let hasTva = 'tokensValidAfter' in userDoc.data;
+      let tva = hasTva ? userDoc.data.tokensValidAfter : 0;
+      return tva is timestamp ? tva.toMillis() / 1000 : (tva > 9999999999 ? tva / 1000 : tva);
+    }
+
     // Check if the user is authenticated and session has not been revoked
     function isSessionValid() {
       return request.auth != null && 
         (
           !exists(/databases/$(database)/documents/users/$(request.auth.uid)) ||
-          request.auth.token.auth_time >= get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tokensValidAfter
+          request.auth.token.auth_time >= getTokensValidAfterSeconds(request.auth.uid)
         );
     }
 

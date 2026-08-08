@@ -104,8 +104,8 @@ export async function POST(req: Request) {
         console.log("Admin Users API: Firestore update complete.");
 
         if (role || allowedEvents) {
-           const mergedRole = role || beforeData.role;
-           const mergedEvents = allowedEvents || beforeData.allowedEvents || [];
+           const mergedRole = role || beforeData?.role;
+           const mergedEvents = allowedEvents || beforeData?.allowedEvents || [];
            console.log("Admin Users API: Updating custom claims...");
            await auth.setCustomUserClaims(uid, {
              role: mergedRole,

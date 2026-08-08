@@ -23,14 +23,20 @@ export async function verifyApiRequest(req: Request, requiredPermission?: Permis
   }
 
   const profile = { id: userDoc.id, ...userDoc.data() } as any;
+  // Use custom claims as the source of truth for permissions, not the user doc
+  const tokenRole = decodedToken.role || "viewer";
 
   if (profile.isActive === false) {
     throw new Error("Account has been deactivated");
   }
 
-  if (requiredPermission && !hasPermission(profile.role, requiredPermission)) {
+  if (requiredPermission && !hasPermission(tokenRole, requiredPermission)) {
     throw new Error(`Insufficient permissions. Requires: ${requiredPermission}`);
   }
+
+  // Also include the token's allowedEvents and role in the returned profile for audit logs to use
+  profile.role = tokenRole;
+  profile.allowedEvents = decodedToken.allowedEvents || [];
 
   return profile;
 }

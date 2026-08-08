@@ -169,7 +169,7 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
                       <div className="font-bold text-[#0B0907] dark:text-[#FCFAF6]">{a.fullName}</div>
                       <div className="text-xs text-zinc-500">{a.email || a.phoneNumber}</div>
                     </td>
-                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400 capitalize">{a.conferenceName || a.conferenceId.replace('_', ' ')}</td>
+                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400 capitalize">{a.conferenceName || a.conferenceId?.replace('_', ' ')}</td>
                     <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{a.associationName || a.campusFellowshipName || "-"}</td>
                     <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{a.churchName || "-"}</td>
                     <td className="px-6 py-4 font-bold text-zinc-600 dark:text-zinc-400">{a.memberStatus}</td>
@@ -242,7 +242,7 @@ function AttendeeDetailPanel({ attendee, onClose }: { attendee: Attendee, onClos
           <section>
             <h3 className="font-bold text-xs uppercase tracking-wider text-zinc-500 mb-3">Registration</h3>
             <div className="space-y-3 font-sans text-sm">
-              <div className="flex justify-between"><span className="text-zinc-500">Conference</span><span className="font-bold capitalize">{attendee.conferenceName || attendee.conferenceId.replace('_', ' ')}</span></div>
+              <div className="flex justify-between"><span className="text-zinc-500">Conference</span><span className="font-bold capitalize">{attendee.conferenceName || attendee.conferenceId?.replace('_', ' ')}</span></div>
               <div className="flex justify-between"><span className="text-zinc-500">Association/Campus</span><span className="font-bold">{attendee.associationName || attendee.campusFellowshipName || "-"}</span></div>
               <div className="flex justify-between"><span className="text-zinc-500">Church</span><span className="font-bold">{attendee.churchName || "-"}</span></div>
               {attendee.otherSchool && (

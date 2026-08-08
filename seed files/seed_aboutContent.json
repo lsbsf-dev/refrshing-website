@@ -1,0 +1,38 @@
+{
+  "philosophy": "The Nigerian Baptist Convention's Christian witness and ministry in institutions of higher learning are in response to the Lord's command to make the gospel known to all persons.\n\nBecause schools are engaged in the quest for knowledge and truth of which God is the Source, the Christian perspective is essential to realize the ultimate in education. The unique nature of the student life and campus community demands a specialized ministry of the church to the individual need of students for redemption and Christian nurture within that community.",
+  "corePillars": [
+    {
+      "title": "Salvation",
+      "description": "Leading campus students to a personal commitment to Jesus Christ as Savior and Lord."
+    },
+    {
+      "title": "Discipleship",
+      "description": "Involving students in the deep study of biblical truth and training them to obey and follow Christ through the Holy Spirit."
+    },
+    {
+      "title": "Churchmanship",
+      "description": "Fostering total commitment and active participation in the programs and life of the local Baptist church."
+    },
+    {
+      "title": "Academic Excellence",
+      "description": "Encouraging a strong balance between spiritual growth and academic success on campus."
+    },
+    {
+      "title": "Missions",
+      "description": "Engaging students in practical local and global outreach for kingdom expansion."
+    }
+  ],
+  "invitation": "Whether you are a student or youth eager to encounter God, an alumnus looking to reconnect and support the vision, or a guest seeking a spiritual awakening, there is a place for you at Refreshing 2026.",
+  "history": "Since its inception in 1986, the Lagos State Baptist Student Fellowship (LSBSF) has served as a central pillar for student ministry across the state. What began as a passionate network of prayer movements has grown into a unified, transformative force.\n\nThrough our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth. As we reach this historic 40th anniversary, we celebrate the lives transformed, the ministries birthed, and the enduring global legacy built by those who came before us.",
+  "themeDescription": "Refreshing 2026 is a threshold. For forty years, the Lord has gathered students across campuses and churches in revival, faith, and fellowship. But the narrative is not ending. We are being commissioned into a greater weight of His presence and a fuller display of His glory across our churches and campuses.",
+  "theme": "Greater Glory",
+  "themeScripture": "Haggai 2:9, Isaiah 52:1-7",
+  "welcomeSongLyrics": "Welcome to refreshing\nWe say you are welcome to God's presence\n\nWelcome to refreshing\nWe say you are welcome to God's presence\n\nBlessings go dey follow you\nSuccess go be your own o\nFavour, jaburata jaburata eheheheh\n\nWelcome to refreshing\nWe say you are welcome to God's presence",
+  "_mappingNotes": [
+    "philosophy + invitation -> About page 'About LSBSF' or 'Mission' rich text field",
+    "history -> About page 'History' rich text field",
+    "themeDescription + theme + themeScripture -> Event record theme/themeScripture fields, and/or About page intro, and/or Homepage hero subtitle",
+    "corePillars -> confirm against what's already hardcoded in about/page.tsx before overwriting — these already match the existing hardcoded pillars almost exactly, may not need re-entry",
+    "welcomeSongLyrics -> no dedicated CMS field exists for this yet; suggest either a new small text field on Homepage/About settings, or skip until a slot is decided"
+  ]
+}

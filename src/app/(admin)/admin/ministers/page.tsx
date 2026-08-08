@@ -213,7 +213,7 @@ export default function AdminMinistersPage() {
               <div className="h-16 w-16 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 relative shrink-0 border border-black/10 dark:border-white/10">
                 {minister.photoUrl ? (
                   <img
-                    src={encodeURI(minister.photoUrl)}
+                    src={minister.photoUrl}
                     alt={minister.name}
                     className="object-cover object-top w-full h-full"
                   />
