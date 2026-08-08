@@ -238,7 +238,7 @@ export default async function AboutPage({ params }: { params: Promise<{ eventId:
       <TimelineSection />
 
       {/* ── COMMITTEE ── */}
-      <CommitteeSection eventId={params.eventId} />
+      <CommitteeSection eventId={eventId} />
 
       {/* ── BE PART OF KINGDOM HISTORY ── */}
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">

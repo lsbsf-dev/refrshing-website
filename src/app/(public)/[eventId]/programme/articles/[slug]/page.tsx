@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Article } from "@/lib/firebase/cms";
@@ -10,8 +10,8 @@ import { ChevronLeft, Calendar, User, Loader2 } from "lucide-react";
 import DOMPurify from "isomorphic-dompurify";
 import { notFound } from "next/navigation";
 
-export default function ArticlePage({ params }: { params: { eventId: string, slug: string } }) {
-  const { eventId, slug } = params;
+export default function ArticlePage({ params }: { params: Promise<{ eventId: string, slug: string }> }) {
+  const { eventId, slug } = use(params);
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

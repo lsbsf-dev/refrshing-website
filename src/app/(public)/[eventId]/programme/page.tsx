@@ -179,8 +179,10 @@ const SCHEDULE = {
   ]
 };
 import { ProgrammeExtras } from "@/components/public/ProgrammeExtras";
+import { use } from "react";
 
-export default function ProgrammePage({ params }: { params: { eventId: string } }) {
+export default function ProgrammePage({ params }: { params: Promise<{ eventId: string }> }) {
+  const { eventId } = use(params);
   const [activeDay, setActiveDay] = useState(0);
 
   useEffect(() => {
@@ -332,7 +334,7 @@ export default function ProgrammePage({ params }: { params: { eventId: string } 
         </div>
       </section>
 
-      <ProgrammeExtras eventId={params.eventId} activeDayLabel={activeDayLabel} />
+      <ProgrammeExtras eventId={eventId} activeDayLabel={activeDayLabel} />
 
       <section className="relative w-full py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
         <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 p-6 sm:p-10 bg-[#1A0E12] text-white shadow-2xl rounded-3xl">
