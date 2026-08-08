@@ -52,7 +52,19 @@ export default function HomePage() {
   return (
     <div ref={pageRef} className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20 min-h-[50vh]">
       <Preloader />
-      {!settings || !settings.blocks || settings.blocks.length === 0 ? null : (
+      {!settings || !settings.blocks || settings.blocks.length === 0 ? (
+        <div className="w-full min-h-[90vh] flex items-center justify-center bg-flyer-dark relative">
+          <div className="absolute inset-0 bg-black/60 z-0"></div>
+          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-6 uppercase tracking-tight glow-text-amber">
+              Welcome to Refreshing 2026
+            </h1>
+            <p className="text-lg md:text-2xl text-white/80 font-sans max-w-2xl mx-auto">
+              Experience a divine shift. Join us for a transformative encounter.
+            </p>
+          </div>
+        </div>
+      ) : (
         settings.blocks.map((block) => (
           <HomepageBlockRenderer 
             key={block.id} 

@@ -48,8 +48,9 @@ import { TimelineSection } from "@/components/public/TimelineSection";
 import { CommitteeSection } from "@/components/public/CommitteeSection";
 import { getEventScopedDocs, AboutSettings } from "@/lib/firebase/cms";
 // Server-side data fetching; no client hooks needed
-export default async function AboutPage({ params }: { params: { eventId: string } }) {
-  const settingsDocs = await getEventScopedDocs<AboutSettings>(params.eventId, "aboutSettings");
+export default async function AboutPage({ params }: { params: Promise<{ eventId: string }> }) {
+  const { eventId } = await params;
+  const settingsDocs = await getEventScopedDocs<AboutSettings>(eventId, "aboutSettings");
   const settings = settingsDocs[0] || null;
 
 

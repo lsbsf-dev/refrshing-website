@@ -24,18 +24,21 @@ service cloud.firestore {
     function isEventAdmin(eventId) {
       return isSessionValid() && 
         request.auth.token.role == 'eventAdmin' && 
+        request.auth.token.allowedEvents != null &&
         eventId in request.auth.token.allowedEvents;
     }
 
     function isEditor(eventId) {
       return isSessionValid() && 
         request.auth.token.role == 'editor' && 
+        request.auth.token.allowedEvents != null &&
         eventId in request.auth.token.allowedEvents;
     }
 
     function isRegistrationTeam(eventId) {
       return isSessionValid() && 
         (request.auth.token.role == 'registrationTeam' || request.auth.token.role == 'registrationStaff') && 
+        request.auth.token.allowedEvents != null &&
         eventId in request.auth.token.allowedEvents;
     }
 
@@ -43,6 +46,7 @@ service cloud.firestore {
     function isCheckinStaff(eventId) {
       return isSessionValid() && 
         request.auth.token.role == 'checkinStaff' && 
+        request.auth.token.allowedEvents != null &&
         eventId in request.auth.token.allowedEvents;
     }
 
@@ -52,6 +56,7 @@ service cloud.firestore {
          request.auth.token.role == 'registrationTeam' || 
          request.auth.token.role == 'registrationStaff' || 
          request.auth.token.role == 'checkinStaff') && 
+        request.auth.token.allowedEvents != null &&
         eventId in request.auth.token.allowedEvents;
     }
 

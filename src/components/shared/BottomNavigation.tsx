@@ -32,10 +32,8 @@ export default function BottomNavigation() {
     >
       <div className="flex items-stretch h-16">
         {tabs.map(({ label, href, icon: Icon }) => {
-          const isActive =
-            href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(href);
+          const isHome = href === "/" || href === `${basePath}/`;
+          const isActive = isHome ? pathname === href : pathname.startsWith(href);
           return (
             <Link
               key={href}
