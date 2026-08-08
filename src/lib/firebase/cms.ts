@@ -161,8 +161,15 @@ export interface Download extends BaseEventScopedDoc {
 // GENERIC CRUD HELPERS
 // ==========================================
 
-export async function getEventScopedDocs<T>(eventId: string, collectionName: string, orderField: string = 'order'): Promise<T[]> {
-  const q = query(collection(db, "events", eventId, collectionName), orderBy(orderField, 'asc'));
+export async function getEventScopedDocs<T>(eventId: string, collectionName: string, orderField: string | null = 'order'): Promise<T[]> {
+  const unorderedCollections = ['homepageSettings', 'aboutSettings', 'attendees', 'ministers', 'articles', 'announcements'];
+  
+  if (orderField === 'order' && unorderedCollections.includes(collectionName)) {
+    orderField = null;
+  }
+
+  const colRef = collection(db, "events", eventId, collectionName);
+  const q = orderField ? query(colRef, orderBy(orderField, 'asc')) : query(colRef);
   const snap = await getDocs(q);
   return snap.docs.map(d => ({ id: d.id, ...d.data() } as T));
 }
