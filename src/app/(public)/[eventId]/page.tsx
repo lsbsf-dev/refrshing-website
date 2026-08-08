@@ -52,11 +52,7 @@ export default function HomePage() {
   return (
     <div ref={pageRef} className="w-full flex flex-col bg-[#FAF6EE] text-[#0B0907] antialiased overflow-hidden selection:bg-primary/20 min-h-[50vh]">
       <Preloader />
-      {!settings || !settings.blocks || settings.blocks.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center p-12">
-           <p className="text-zinc-500 font-serif italic text-xl">The homepage is currently being updated...</p>
-        </div>
-      ) : (
+      {!settings || !settings.blocks || settings.blocks.length === 0 ? null : (
         settings.blocks.map((block) => (
           <HomepageBlockRenderer 
             key={block.id} 

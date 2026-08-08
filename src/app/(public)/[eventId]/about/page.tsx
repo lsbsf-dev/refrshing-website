@@ -1,3 +1,4 @@
+
 /**
  * About Page Component
  * Showcases NBC Philosophy, 5 Core Pillars, and History of LSBSF.
@@ -46,15 +47,11 @@ const pillars = [
 import { TimelineSection } from "@/components/public/TimelineSection";
 import { CommitteeSection } from "@/components/public/CommitteeSection";
 import { getEventScopedDocs, AboutSettings } from "@/lib/firebase/cms";
-import { useQuery } from "@tanstack/react-query";
-
-export default function AboutPage({ params }: { params: { eventId: string } }) {
-  const { data: settingsDocs = [] } = useQuery({
-    queryKey: ["public", "aboutSettings", params.eventId],
-    queryFn: () => getEventScopedDocs<AboutSettings>(params.eventId, "aboutSettings"),
-    staleTime: 5 * 60 * 1000,
-  });
+// Server-side data fetching; no client hooks needed
+export default async function AboutPage({ params }: { params: { eventId: string } }) {
+  const settingsDocs = await getEventScopedDocs<AboutSettings>(params.eventId, "aboutSettings");
   const settings = settingsDocs[0] || null;
+
 
   return (
     <div className="w-full flex-1 flex flex-col bg-[#FAF6EE] text-[#0B0907]">
