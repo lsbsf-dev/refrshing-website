@@ -93,7 +93,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center font-sans ${theme === "dark" ? "bg-[#0B0907] text-white" : "bg-[#FAF6EE] text-[#0B0907]"}`}>
+      <div className={`min-h-screen flex items-center justify-center font-sans bg-background text-foreground ${theme === "dark" ? "dark" : ""}`}>
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-[#C25627] border-t-transparent rounded-full animate-spin" />
           <span className="font-mono text-xs opacity-60 uppercase tracking-widest">Verifying Admin Session...</span>
@@ -120,7 +120,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 bg-background text-foreground`}>
+    <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 bg-background text-foreground ${isDark ? "dark" : ""}`}>
       {/* ── Desktop Sidebar ── */}
       <aside className={`hidden lg:flex flex-col border-r shrink-0 p-4 transition-all duration-300 z-30 sticky top-0 h-[100dvh] max-h-screen overflow-y-auto overflow-x-hidden ${isCollapsed ? "w-20" : "w-60"} bg-surface border-border shadow-sm`}>
         <div className="flex items-center justify-start gap-3 mb-6 pb-4 border-b border-border px-1 shrink-0">

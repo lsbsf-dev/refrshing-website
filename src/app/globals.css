@@ -75,18 +75,29 @@ body {
 .dark,
 .dark body,
 html.dark {
+  /* Legacy non-prefixed vars */
   --background: #0B0907;
   --background-alt: #181612;
   --surface: #181612;
   --surface-alt: #14120E;
-  --surface-muted: rgba(255, 255, 255, 0.05); /* white/5 */
-  --surface-hover: rgba(255, 255, 255, 0.1);  /* white/10 */
-  
+  --surface-muted: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.1);
   --foreground: #FCFAF6;
-  /* WCAG AA (4.5:1) compliant muted text against #0B0907. #A39A8E provides ~7.1:1 contrast ratio */
   --foreground-muted: #A39A8E;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.15);
+
+  /* Tailwind v4 dynamically evaluated theme vars */
+  --color-background: #0B0907;
+  --color-background-alt: #181612;
+  --color-surface: #181612;
+  --color-surface-alt: #14120E;
+  --color-surface-muted: rgba(255, 255, 255, 0.05);
+  --color-surface-hover: rgba(255, 255, 255, 0.1);
+  --color-foreground: #FCFAF6;
+  --color-foreground-muted: #A39A8E;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.15);
   
   background-color: var(--background);
   color: var(--foreground);
