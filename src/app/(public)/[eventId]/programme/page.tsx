@@ -272,36 +272,43 @@ export default function ProgrammePage({ params }: { params: Promise<{ eventId: s
             </p>
           </div>
 
-          <div className="relative pl-8 md:pl-12 border-l border-black/10 flex flex-col gap-10 text-left">
+          <div className="relative flex flex-col items-center gap-10 text-center w-full mt-4">
+            {/* Central Vertical Line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/10 -translate-x-1/2 z-0" />
+
             {dayItems.map((sess, idx) => {
               const isSectionHeader = sess.time.includes("SESSION") || sess.time.includes("NIGHT");
               const isBreak = sess.time.includes("Break");
               
               if (isSectionHeader) {
                 return (
-                  <div key={idx} className="relative block pt-6 pb-2">
-                    <div className="absolute -left-[33px] md:-left-[57px] top-8 h-4 w-4 bg-[#FAF6EE] border-2 border-primary-dark flex items-center justify-center z-10">
-                      <div className="h-1.5 w-1.5 bg-[#C25627]" />
+                  <div key={idx} className="relative flex flex-col items-center pt-8 pb-4 w-full z-10">
+                    {/* Marker on the line */}
+                    <div className="absolute top-12 left-1/2 -translate-x-1/2 h-5 w-5 bg-[#FAF6EE] border-2 border-[#C25627] rounded-full flex items-center justify-center z-10 shadow-sm">
+                      <div className="h-2 w-2 bg-[#C25627] rounded-full" />
                     </div>
-                    <span className="font-mono text-sm font-extrabold tracking-widest text-[#C25627] uppercase">
-                      {sess.time}
-                    </span>
-                    <h3 className="font-serif text-xl sm:text-2xl font-light text-[#0B0907] uppercase mt-2 whitespace-pre-line">
-                      {sess.title}
-                    </h3>
-                    {sess.detail && (
-                      <p className="font-sans text-zinc-600 text-sm sm:text-base font-light leading-relaxed max-w-2xl mt-1 whitespace-pre-line">
-                        {sess.detail}
-                      </p>
-                    )}
+                    
+                    <div className="bg-[#FAF6EE] px-4 md:px-8 py-2 relative z-10 mt-4 max-w-2xl flex flex-col items-center border border-transparent">
+                      <span className="font-mono text-sm font-extrabold tracking-widest text-[#C25627] uppercase block">
+                        {sess.time}
+                      </span>
+                      <h3 className="font-serif text-xl sm:text-2xl font-light text-[#0B0907] uppercase mt-2 whitespace-pre-line text-center">
+                        {sess.title}
+                      </h3>
+                      {sess.detail && (
+                        <p className="font-sans text-zinc-600 text-sm sm:text-base font-light leading-relaxed mt-2 whitespace-pre-line text-center">
+                          {sess.detail}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 );
               }
 
               if (isBreak) {
                 return (
-                  <div key={idx} className="relative block py-4 text-center border-y border-black/5 bg-black/5 mt-2 rounded-xl">
-                    <h3 className="font-mono text-sm sm:text-base font-bold text-[#6B1D2A] uppercase tracking-[0.2em]">
+                  <div key={idx} className="relative w-full max-w-md mx-auto py-4 text-center border-y border-black/5 bg-[#FAF6EE] z-10 my-4 shadow-sm">
+                    <h3 className="font-mono text-sm sm:text-base font-bold text-[#6B1D2A] uppercase tracking-[0.2em] relative z-10">
                       {sess.title}
                     </h3>
                   </div>
@@ -309,20 +316,21 @@ export default function ProgrammePage({ params }: { params: Promise<{ eventId: s
               }
 
               return (
-                <div key={idx} className="relative block group">
-                  <div className="absolute -left-[32px] md:-left-[56px] top-1.5 h-3 w-3 bg-[#FAF6EE] border border-black/20 rounded-full flex items-center justify-center z-10">
-                    <div className="h-1 w-1 bg-black/40 rounded-full" />
+                <div key={idx} className="relative flex flex-col items-center group w-full z-10 my-2">
+                  {/* Small Marker */}
+                  <div className="absolute top-[28px] left-1/2 -translate-y-1/2 -translate-x-1/2 h-3 w-3 bg-[#FAF6EE] border border-black/20 rounded-full flex items-center justify-center z-10">
+                    <div className="h-1 w-1 bg-black/40 rounded-full transition-colors group-hover:bg-[#C25627]" />
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
+                  <div className="bg-[#FAF6EE] px-4 py-2 relative z-10 max-w-xl w-full flex flex-col items-center">
                     <span className="font-mono text-xs font-bold tracking-widest text-[#C25627]">
                       {sess.time}
                     </span>
-                    <h3 className="font-serif text-lg sm:text-xl font-normal text-[#0B0907]">
+                    <h3 className="font-serif text-lg sm:text-xl font-normal text-[#0B0907] mt-1 text-center group-hover:text-[#C25627] transition-colors">
                       {sess.title}
                     </h3>
                     {sess.detail && (
-                      <p className="font-sans text-zinc-600 text-sm font-light leading-relaxed max-w-2xl whitespace-pre-line">
+                      <p className="font-sans text-zinc-600 text-sm font-light leading-relaxed mt-2 whitespace-pre-line text-center max-w-md">
                         {sess.detail}
                       </p>
                     )}

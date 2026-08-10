@@ -86,11 +86,11 @@ export async function createMinister(minister: Omit<Minister, "id" | "slug"> & {
   return data.slug;
 }
 
-export async function deleteMinister(ministerId: string): Promise<void> {
+export async function deleteMinister(eventId: string, ministerId: string): Promise<void> {
   const res = await fetch("/api/admin/ministers", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "delete", ministerId }),
+    body: JSON.stringify({ action: "delete", eventId, ministerId }),
   });
   if (!res.ok) throw new Error("Failed to delete minister");
 }

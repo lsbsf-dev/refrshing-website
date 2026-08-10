@@ -1,0 +1,88 @@
+[2026-08-10T03:22:09.273Z] === Starting Migration (TEST MODE: ministers only) [DRY RUN] ===
+[2026-08-10T03:22:09.274Z] 
+--- Scanning Collection: ministers ---
+[2026-08-10T03:22:12.331Z] 
+=== Migration Finished ===
+[2026-08-10T03:22:59.113Z] === Starting Migration (FULL MODE) [DRY RUN] ===
+[2026-08-10T03:22:59.115Z] 
+--- Scanning Collection: ministers ---
+[2026-08-10T03:23:02.925Z] 
+--- Scanning Collection: galleryAlbums ---
+[2026-08-10T03:23:03.318Z] No documents found in galleryAlbums
+[2026-08-10T03:23:03.318Z] 
+--- Scanning Collection: photos ---
+[2026-08-10T03:23:04.189Z] No documents found in photos
+[2026-08-10T03:23:04.189Z] 
+--- Scanning Collection: advertisements ---
+[2026-08-10T03:23:04.509Z] No documents found in advertisements
+[2026-08-10T03:23:04.509Z] 
+--- Scanning Collection: timelineEntries ---
+[2026-08-10T03:23:05.409Z] No documents found in timelineEntries
+[2026-08-10T03:23:05.409Z] 
+--- Scanning Collection: committeeMembers ---
+[2026-08-10T03:23:05.678Z] No documents found in committeeMembers
+[2026-08-10T03:23:05.678Z] 
+--- Scanning Collection: downloads ---
+[2026-08-10T03:23:06.613Z] No documents found in downloads
+[2026-08-10T03:23:06.613Z] 
+--- Scanning Collection: articles ---
+[2026-08-10T03:23:06.962Z] 
+--- Scanning Collection: resources ---
+[2026-08-10T03:23:08.361Z] 
+--- Scanning Singleton Docs ---
+[2026-08-10T03:23:08.713Z] Document not found: events/refreshing-2026/homepageSettings/settings
+[2026-08-10T03:23:09.602Z] 
+--- Checking Rich Text Fields for Inline Images ---
+[2026-08-10T03:23:09.891Z] 
+=== Migration Finished ===
+[2026-08-10T03:26:22.361Z] === Starting Migration (TEST MODE: ministers only)  ===
+[2026-08-10T03:26:22.362Z] 
+--- Scanning Collection: ministers ---
+[2026-08-10T03:26:24.258Z] Found URL to migrate in events/refreshing-2026/ministers/bro-sunday-oguntola -> photoUrl: /ministers/Mr. Sunday Oguntola.jpg
+[2026-08-10T03:26:26.236Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332385/refreshing/migrated/xacbh0yfuv11bizd2tka.jpg
+[2026-08-10T03:26:26.620Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/bro-sunday-oguntola
+[2026-08-10T03:26:26.620Z] Found URL to migrate in events/refreshing-2026/ministers/dr-mary-olayanju -> photoUrl: /ministers/Dr. Mrs Mary Olayanju.jpg
+[2026-08-10T03:26:27.443Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332386/refreshing/migrated/kkkqigdok2gtfoyf2wqw.jpg
+[2026-08-10T03:26:27.715Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/dr-mary-olayanju
+[2026-08-10T03:26:27.715Z] Found URL to migrate in events/refreshing-2026/ministers/ebunolamisings -> photoUrl: /ministers/Ebunolamisings.jpg
+[2026-08-10T03:26:28.694Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332387/refreshing/migrated/sr8uif3mtz2glmoiihvo.jpg
+[2026-08-10T03:26:28.983Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/ebunolamisings
+[2026-08-10T03:26:28.984Z] Found URL to migrate in events/refreshing-2026/ministers/oladosu-twins -> photoUrl: /ministers/Oladosu Twins.jpg
+[2026-08-10T03:26:30.270Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332389/refreshing/migrated/anh2hf46rtla5axvaciz.jpg
+[2026-08-10T03:26:30.583Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/oladosu-twins
+[2026-08-10T03:26:30.584Z] Found URL to migrate in events/refreshing-2026/ministers/pst-adebusola-oguntola -> photoUrl: /ministers/Pst. Mrs. Adebusola Oguntola.jpeg
+[2026-08-10T03:26:31.384Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332390/refreshing/migrated/nvyjiee7cik2ihq3t5or.jpg
+[2026-08-10T03:26:31.674Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/pst-adebusola-oguntola
+[2026-08-10T03:26:31.674Z] Found URL to migrate in events/refreshing-2026/ministers/pst-odunayo-adeyemi -> photoUrl: /ministers/Pst. Odunayo Adeyemi.jpg
+[2026-08-10T03:26:32.529Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332391/refreshing/migrated/fz3sk08h1qfqsssr06pf.jpg
+[2026-08-10T03:26:32.810Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/pst-odunayo-adeyemi
+[2026-08-10T03:26:32.810Z] Found URL to migrate in events/refreshing-2026/ministers/rebecca-olowookere -> photoUrl: /ministers/Rebecca Olowookere.jpg
+[2026-08-10T03:26:33.685Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332392/refreshing/migrated/zfjld3ahzzbvzad3fdk3.jpg
+[2026-08-10T03:26:33.978Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rebecca-olowookere
+[2026-08-10T03:26:33.978Z] Found URL to migrate in events/refreshing-2026/ministers/rev-adebisi-ikotun -> photoUrl: /ministers/Rev'd. Adebisi Ikotun.jpg
+[2026-08-10T03:26:34.883Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332394/refreshing/migrated/j5hu09bd7ifhmjf3cfaa.jpg
+[2026-08-10T03:26:35.167Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-adebisi-ikotun
+[2026-08-10T03:26:35.167Z] Found URL to migrate in events/refreshing-2026/ministers/rev-alade-james -> photoUrl: /ministers/Rev'd. James Alade.jpg
+[2026-08-10T03:26:36.064Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332395/refreshing/migrated/tzr1gvht88fsidjqycxh.jpg
+[2026-08-10T03:26:36.446Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-alade-james
+[2026-08-10T03:26:36.446Z] Found URL to migrate in events/refreshing-2026/ministers/rev-ben-banjoko -> photoUrl: /ministers/Rev'd. Ben Banjoko.jpg
+[2026-08-10T03:26:37.300Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332396/refreshing/migrated/xqoasgqex5ahe5tmj1gf.jpg
+[2026-08-10T03:26:37.577Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-ben-banjoko
+[2026-08-10T03:26:37.577Z] Found URL to migrate in events/refreshing-2026/ministers/rev-ebenezer-osundele -> photoUrl: /ministers/Rev’d. Ebenezer Osundele.jpg
+[2026-08-10T03:26:38.367Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332397/refreshing/migrated/dnnji85ara9yjc36exaw.jpg
+[2026-08-10T03:26:38.649Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-ebenezer-osundele
+[2026-08-10T03:26:38.650Z] Found URL to migrate in events/refreshing-2026/ministers/rev-enoch-abimbola -> photoUrl: /ministers/Rev'd Dr Enoch Abimbola.jpg
+[2026-08-10T03:26:39.540Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332398/refreshing/migrated/tbcj2wpuvsdzhrodjmix.jpg
+[2026-08-10T03:26:39.854Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-enoch-abimbola
+[2026-08-10T03:26:39.854Z] Found URL to migrate in events/refreshing-2026/ministers/rev-julius-oluwole -> photoUrl: /ministers/Rev'd Dr Julius Oluwole.jpg
+[2026-08-10T03:26:40.831Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332399/refreshing/migrated/mqhxgifvsvsptout8cru.jpg
+[2026-08-10T03:26:41.119Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-julius-oluwole
+[2026-08-10T03:26:41.119Z] Found URL to migrate in events/refreshing-2026/ministers/rev-tunde-babatunde -> photoUrl: /ministers/Rev. Tunde Babatunde.jpg
+[2026-08-10T03:26:42.008Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332401/refreshing/migrated/l7mkjqhzsbvwszrgyvdc.jpg
+[2026-08-10T03:26:42.294Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-tunde-babatunde
+[2026-08-10T03:26:42.295Z] Found URL to migrate in events/refreshing-2026/ministers/rev-victor-kolawole -> photoUrl: /ministers/Rev. Victor Kolawole.jpg
+[2026-08-10T03:26:43.157Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332402/refreshing/migrated/ejsnldov93dz1hyd2srq.jpg
+[2026-08-10T03:26:43.435Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/rev-victor-kolawole
+[2026-08-10T03:26:43.435Z] Found URL to migrate in events/refreshing-2026/ministers/victoria-olaogun -> photoUrl: /ministers/Mrs Victoria Olaogun.jpg
+[2026-08-10T03:26:44.294Z] SUCCESS: Uploaded to Cloudinary -> https://res.cloudinary.com/fkzaroaa/image/upload/v1786332403/refreshing/migrated/xxz6tebtcynkflj4prmn.jpg
+[2026-08-10T03:26:44.580Z] SUCCESS: Updated Firestore document events/refreshing-2026/ministers/victoria-olaogun

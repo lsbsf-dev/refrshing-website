@@ -92,7 +92,7 @@ export default function AdminMinistersPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteMinister(id),
+    mutationFn: (id: string) => deleteMinister(ACTIVE_EVENT_ID, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "ministers"] });
       toast.success("Minister deleted successfully!");

@@ -10,18 +10,24 @@ export async function POST(req: Request) {
     const { action, ministerId, payload } = data;
 
     if (action === "create") {
+      const eventId = payload.eventId;
+      if (!eventId) return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
       const slug = payload.slug || payload.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      await firestore.collection("ministers").doc(slug).set(payload);
+      await firestore.collection("events").doc(eventId).collection("ministers").doc(slug).set(payload);
       return NextResponse.json({ success: true, slug });
     }
 
     if (action === "update") {
-      await firestore.collection("ministers").doc(ministerId).set(payload, { merge: true });
+      const eventId = payload.eventId;
+      if (!eventId) return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
+      await firestore.collection("events").doc(eventId).collection("ministers").doc(ministerId).set(payload, { merge: true });
       return NextResponse.json({ success: true });
     }
 
     if (action === "delete") {
-      await firestore.collection("ministers").doc(ministerId).update({ status: "deleted" });
+      const eventId = data.eventId; // We need to pass eventId from the frontend for delete
+      if (!eventId) return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
+      await firestore.collection("events").doc(eventId).collection("ministers").doc(ministerId).update({ status: "deleted" });
       return NextResponse.json({ success: true });
     }
 
