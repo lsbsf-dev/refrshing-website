@@ -299,16 +299,16 @@ export default function AdminCheckInPage() {
               <button
                 onClick={() => setUndoAttendeeId(null)}
                 className="px-4 py-2 font-bold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-                disabled={undoCheckInMutation.isPending}
+                disabled={!!processingId}
               >
                 Cancel
               </button>
               <button
-                onClick={() => undoCheckInMutation.mutate()}
+                onClick={() => confirmUndoCheckIn()}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg flex items-center gap-2"
-                disabled={undoCheckInMutation.isPending}
+                disabled={!!processingId}
               >
-                {undoCheckInMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                {processingId ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Undo Check-In
               </button>
             </div>
