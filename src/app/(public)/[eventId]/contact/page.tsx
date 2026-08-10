@@ -31,14 +31,16 @@ export default function ContactPage() {
     enabled: !!ACTIVE_EVENT_ID,
   });
 
-  const contactSettings = settingsDocs.find(doc => doc.id === "contact") || {
+  const contactSettings = (settingsDocs.find(doc => doc.id === "contact") as ContactSettings) || {
+    id: "contact",
+    status: "published",
     address: "Baptist Academy Hall, Obanikoro, Ikorodu Road, Lagos, Nigeria.",
     contacts: [
       { id: "1", name: "Mr Sunday Oguntola", role: "Alumni President", phone: "08034309265" },
       { id: "2", name: "Emmanuel Adeyemi", role: "Contact Person", phone: "09020537794" },
       { id: "3", name: "Idowu Oluwatimilehin", role: "Contact Person", phone: "07019819340" }
     ]
-  };
+  } as ContactSettings;
 
   const currentContacts = contactSettings.contacts;
   const currentAddress = contactSettings.address;
