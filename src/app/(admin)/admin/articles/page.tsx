@@ -147,26 +147,26 @@ export default function ArticlesAdminPage() {
           <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Title">
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
 
             <FormField label="Slug">
-              <input type="text" placeholder="Auto-generated if empty" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" placeholder="Auto-generated if empty" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Author">
-              <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
 
             <FormField label="Published Date">
-              <input type="date" value={publishedDate} onChange={(e) => setPublishedDate(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="date" value={publishedDate} onChange={(e) => setPublishedDate(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
           </div>
 
           <FormField label="Summary (Short description)">
-            <textarea value={summary} onChange={(e) => setSummary(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none min-h-[80px]" />
+            <textarea value={summary} onChange={(e) => setSummary(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none min-h-[80px]" />
           </FormField>
 
           <FormField label="Cover Image">
@@ -181,7 +181,7 @@ export default function ArticlesAdminPage() {
           </FormField>
 
           <FormField label="Status">
-            <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none">
+            <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none">
               <option value="published">Published</option>
               <option value="draft">Draft</option>
             </select>

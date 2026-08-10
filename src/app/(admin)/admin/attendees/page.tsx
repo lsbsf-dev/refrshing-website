@@ -245,11 +245,11 @@ export default function AdminAttendeesPage() {
     <div className="flex flex-col gap-8 max-w-6xl mx-auto pb-20">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase flex items-center gap-3">
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
           <Users className="h-8 w-8 text-[#C25627]" />
           Attendee Management
         </h1>
-        <p className="font-sans text-sm text-black/60 dark:text-white/60">
+        <p className="font-sans text-sm text-foreground-muted">
           Import and manage registered attendees for conference editions.
         </p>
       </div>
@@ -264,7 +264,7 @@ export default function AdminAttendeesPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-4 border-b border-black/10 dark:border-white/10 pb-4">
+      <div className="flex items-center gap-4 border-b border-border pb-4">
         <button 
           onClick={() => setActiveTab("directory")}
           className={`font-sans font-bold text-sm px-4 py-2 rounded-xl transition-colors ${
@@ -286,13 +286,13 @@ export default function AdminAttendeesPage() {
       {activeTab === "directory" ? (
         <AttendeeDirectory eventId={selectedEventId} />
       ) : (
-        <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
+        <div className="bg-surface border border-border rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
           {/* Import Section */}
         <div>
-          <h2 className="font-serif text-xl font-bold uppercase text-[#0B0907] dark:text-[#FCFAF6] mb-1">
+          <h2 className="font-serif text-xl font-bold uppercase text-foreground mb-1">
             Batch Import via Excel/CSV
           </h2>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Upload an Excel or CSV file exported from your ticketing system (e.g., Tix.africa) to sync attendees into the database.
           </p>
         </div>
@@ -300,7 +300,7 @@ export default function AdminAttendeesPage() {
         <div className="flex items-center gap-4">
           <button 
             onClick={handleDownloadTemplate}
-            className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors rounded-xl text-sm font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6]"
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors rounded-xl text-sm font-sans font-bold text-foreground"
           >
             <Download className="h-4 w-4 text-[#C25627]" />
             Download Template
@@ -312,7 +312,7 @@ export default function AdminAttendeesPage() {
           onClick={() => !importing && fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center gap-4 text-center cursor-pointer transition-all ${
             importing 
-              ? "border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-white/5 opacity-70 pointer-events-none" 
+              ? "border-border bg-surface-muted opacity-70 pointer-events-none" 
               : "border-black/20 dark:border-white/20 hover:border-[#C25627] dark:hover:border-[#C25627] hover:bg-zinc-50 dark:hover:bg-white/5"
           }`}
         >
@@ -322,7 +322,7 @@ export default function AdminAttendeesPage() {
                 <Loader2 className="h-8 w-8 text-[#C25627] animate-spin" />
               </div>
               <div>
-                <p className="font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6] text-lg">
+                <p className="font-sans font-bold text-foreground text-lg">
                   Processing Batch...
                 </p>
                 <p className="font-sans text-sm text-black/50 dark:text-white/50 mt-1">
@@ -336,7 +336,7 @@ export default function AdminAttendeesPage() {
                 <FileSpreadsheet className="h-8 w-8 text-[#C25627]" />
               </div>
               <div>
-                <p className="font-sans font-bold text-[#0B0907] dark:text-[#FCFAF6] text-lg">
+                <p className="font-sans font-bold text-foreground text-lg">
                   Click to browse files
                 </p>
                 <p className="font-sans text-sm text-black/50 dark:text-white/50 mt-1">
@@ -364,10 +364,10 @@ export default function AdminAttendeesPage() {
         {/* Import Session Review */}
         {importStats && importSession && (
           <div className="bg-zinc-50 dark:bg-black/20 border border-black/5 dark:border-white/5 p-6 rounded-3xl flex flex-col gap-6 animate-fade-in">
-            <div className="flex items-start justify-between border-b border-black/10 dark:border-white/10 pb-6">
+            <div className="flex items-start justify-between border-b border-border pb-6">
               <div>
-                <h3 className="font-serif text-2xl font-bold text-[#0B0907] dark:text-[#FCFAF6]">Review Import Session</h3>
-                <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                <h3 className="font-serif text-2xl font-bold text-foreground">Review Import Session</h3>
+                <p className="font-sans text-sm text-foreground-muted mt-1">
                   {importStats.processed} Total Detected Rows
                 </p>
               </div>
@@ -420,7 +420,7 @@ export default function AdminAttendeesPage() {
                   {importSession.map((row, idx) => {
                     if (row.status !== 'error' || row.importDecision === 'skip') return null;
                     return (
-                      <div key={idx} className="bg-white dark:bg-[#181612] p-4 rounded-xl border border-red-500/30 flex flex-col gap-4">
+                      <div key={idx} className="bg-surface p-4 rounded-xl border border-red-500/30 flex flex-col gap-4">
                         <div className="flex justify-between items-start">
                           <div>
                             <p className="text-xs font-mono font-bold text-zinc-500">Row {row.originalIndex + 1}</p>
@@ -493,7 +493,7 @@ export default function AdminAttendeesPage() {
                                              onChange={(e) => handleRowUpdate(idx, field, e.target.value)}
                                              placeholder={`Enter ${field.replace('Raw', '')}`}
                                              className={`w-full bg-transparent border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${
-                                               hasError ? 'border-red-500 focus:border-red-600' : 'border-black/10 dark:border-white/10 focus:border-[#C25627]'
+                                               hasError ? 'border-red-500 focus:border-red-600' : 'border-border focus:border-[#C25627]'
                                              }`}
                                            />
                                         );
@@ -539,7 +539,7 @@ export default function AdminAttendeesPage() {
                                      value={row.data[field as keyof AttendeeData] || ''}
                                      onChange={(e) => handleRowUpdate(idx, field, e.target.value)}
                                      className={`w-full bg-transparent border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${
-                                       hasError ? 'border-red-500 focus:border-red-600' : 'border-black/10 dark:border-white/10 focus:border-[#C25627]'
+                                       hasError ? 'border-red-500 focus:border-red-600' : 'border-border focus:border-[#C25627]'
                                      }`}
                                    />
                                  )}
@@ -569,10 +569,10 @@ export default function AdminAttendeesPage() {
                   {importSession.map((row, idx) => {
                     if (row.status !== 'possible_duplicate' || row.importDecision === 'skip') return null;
                     return (
-                      <div key={idx} className="bg-white dark:bg-[#181612] p-4 rounded-xl border border-amber-500/30 flex items-center justify-between">
+                      <div key={idx} className="bg-surface p-4 rounded-xl border border-amber-500/30 flex items-center justify-between">
                         <div>
                            <p className="text-xs font-mono font-bold text-zinc-500 mb-1">Row {row.originalIndex + 1}</p>
-                           <p className="font-bold text-sm text-[#0B0907] dark:text-[#FCFAF6]">{row.data.fullName} <span className="font-normal text-zinc-500 ml-2">{row.data.email || row.data.phoneNumber}</span></p>
+                           <p className="font-bold text-sm text-foreground">{row.data.fullName} <span className="font-normal text-zinc-500 ml-2">{row.data.email || row.data.phoneNumber}</span></p>
                            {row.importDecision === 'force_import' && (
                              <p className="text-xs font-bold text-emerald-500 mt-2 bg-emerald-500/10 inline-block px-2 py-1 rounded-md">✓ Import Anyway selected</p>
                            )}
@@ -602,7 +602,7 @@ export default function AdminAttendeesPage() {
             
             {/* Confirmed Duplicates (Skipped) */}
             {importSession.filter(r => r.status === 'confirmed_duplicate').length > 0 && (
-              <div className="mt-4 pt-4 border-t border-black/10 dark:border-white/10">
+              <div className="mt-4 pt-4 border-t border-border">
                  <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{importSession.filter(r => r.status === 'confirmed_duplicate').length} Exact Match Duplicates Automatically Skipped</p>
               </div>
             )}
@@ -641,10 +641,10 @@ export default function AdminAttendeesPage() {
       {/* Confirmation Modal */}
       {showConfirmModal && importStats && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-           <div className="bg-white dark:bg-[#181612] w-full max-w-md rounded-3xl p-6 shadow-xl flex flex-col gap-6 animate-fade-in">
+           <div className="bg-surface w-full max-w-md rounded-3xl p-6 shadow-xl flex flex-col gap-6 animate-fade-in">
               <div>
                 <h3 className="font-serif text-2xl font-bold mb-2">Ready to import {importStats.imported} attendees</h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">Please review the final numbers before committing to the database.</p>
+                <p className="text-sm text-foreground-muted">Please review the final numbers before committing to the database.</p>
               </div>
 
               <div className="bg-zinc-50 dark:bg-black/20 rounded-xl p-4 flex flex-col gap-2 font-mono text-sm border border-black/5 dark:border-white/5">
@@ -653,7 +653,7 @@ export default function AdminAttendeesPage() {
                 <div className="flex justify-between"><span className="text-amber-600">Possible Duplicates</span><span className="font-bold text-amber-600">{importSession?.filter(r=>r.status === 'possible_duplicate').length}</span></div>
                 <div className="flex justify-between"><span className="text-red-500">Errors</span><span className="font-bold text-red-500">{importStats.rejected}</span></div>
                 <div className="flex justify-between"><span className="text-zinc-500">Excluded/Skipped</span><span className="font-bold">{importStats.skipped}</span></div>
-                <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex justify-between">
+                <div className="mt-2 pt-2 border-t border-border flex justify-between">
                   <span className="text-zinc-500">Duplicate Overrides:</span>
                   <span className="font-bold text-emerald-600">{importSession?.filter(r=>r.importDecision === 'force_import').length}</span>
                 </div>

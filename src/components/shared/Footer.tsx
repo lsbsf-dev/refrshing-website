@@ -74,9 +74,7 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">INFORMATION</span>
           <div className="flex flex-col gap-2.5 font-sans text-xs">
-            <Link href="/faq" className="hover:text-primary text-zinc-300 transition-colors active-press">Frequently Asked Questions</Link>
             <Link href="/contact" className="hover:text-primary text-zinc-300 transition-colors active-press">Venue & Directions</Link>
-
           </div>
         </div>
 

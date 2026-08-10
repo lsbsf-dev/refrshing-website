@@ -9,15 +9,15 @@ async function performCheckIn(
   attendeeId: string,
   uid: string,
   email: string,
-  role: string,
+  permissions: string[],
   allowedEvents: string[]
 ) {
-  const isSuper = role === "superAdmin";
-  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId);
-  const isRegStaff = role === "registrationStaff" && allowedEvents.includes(eventId);
-  const isCheckin = role === "checkinStaff" && allowedEvents.includes(eventId);
+  const isSuperAdmin = permissions.includes("users.write"); // superAdmin has this, others generally don't, but we can also just rely on checking if they have checkin permission for this event.
+  // Actually, we just need to check if they have registrations.checkin and are allowed for this event
+  const canCheckIn = permissions.includes("registrations.checkin");
+  const isAllowedEvent = allowedEvents.includes(eventId) || isSuperAdmin; // SuperAdmin usually has all events or bypasses
 
-  if (!isSuper && !isEventAdm && !isRegStaff && !isCheckin) {
+  if (!canCheckIn || !isAllowedEvent) {
     throw new functions.https.HttpsError(
       "permission-denied",
       "User is not authorized to perform check-ins for this event."
@@ -88,7 +88,7 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
   }
 
   const token = context.auth.token;
-  const role = (token.role as string) || "";
+  const permissions = (token.permissions || []) as string[];
   const allowedEvents = (token.allowedEvents || []) as string[];
 
   try {
@@ -97,7 +97,7 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
       attendeeId,
       context.auth.uid,
       token.email || "unknown@lsbsf.org",
-      role,
+      permissions,
       allowedEvents
     );
   } catch (error: any) {
@@ -131,16 +131,15 @@ export const undoCheckIn = functions.https.onCall(async (data, context) => {
   }
 
   const token = context.auth.token;
-  const role = token.role as string;
+  const permissions = (token.permissions || []) as string[];
   const allowedEvents = (token.allowedEvents || []) as string[];
 
-  // Permission checks (MFA removed)
-  const isSuper = role === "superAdmin";
-  const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId);
-  const isRegStaff = role === "registrationStaff" && allowedEvents.includes(eventId);
-  const isCheckin = role === "checkinStaff" && allowedEvents.includes(eventId);
+  // Permission checks
+  const isSuperAdmin = permissions.includes("users.write");
+  const canCheckIn = permissions.includes("registrations.checkin");
+  const isAllowedEvent = allowedEvents.includes(eventId) || isSuperAdmin;
 
-  if (!isSuper && !isEventAdm && !isRegStaff && !isCheckin) {
+  if (!canCheckIn || !isAllowedEvent) {
     throw new functions.https.HttpsError(
       "permission-denied",
       "User is not authorized to reverse check-ins for this event."

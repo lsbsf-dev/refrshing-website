@@ -80,7 +80,7 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
             placeholder="Search attendees..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 text-sm font-sans py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-[#C25627]"
+            className="w-full bg-surface border border-border text-sm font-sans py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-[#C25627]"
           />
         </div>
         
@@ -128,10 +128,10 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
       </div>
 
       {/* Directory Table */}
-      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left font-sans text-sm">
-            <thead className="bg-zinc-50 dark:bg-white/5 border-b border-black/10 dark:border-white/10 text-xs uppercase font-bold text-zinc-500">
+            <thead className="bg-surface-muted border-b border-border text-xs uppercase font-bold text-zinc-500">
               <tr>
                 <th className="px-6 py-4">Name</th>
                 <th className="px-6 py-4">Conference</th>
@@ -166,13 +166,13 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
                 filteredAttendees.slice(0, 100).map(a => (
                   <tr key={a.id} onClick={() => setSelectedAttendee(a)} className="hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] cursor-pointer transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-[#0B0907] dark:text-[#FCFAF6]">{a.fullName}</div>
+                      <div className="font-bold text-foreground">{a.fullName}</div>
                       <div className="text-xs text-zinc-500">{a.email || a.phoneNumber}</div>
                     </td>
-                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400 capitalize">{a.conferenceName || a.conferenceId?.replace('_', ' ')}</td>
-                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{a.associationName || a.campusFellowshipName || "-"}</td>
-                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{a.churchName || "-"}</td>
-                    <td className="px-6 py-4 font-bold text-zinc-600 dark:text-zinc-400">{a.memberStatus}</td>
+                    <td className="px-6 py-4 text-foreground-muted capitalize">{a.conferenceName || a.conferenceId?.replace('_', ' ')}</td>
+                    <td className="px-6 py-4 text-foreground-muted">{a.associationName || a.campusFellowshipName || "-"}</td>
+                    <td className="px-6 py-4 text-foreground-muted">{a.churchName || "-"}</td>
+                    <td className="px-6 py-4 font-bold text-foreground-muted">{a.memberStatus}</td>
                     <td className="px-6 py-4">
                       {a.checkIn?.checkedIn ? (
                         <span className="text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-1 rounded-lg text-xs">Yes</span>
@@ -189,7 +189,7 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
             </tbody>
           </table>
           {filteredAttendees.length > 100 && (
-             <div className="p-4 text-center text-xs text-zinc-500 bg-zinc-50 dark:bg-white/5">
+             <div className="p-4 text-center text-xs text-zinc-500 bg-surface-muted">
                 Showing 100 of {filteredAttendees.length} results. Please use filters to narrow down.
              </div>
           )}
@@ -214,9 +214,9 @@ function AttendeeDetailPanel({ attendee, onClose }: { attendee: Attendee, onClos
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative w-full max-w-md bg-white dark:bg-[#12100C] h-full shadow-2xl border-l border-black/10 dark:border-white/10 flex flex-col animate-slide-in-right overflow-hidden">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#12100C] h-full shadow-2xl border-l border-border flex flex-col animate-slide-in-right overflow-hidden">
         
-        <div className="p-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-zinc-50 dark:bg-white/5">
+        <div className="p-6 border-b border-border flex items-center justify-between bg-surface-muted">
           <div>
             <h2 className="font-serif text-2xl font-bold">{attendee.fullName}</h2>
             <p className="font-mono text-xs text-[#C25627] mt-1">{attendee.id}</p>
@@ -252,7 +252,7 @@ function AttendeeDetailPanel({ attendee, onClose }: { attendee: Attendee, onClos
           </section>
 
           {/* Payment Evidence (Protected) */}
-          <section className="bg-zinc-50 dark:bg-white/5 -mx-6 px-6 py-6 border-y border-black/5 dark:border-white/5">
+          <section className="bg-surface-muted -mx-6 px-6 py-6 border-y border-black/5 dark:border-white/5">
             <h3 className="font-bold text-xs uppercase tracking-wider text-zinc-500 mb-3">Payment Evidence</h3>
             {isLoading ? (
               <div className="flex items-center gap-2 text-zinc-500 text-sm">

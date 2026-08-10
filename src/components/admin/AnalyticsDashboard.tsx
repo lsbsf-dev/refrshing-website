@@ -49,7 +49,7 @@ export function AnalyticsDashboard() {
 
   if (isLoadingSummary || isLoadingAssoc) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-[#181612] rounded-2xl border border-zinc-200 dark:border-white/10 shadow-sm">
+      <div className="flex flex-col items-center justify-center py-20 bg-surface rounded-2xl border border-border shadow-sm">
         <Loader2 className="h-8 w-8 animate-spin text-[#C25627] mb-4" />
         <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">Loading Analytics...</span>
       </div>
@@ -68,7 +68,7 @@ export function AnalyticsDashboard() {
 
   if (!summary) {
     return (
-      <div className="text-center py-20 bg-white dark:bg-[#181612] rounded-2xl border border-zinc-200 dark:border-white/10 shadow-sm">
+      <div className="text-center py-20 bg-surface rounded-2xl border border-border shadow-sm">
         <BarChart3 className="h-10 w-10 text-zinc-300 mx-auto mb-4" />
         <p className="font-serif text-lg font-medium">No analytics data available yet.</p>
       </div>
@@ -83,12 +83,12 @@ export function AnalyticsDashboard() {
       
       {/* ── Global Metrics ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#181612] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
               <Users className="h-5 w-5" />
             </div>
-            <h3 className="font-sans font-bold text-sm uppercase tracking-wider text-zinc-600 dark:text-zinc-400">Total Registered</h3>
+            <h3 className="font-sans font-bold text-sm uppercase tracking-wider text-foreground-muted">Total Registered</h3>
           </div>
           <span className="font-serif text-4xl sm:text-5xl font-bold text-zinc-900 dark:text-white relative z-10">
             {totalRegistered.toLocaleString()}
@@ -98,12 +98,12 @@ export function AnalyticsDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#181612] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
               <QrCode className="h-5 w-5" />
             </div>
-            <h3 className="font-sans font-bold text-sm uppercase tracking-wider text-zinc-600 dark:text-zinc-400">Total Checked-In</h3>
+            <h3 className="font-sans font-bold text-sm uppercase tracking-wider text-foreground-muted">Total Checked-In</h3>
           </div>
           <span className="font-serif text-4xl sm:text-5xl font-bold text-zinc-900 dark:text-white relative z-10">
             {totalCheckedIn.toLocaleString()}
@@ -131,7 +131,7 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* ── Main Chart ── */}
-      <div className="bg-white dark:bg-[#181612] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-sm">
+      <div className="bg-surface border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
         <h2 className="font-serif text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2">
           CONFERENCE BREAKDOWN
         </h2>
@@ -154,8 +154,8 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* ── Detailed Accordion Breakdown ── */}
-      <div className="bg-white dark:bg-[#181612] border border-zinc-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-zinc-200 dark:border-white/10">
+      <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-border">
            <h2 className="font-serif text-xl font-bold">ASSOCIATION & CAMPUS DETAILS</h2>
            <p className="font-sans text-xs text-zinc-500 mt-1">Click a conference to view its breakdown</p>
         </div>
@@ -174,7 +174,7 @@ export function AnalyticsDashboard() {
                   {/* Accordion Header */}
                   <button
                     onClick={() => toggleConference(confId)}
-                    className={`flex items-center justify-between p-4 sm:p-5 hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors text-left ${isExpanded ? "bg-zinc-50 dark:bg-white/5" : ""}`}
+                    className={`flex items-center justify-between p-4 sm:p-5 hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors text-left ${isExpanded ? "bg-surface-muted" : ""}`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`p-1 rounded-full transition-transform ${isExpanded ? "rotate-90 bg-zinc-200 dark:bg-white/10" : "bg-transparent text-zinc-400"}`}>
@@ -216,7 +216,7 @@ export function AnalyticsDashboard() {
                           {confAssocs.map((assoc) => {
                             const rate = assoc.registered > 0 ? Math.round((assoc.checkedIn / assoc.registered) * 100) : 0;
                             return (
-                              <div key={assoc.id} className="bg-white dark:bg-[#1A1813] border border-zinc-200 dark:border-white/10 p-3.5 rounded-xl shadow-sm flex items-center justify-between gap-3">
+                              <div key={assoc.id} className="bg-white dark:bg-[#1A1813] border border-border p-3.5 rounded-xl shadow-sm flex items-center justify-between gap-3">
                                 <div className="flex flex-col min-w-0">
                                   <span className="font-sans text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate" title={assoc.name}>
                                     {assoc.name}

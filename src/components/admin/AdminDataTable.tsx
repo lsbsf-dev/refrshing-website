@@ -47,10 +47,10 @@ export function AdminDataTable<T extends { id: string }>({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-1 uppercase">
+          <h1 className="font-serif text-3xl font-bold text-foreground mb-1 uppercase">
             {title}
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             {description}
           </p>
         </div>
@@ -72,13 +72,13 @@ export function AdminDataTable<T extends { id: string }>({
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 text-sm font-sans py-3 pl-11 pr-4 rounded-xl outline-none focus:border-[#C25627] dark:focus:border-[#C25627] transition-colors shadow-sm"
+            className="w-full bg-surface border border-border text-sm font-sans py-3 pl-11 pr-4 rounded-xl outline-none focus:border-[#C25627] dark:focus:border-[#C25627] transition-colors shadow-sm"
           />
         </div>
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
         {isLoading ? (
           <div className="p-12 flex flex-col items-center justify-center text-zinc-500">
             <Loader2 className="h-8 w-8 animate-spin mb-4" />
@@ -92,7 +92,7 @@ export function AdminDataTable<T extends { id: string }>({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left font-sans text-sm">
-              <thead className="bg-zinc-50 dark:bg-white/5 border-b border-black/10 dark:border-white/10 text-xs uppercase font-bold text-zinc-500">
+              <thead className="bg-surface-muted border-b border-border text-xs uppercase font-bold text-zinc-500">
                 <tr>
                   {columns.map((col, i) => (
                     <th key={col.key || i} className="px-6 py-4">{col.label}</th>

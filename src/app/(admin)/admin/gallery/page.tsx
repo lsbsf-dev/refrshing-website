@@ -94,10 +94,10 @@ export default function AdminGalleryDashboard() {
   return (
     <div className="pb-20 max-w-6xl mx-auto space-y-12">
       <div>
-        <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase mb-1">
+        <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1">
           Gallery & Media Library
         </h1>
-        <p className="font-sans text-sm text-black/60 dark:text-white/60">
+        <p className="font-sans text-sm text-foreground-muted">
           Manage photo albums and YouTube video embeds for this event.
         </p>
       </div>
@@ -127,7 +127,7 @@ export default function AdminGalleryDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {albums.map((album) => (
-              <div key={album.id} className="group relative bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={album.id} className="group relative bg-surface border border-border rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="h-48 bg-zinc-200 dark:bg-zinc-800 relative">
                   {album.coverImageUrl ? (
                     <img src={album.coverImageUrl} alt={album.title} className="w-full h-full object-cover" />
@@ -186,7 +186,7 @@ export default function AdminGalleryDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos.map((vid) => (
-              <div key={vid.id} className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden p-4 flex gap-4">
+              <div key={vid.id} className="bg-surface border border-border rounded-2xl overflow-hidden p-4 flex gap-4">
                 <div className="w-24 h-16 bg-zinc-200 dark:bg-zinc-800 rounded-lg overflow-hidden shrink-0">
                   <img src={`https://img.youtube.com/vi/${vid.youtubeId}/mqdefault.jpg`} className="w-full h-full object-cover" alt="thumbnail" />
                 </div>

@@ -66,11 +66,11 @@ export default function AdminAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase flex items-center gap-3">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
             <BarChart3 className="h-8 w-8 text-[#C25627]" />
             Analytics & Reports
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Historical and snapshot data for registrations.
           </p>
         </div>
@@ -101,19 +101,19 @@ export default function AdminAnalyticsPage() {
           
           {/* Top Level KPIs */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-[#181612] p-6 rounded-3xl border border-black/10 dark:border-white/10 shadow-sm flex flex-col gap-2">
+            <div className="bg-surface p-6 rounded-3xl border border-border shadow-sm flex flex-col gap-2">
               <div className="flex items-center gap-2 text-zinc-500">
                 <Users className="h-5 w-5" />
                 <h3 className="font-bold text-sm uppercase tracking-wider">Total Registrations</h3>
               </div>
-              <p className="font-serif text-5xl font-bold text-[#0B0907] dark:text-[#FCFAF6]">
+              <p className="font-serif text-5xl font-bold text-foreground">
                 {attendees.length.toLocaleString()}
               </p>
             </div>
-            <div className="bg-white dark:bg-[#181612] p-6 rounded-3xl border border-black/10 dark:border-white/10 shadow-sm flex flex-col gap-2">
+            <div className="bg-surface p-6 rounded-3xl border border-border shadow-sm flex flex-col gap-2">
                <h3 className="font-bold text-sm uppercase tracking-wider text-zinc-500 mb-1">Role Breakdown</h3>
                <div className="flex justify-between items-center mt-2">
-                 <span className="text-sm font-bold text-zinc-600 dark:text-zinc-400">Members</span>
+                 <span className="text-sm font-bold text-foreground-muted">Members</span>
                  <span className="font-mono font-bold text-lg">{totalMembers.toLocaleString()}</span>
                </div>
                <div className="flex justify-between items-center">
@@ -125,12 +125,12 @@ export default function AdminAnalyticsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Conference Breakdown */}
-            <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 shadow-sm">
+            <div className="bg-surface border border-border rounded-3xl p-6 shadow-sm">
               <h2 className="font-serif text-xl font-bold mb-4 uppercase">By Conference</h2>
               <div className="space-y-3">
                 {conferenceData.map(([name, count]) => (
                   <div key={name} className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-zinc-600 dark:text-zinc-400 capitalize">{name}</span>
+                    <span className="text-sm font-bold text-foreground-muted capitalize">{name}</span>
                     <div className="flex items-center gap-3">
                       <div className="w-32 h-2 bg-zinc-100 dark:bg-white/5 rounded-full overflow-hidden">
                         <div className="h-full bg-[#C25627]" style={{ width: `${(count / attendees.length) * 100}%` }}></div>
@@ -143,7 +143,7 @@ export default function AdminAnalyticsPage() {
             </div>
 
             {/* Campus Breakdown */}
-            <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 shadow-sm">
+            <div className="bg-surface border border-border rounded-3xl p-6 shadow-sm">
               <h2 className="font-serif text-xl font-bold mb-4 uppercase">Campus Fellowships</h2>
               {campusData.length === 0 ? (
                 <p className="text-sm text-zinc-500">No campus registrations yet.</p>
@@ -151,7 +151,7 @@ export default function AdminAnalyticsPage() {
                 <div className="space-y-3">
                   {campusData.map(([name, count]) => (
                     <div key={name} className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-zinc-600 dark:text-zinc-400">{name}</span>
+                      <span className="text-sm font-bold text-foreground-muted">{name}</span>
                       <span className="font-mono font-bold text-sm">{count}</span>
                     </div>
                   ))}
@@ -162,7 +162,7 @@ export default function AdminAnalyticsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Associations */}
-            <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 shadow-sm">
+            <div className="bg-surface border border-border rounded-3xl p-6 shadow-sm">
               <h2 className="font-serif text-xl font-bold mb-4 uppercase">Top Associations</h2>
               <div className="space-y-3">
                 {associationData.map(([name, count], i) => (
@@ -178,7 +178,7 @@ export default function AdminAnalyticsPage() {
             </div>
 
             {/* Top Churches */}
-            <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 shadow-sm">
+            <div className="bg-surface border border-border rounded-3xl p-6 shadow-sm">
               <h2 className="font-serif text-xl font-bold mb-4 uppercase">Top Churches</h2>
               <div className="space-y-3">
                 {churchData.map(([name, count], i) => (

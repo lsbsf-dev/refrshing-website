@@ -8,6 +8,7 @@ interface UserProfile {
   name: string;
   email: string;
   role: string;
+  permissions: string[];
   allowedEvents: string[];
 }
 

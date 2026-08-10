@@ -124,10 +124,10 @@ export default function AlbumManagementPage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase mb-1">
+          <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1">
             {currentAlbum.title}
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Manage album details and photos.
           </p>
         </div>
@@ -136,7 +136,7 @@ export default function AlbumManagementPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Album Settings */}
         <div className="lg:col-span-1 space-y-6">
-          <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6">
+          <section className="bg-surface border border-border rounded-2xl p-6">
             <h2 className="font-serif text-xl font-bold mb-4">Album Settings</h2>
             <div className="space-y-4">
               <FormField label="Title">
@@ -155,7 +155,7 @@ export default function AlbumManagementPage() {
             </div>
           </section>
 
-          <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6">
+          <section className="bg-surface border border-border rounded-2xl p-6">
             <h2 className="font-serif text-xl font-bold mb-4">Upload Photos</h2>
             <MultiImageUploader onUploadSuccess={handleUploadSuccess} />
           </section>
@@ -163,7 +163,7 @@ export default function AlbumManagementPage() {
 
         {/* Photos Grid */}
         <div className="lg:col-span-2">
-          <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6">
+          <section className="bg-surface border border-border rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-serif text-xl font-bold">Photos ({photos.length})</h2>
             </div>

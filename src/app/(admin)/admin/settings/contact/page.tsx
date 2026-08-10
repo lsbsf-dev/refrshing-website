@@ -99,11 +99,11 @@ export default function ContactSettingsAdminPage() {
     <div className="pb-20 max-w-4xl">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase mb-1 flex items-center gap-3">
+          <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1 flex items-center gap-3">
             <Phone className="h-8 w-8 text-[#C25627]" />
             Contact Page Settings
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Configure the physical address and coordinating contacts shown on the Contact page.
           </p>
         </div>
@@ -119,25 +119,25 @@ export default function ContactSettingsAdminPage() {
 
       <div className="space-y-12">
         {/* SECTION 1: VENUE / ADDRESS */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">1. Physical Venue</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">1. Physical Venue</h2>
           <FormField label="Conference Venue Address">
             <textarea 
               value={form.address} 
               onChange={e => setForm({...form, address: e.target.value})} 
-              className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none min-h-[80px]" 
+              className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none min-h-[80px]" 
               placeholder="Enter the full venue address..." 
             />
           </FormField>
         </section>
 
         {/* SECTION 2: CONTACT PERSONS */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-serif text-2xl font-bold text-[#0B0907] dark:text-white">2. Contact Channels</h2>
+            <h2 className="font-serif text-2xl font-bold text-foreground">2. Contact Channels</h2>
             <button
               onClick={addContact}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[#0B0907] dark:text-white rounded-lg text-sm font-bold transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg text-sm font-bold transition-colors"
             >
               <Plus className="h-4 w-4" />
               Add Contact
@@ -149,7 +149,7 @@ export default function ContactSettingsAdminPage() {
               <p className="text-zinc-500 text-sm">No contacts added yet. Click "Add Contact" to create one.</p>
             ) : (
               form.contacts.map((contact, index) => (
-                <div key={contact.id} className="p-4 sm:p-6 border border-black/10 dark:border-white/10 rounded-xl bg-zinc-50/50 dark:bg-white/5 relative group">
+                <div key={contact.id} className="p-4 sm:p-6 border border-border rounded-xl bg-zinc-50/50 dark:bg-white/5 relative group">
                   <button
                     onClick={() => removeContact(contact.id)}
                     className="absolute top-4 right-4 text-red-500 opacity-50 hover:opacity-100 transition-opacity"
@@ -161,18 +161,18 @@ export default function ContactSettingsAdminPage() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField label="Full Name">
-                        <input type="text" value={contact.name} onChange={e => updateContact(contact.id, { name: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. Mr Sunday Oguntola" />
+                        <input type="text" value={contact.name} onChange={e => updateContact(contact.id, { name: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" placeholder="e.g. Mr Sunday Oguntola" />
                       </FormField>
                       <FormField label="Role / Title">
-                        <input type="text" value={contact.role} onChange={e => updateContact(contact.id, { role: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. Alumni President" />
+                        <input type="text" value={contact.role} onChange={e => updateContact(contact.id, { role: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" placeholder="e.g. Alumni President" />
                       </FormField>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField label="Phone Number">
-                        <input type="text" value={contact.phone} onChange={e => updateContact(contact.id, { phone: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. 08034309265" />
+                        <input type="text" value={contact.phone} onChange={e => updateContact(contact.id, { phone: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" placeholder="e.g. 08034309265" />
                       </FormField>
                       <FormField label="Email Address (Optional)">
-                        <input type="email" value={contact.email || ""} onChange={e => updateContact(contact.id, { email: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. contact@example.com" />
+                        <input type="email" value={contact.email || ""} onChange={e => updateContact(contact.id, { email: e.target.value })} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" placeholder="e.g. contact@example.com" />
                       </FormField>
                     </div>
                   </div>

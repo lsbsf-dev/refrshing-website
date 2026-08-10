@@ -135,16 +135,16 @@ export default function BibleStudiesAdminPage() {
         >
           <div className="space-y-4">
           <FormField label="Title">
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
           </FormField>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Theme">
-              <input type="text" value={theme} onChange={(e) => setTheme(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={theme} onChange={(e) => setTheme(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
             
             <FormField label="Author">
-              <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
           </div>
 
@@ -154,11 +154,11 @@ export default function BibleStudiesAdminPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Order (Sort)">
-              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
 
             <FormField label="Status">
-              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none">
+              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none">
                 <option value="published">Published</option>
                 <option value="draft">Draft</option>
               </select>

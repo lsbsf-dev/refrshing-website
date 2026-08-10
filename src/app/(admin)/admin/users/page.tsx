@@ -7,6 +7,8 @@ import { getUsers, provisionAdminAccount, updateUserAccess } from "@/lib/firebas
 import { getEvents } from "@/lib/firebase/events";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
+import { RoleBuilder } from "@/components/admin/RoleBuilder";
+
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();
 
@@ -18,6 +20,19 @@ export default function AdminUsersPage() {
   const { data: eventsList = [] } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
+  });
+
+  const { data: rolesList = [] } = useQuery({
+    queryKey: ["admin", "roles"],
+    queryFn: async () => {
+      // Import dynamically or just rely on the same queryKey
+      // RoleBuilder handles fetching too, but we need it here for the filter options and custom role dropdowns
+      // Actually we can just fetch it here too since react-query will dedup
+      const { collection, getDocs } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase/app");
+      const snap = await getDocs(collection(db, "settings", "global", "roles"));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
   });
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -124,25 +139,61 @@ export default function AdminUsersPage() {
     });
   };
 
+  const [activeTab, setActiveTab] = useState<"users" | "roles">("users");
+
+  const dynamicRoleOptions = [
+    { value: "all", label: "All Roles" },
+    ...rolesList.map((r: any) => ({ value: r.id, label: r.name || r.id })),
+    { value: "superAdmin", label: "Super Administrator" },
+    { value: "eventAdmin", label: "Event Administrator" },
+    { value: "editor", label: "Editor" },
+    { value: "registrationStaff", label: "Registration Staff" },
+    { value: "checkinStaff", label: "Check-in Staff" },
+    { value: "viewer", label: "Viewer" },
+  ];
+
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase">
             Users & Roles
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Provision admin accounts, assign roles, and manage system access.
           </p>
         </div>
-        <button
-          onClick={() => setIsProvisionModalOpen(true)}
-          className="px-6 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg transition-all active:scale-95"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Provision Account</span>
-        </button>
+        
+        {/* Tabs */}
+        <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 p-1 rounded-xl self-start">
+          <button
+            onClick={() => setActiveTab("users")}
+            className={`px-4 py-2 rounded-lg font-sans text-xs font-bold uppercase transition-all ${
+              activeTab === "users" ? "bg-surface text-foreground shadow-sm" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+            }`}
+          >
+            Users
+          </button>
+          <button
+            onClick={() => setActiveTab("roles")}
+            className={`px-4 py-2 rounded-lg font-sans text-xs font-bold uppercase transition-all ${
+              activeTab === "roles" ? "bg-surface text-foreground shadow-sm" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+            }`}
+          >
+            Role Builder
+          </button>
+        </div>
+
+        {activeTab === "users" && (
+          <button
+            onClick={() => setIsProvisionModalOpen(true)}
+            className="px-6 py-3 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-lg transition-all active:scale-95"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Provision Account</span>
+          </button>
+        )}
       </div>
 
       {savedSuccess && (
@@ -152,40 +203,36 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-[#181612] p-2 border border-black/10 dark:border-white/10 rounded-2xl shadow-sm">
-        <div className="relative w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none text-sm font-sans py-3 pl-10 pr-4 outline-none text-[#0B0907] dark:text-[#FCFAF6] placeholder:text-zinc-500"
-          />
-        </div>
-        <div className="w-full sm:w-64 border-l border-black/5 dark:border-white/5 pl-4">
-          <CustomSelect
-            value={filterRole}
-            onChange={(val) => setFilterRole(val)}
-            options={[
-              { value: "all", label: "All Roles" },
-              { value: "superAdmin", label: "Super Administrator" },
-              { value: "eventAdmin", label: "Event Administrator" },
-              { value: "mediaTeam", label: "Media Team" },
-              { value: "registrationTeam", label: "Registration Team" },
-              { value: "analyticsViewer", label: "Analytics Viewer" },
-            ]}
-          />
-        </div>
-      </div>
+      {/* Users Tab Content */}
+      {activeTab === "users" && (
+        <>
+          {/* Controls */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 bg-surface p-2 border border-border rounded-2xl shadow-sm">
+            <div className="relative w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <input
+                type="text"
+                placeholder="Search by name or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent border-none text-sm font-sans py-3 pl-10 pr-4 outline-none text-foreground placeholder:text-zinc-500"
+              />
+            </div>
+            <div className="w-full sm:w-64 border-l border-black/5 dark:border-white/5 pl-4">
+              <CustomSelect
+                value={filterRole}
+                onChange={(val) => setFilterRole(val)}
+                options={dynamicRoleOptions}
+              />
+            </div>
+          </div>
 
       {/* Table / List */}
-      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-black/10 dark:border-white/10">
+              <tr className="border-b border-border">
                 <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider">
                   User Details
                 </th>
@@ -216,14 +263,24 @@ export default function AdminUsersPage() {
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((user) => (
+                filteredUsers.map((user) => {
+                  const roleObj = rolesList.find((r: any) => r.id === user.role);
+                  const displayRole = roleObj ? (roleObj as any).name : ({
+                    superAdmin: "Super Administrator",
+                    eventAdmin: "Event Administrator",
+                    editor: "Editor",
+                    registrationStaff: "Registration Staff",
+                    checkinStaff: "Check-in Staff",
+                    viewer: "Viewer",
+                  }[user.role as string] || user.role);
+                  return (
                   <tr key={user.id} className={`hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group ${!user.isActive ? "opacity-60" : ""}`}>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
-                        <span className="font-sans text-sm font-bold text-[#0B0907] dark:text-[#FCFAF6]">
+                        <span className="font-sans text-sm font-bold text-foreground">
                           {user.name}
                         </span>
-                        <span className="font-sans text-xs text-black/60 dark:text-white/60">
+                        <span className="font-sans text-xs text-foreground-muted">
                           {user.email}
                         </span>
                       </div>
@@ -231,13 +288,7 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="font-sans text-xs font-bold uppercase text-[#DDB94E]">
-                          {{
-                            superAdmin: "Super Administrator",
-                            eventAdmin: "Event Administrator",
-                            mediaTeam: "Media Team",
-                            registrationTeam: "Registration Team",
-                            analyticsViewer: "Analytics Viewer",
-                          }[user.role as string] || user.role}
+                          {displayRole}
                         </span>
                         {user.allowedEvents?.length > 0 && user.role !== "superAdmin" && (
                           <span className="font-sans text-[10px] text-zinc-500">
@@ -289,21 +340,26 @@ export default function AdminUsersPage() {
                       </div>
                     </td>
                   </tr>
-                ))
+                )})
               )}
             </tbody>
           </table>
         </div>
       </div>
+      </>
+      )}
+
+      {/* Role Builder Tab Content */}
+      {activeTab === "roles" && <RoleBuilder />}
 
       {/* ── Provision Modal ── */}
       {isProvisionModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleProvision}
-            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 PROVISION ACCOUNT
               </h3>
@@ -326,7 +382,7 @@ export default function AdminUsersPage() {
                   required
                   value={newUser.name}
                   onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -338,7 +394,7 @@ export default function AdminUsersPage() {
                   required
                   value={newUser.email}
                   onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -351,13 +407,7 @@ export default function AdminUsersPage() {
                 <CustomSelect
                   value={newUser.role}
                   onChange={(val) => setNewUser({ ...newUser, role: val as any, allowedEvents: [] })}
-                  options={[
-                    { value: "superAdmin", label: "Super Administrator" },
-                    { value: "eventAdmin", label: "Event Administrator" },
-                    { value: "mediaTeam", label: "Media Team" },
-                    { value: "registrationTeam", label: "Registration Team" },
-                    { value: "analyticsViewer", label: "Analytics Viewer" },
-                  ]}
+                  options={dynamicRoleOptions.filter(o => o.value !== "all")}
                 />
               </div>
               <div>
@@ -369,7 +419,7 @@ export default function AdminUsersPage() {
                   required
                   value={newUser.password}
                   onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
                   placeholder="e.g. TempPass123!"
                 />
               </div>
@@ -377,7 +427,7 @@ export default function AdminUsersPage() {
 
             {/* Event Scope Selection (Not needed for superAdmin) */}
             {newUser.role !== "superAdmin" && (
-              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/10 dark:border-white/10">
+              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-border">
                 <label className="block text-xs font-sans font-bold uppercase mb-3">
                   Scope (Allowed Event Editions)
                 </label>
@@ -390,7 +440,7 @@ export default function AdminUsersPage() {
                       className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors ${
                         newUser.allowedEvents.includes(event.id)
                           ? "bg-[#C25627] text-white border-[#C25627]"
-                          : "bg-white dark:bg-[#181612] text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
+                          : "bg-surface text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
                       }`}
                     >
                       {event.name}
@@ -405,7 +455,7 @@ export default function AdminUsersPage() {
               </div>
             )}
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border mt-2">
               <button
                 type="button"
                 onClick={() => setIsProvisionModalOpen(false)}
@@ -433,11 +483,11 @@ export default function AdminUsersPage() {
               e.preventDefault();
               editMutation.mutate(editingUser);
             }}
-            className="bg-white dark:bg-[#0B0907] border border-black/10 dark:border-white/10 rounded-3xl p-6 w-full max-w-lg shadow-2xl flex flex-col gap-6 animate-slide-up"
+            className="bg-background border border-border rounded-3xl p-6 w-full max-w-lg shadow-2xl flex flex-col gap-6 animate-slide-up"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="font-serif text-2xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase">Edit User</h2>
+                <h2 className="font-serif text-2xl font-bold text-foreground uppercase">Edit User</h2>
                 <p className="font-sans text-xs text-black/50 dark:text-white/50 mt-1">Update roles and event scopes</p>
               </div>
               <button
@@ -457,7 +507,7 @@ export default function AdminUsersPage() {
                   required
                   value={editingUser.name}
                   onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
 
@@ -470,7 +520,7 @@ export default function AdminUsersPage() {
                   required
                   value={editingUser.email}
                   onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -481,7 +531,7 @@ export default function AdminUsersPage() {
                   type="text"
                   value={editingUser.password}
                   onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
                   placeholder="Leave blank to keep current"
                 />
               </div>
@@ -491,20 +541,14 @@ export default function AdminUsersPage() {
                 <CustomSelect
                   value={editingUser.role}
                   onChange={(val) => setEditingUser({ ...editingUser, role: val as any, allowedEvents: [] })}
-                  options={[
-                    { value: "superAdmin", label: "Super Administrator" },
-                    { value: "eventAdmin", label: "Event Administrator" },
-                    { value: "mediaTeam", label: "Media Team" },
-                    { value: "registrationTeam", label: "Registration Team" },
-                    { value: "analyticsViewer", label: "Analytics Viewer" },
-                  ]}
+                  options={dynamicRoleOptions.filter(o => o.value !== "all")}
                 />
               </div>
             </div>
 
             {/* Event Scope Selection */}
             {editingUser.role !== "superAdmin" && (
-              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/10 dark:border-white/10">
+              <div className="bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-border">
                 <label className="block text-xs font-sans font-bold uppercase mb-3">
                   Scope (Allowed Event Editions)
                 </label>
@@ -524,7 +568,7 @@ export default function AdminUsersPage() {
                       className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors ${
                         editingUser.allowedEvents.includes(event.id)
                           ? "bg-[#C25627] text-white border-[#C25627]"
-                          : "bg-white dark:bg-[#181612] text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
+                          : "bg-surface text-zinc-500 border-black/20 dark:border-white/20 hover:border-[#C25627]"
                       }`}
                     >
                       {event.name}
@@ -539,7 +583,7 @@ export default function AdminUsersPage() {
               </div>
             )}
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border mt-2">
               <button
                 type="button"
                 onClick={() => setIsEditModalOpen(false)}

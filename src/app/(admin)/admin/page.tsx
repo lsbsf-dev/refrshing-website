@@ -30,15 +30,16 @@ export default function AdminDashboardHome() {
   const queryClient = useQueryClient();
 
   const role = profile?.role || "viewer";
+  const permissions = profile?.permissions || [];
 
   // Check permissions
-  const canReadMinisters = hasPermission(role, Permissions.Ministers.Read);
-  const canReadProgramme = hasPermission(role, Permissions.Programme.Read);
-  const canReadAnnouncements = hasPermission(role, Permissions.Announcements.Read);
-  const canReadResources = hasPermission(role, Permissions.Resources.Read);
-  const canReadRegistrations = hasPermission(role, Permissions.Registrations.Read);
-  const canReadHomepage = hasPermission(role, Permissions.Homepage.Read);
-  const canReadUsers = hasPermission(role, Permissions.Users.Read);
+  const canReadMinisters = hasPermission(permissions, Permissions.Ministers.Read);
+  const canReadProgramme = hasPermission(permissions, Permissions.Programme.Read);
+  const canReadAnnouncements = hasPermission(permissions, Permissions.Announcements.Read);
+  const canReadResources = hasPermission(permissions, Permissions.Resources.Read);
+  const canReadRegistrations = hasPermission(permissions, Permissions.Registrations.Read);
+  const canReadHomepage = hasPermission(permissions, Permissions.Homepage.Read);
+  const canReadUsers = hasPermission(permissions, Permissions.Users.Read);
 
   // Queries (fetch-on-load, no realtime listeners)
   const { data: ministers = [], isFetching: isFetchingMinisters } = useQuery({
@@ -55,7 +56,7 @@ export default function AdminDashboardHome() {
     staleTime: Infinity
   });
 
-  const canReadAnalytics = hasPermission(role, Permissions.Analytics.Read);
+  const canReadAnalytics = hasPermission(permissions, Permissions.Analytics.Read);
 
   const isFetching = isFetchingMinisters || isFetchingAnnouncements;
 
@@ -67,7 +68,7 @@ export default function AdminDashboardHome() {
     <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-20">
       
       {/* ── Welcome Banner (Editorial Design) ── */}
-      <div className="relative w-full p-8 sm:p-10 rounded-2xl bg-[#FAF9F6] dark:bg-[#181612] text-[#1C1A17] dark:text-[#FCFAF6] border border-zinc-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="relative w-full p-8 sm:p-10 rounded-2xl bg-surface text-foreground border border-border shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex flex-col gap-2">
           <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-[#C25627] uppercase flex items-center gap-2">
             <Flame className="h-4 w-4" />
@@ -82,7 +83,7 @@ export default function AdminDashboardHome() {
         </div>
 
         <div className="flex items-center gap-3">
-          {hasPermission(role, Permissions.Registrations.CheckIn) && (
+          {hasPermission(permissions, Permissions.Registrations.CheckIn) && (
             <Link
               href="/admin/checkin"
               className="px-4 py-2 bg-[#C25627] hover:bg-[#a1451f] text-white font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-colors shadow-sm flex items-center gap-2"
@@ -211,7 +212,7 @@ export default function AdminDashboardHome() {
 
       {/* ── Advanced Analytics ── */}
       {canReadAnalytics && (
-        <div className="mt-4 pt-8 border-t border-zinc-200 dark:border-white/10">
+        <div className="mt-4 pt-8 border-t border-border">
            <div className="flex items-center justify-between mb-6">
               <div>
                  <span className="font-sans text-[10px] font-bold tracking-[0.2em] text-[#C25627] uppercase block mb-1">

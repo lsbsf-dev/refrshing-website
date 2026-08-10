@@ -92,10 +92,10 @@ export default function HomepageAdminPage() {
     <div className="pb-20 max-w-4xl">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase mb-1">
+          <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1">
             Homepage Settings
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Configure the content and layout of the public homepage.
           </p>
         </div>
@@ -111,14 +111,14 @@ export default function HomepageAdminPage() {
 
       <div className="space-y-12">
         {/* SECTION 1: HERO */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">1. Hero Content</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">1. Hero Content</h2>
           <div className="space-y-6">
             <FormField label="Hero Title">
-              <input type="text" value={form.heroTitle} onChange={e => setForm({...form, heroTitle: e.target.value})} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. LSBSF REFRESHING 2026" />
+              <input type="text" value={form.heroTitle} onChange={e => setForm({...form, heroTitle: e.target.value})} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" placeholder="e.g. LSBSF REFRESHING 2026" />
             </FormField>
             <FormField label="Hero Subtitle">
-              <input type="text" value={form.heroSubtitle} onChange={e => setForm({...form, heroSubtitle: e.target.value})} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="e.g. Join us for a transformative experience" />
+              <input type="text" value={form.heroSubtitle} onChange={e => setForm({...form, heroSubtitle: e.target.value})} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" placeholder="e.g. Join us for a transformative experience" />
             </FormField>
             <FormField label="Hero Background Image">
               <ImageUploader value={form.heroBackgroundImageUrl} onChange={url => setForm({...form, heroBackgroundImageUrl: url})} />
@@ -127,8 +127,8 @@ export default function HomepageAdminPage() {
         </section>
 
         {/* SECTION 2: TOGGLES */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">2. Action & Timing</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">2. Action & Timing</h2>
           <div className="space-y-6">
             <div className="flex items-center gap-4">
               <input type="checkbox" id="showReg" checked={form.showRegistrationButton} onChange={e => setForm({...form, showRegistrationButton: e.target.checked})} className="h-5 w-5 accent-[#C25627]" />
@@ -136,7 +136,7 @@ export default function HomepageAdminPage() {
             </div>
             {form.showRegistrationButton && (
               <FormField label="Registration Link URL">
-                <input type="url" value={form.registrationLink || ""} onChange={e => setForm({...form, registrationLink: e.target.value})} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" placeholder="https://..." />
+                <input type="url" value={form.registrationLink || ""} onChange={e => setForm({...form, registrationLink: e.target.value})} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" placeholder="https://..." />
               </FormField>
             )}
             <div className="flex items-center gap-4">
@@ -147,8 +147,8 @@ export default function HomepageAdminPage() {
         </section>
 
         {/* SECTION 3: ANNIVERSARY */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">3. Anniversary Banner</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">3. Anniversary Banner</h2>
           <p className="text-sm text-zinc-500 mb-6">A persistent section on the homepage celebrating a major anniversary.</p>
           <div className="space-y-6">
             <div className="flex items-center gap-4 mb-4">
@@ -158,20 +158,20 @@ export default function HomepageAdminPage() {
             {form.anniversaryBannerEnabled && (
               <div className="space-y-4 p-4 border border-black/10 rounded-xl bg-zinc-50/50 dark:bg-white/5">
                 <FormField label="Title">
-                  <input type="text" value={form.anniversary?.title || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, title: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+                  <input type="text" value={form.anniversary?.title || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, title: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" />
                 </FormField>
                 <FormField label="Subtitle">
-                  <input type="text" value={form.anniversary?.subtitle || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, subtitle: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+                  <input type="text" value={form.anniversary?.subtitle || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, subtitle: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" />
                 </FormField>
                 <FormField label="Background Image">
                   <ImageUploader value={form.anniversary?.backgroundImageUrl || ""} onChange={url => setForm({...form, anniversary: {...form.anniversary, backgroundImageUrl: url}})} />
                 </FormField>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField label="Display Start Date">
-                    <input type="datetime-local" value={form.anniversary?.displayStart || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, displayStart: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+                    <input type="datetime-local" value={form.anniversary?.displayStart || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, displayStart: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" />
                   </FormField>
                   <FormField label="Display End Date">
-                    <input type="datetime-local" value={form.anniversary?.displayEnd || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, displayEnd: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+                    <input type="datetime-local" value={form.anniversary?.displayEnd || ""} onChange={e => setForm({...form, anniversary: {...form.anniversary, displayEnd: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none" />
                   </FormField>
                 </div>
               </div>
@@ -180,8 +180,8 @@ export default function HomepageAdminPage() {
         </section>
 
         {/* SECTION 4: MILESTONE */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">4. Milestone Overlay</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">4. Milestone Overlay</h2>
           <p className="text-sm text-zinc-500 mb-6">A celebratory modal overlay that appears once on a visitor's first visit.</p>
           <div className="space-y-6">
             <div className="flex items-center gap-4 mb-4">
@@ -191,7 +191,7 @@ export default function HomepageAdminPage() {
             {form.milestoneOverlayEnabled && (
               <div className="space-y-4 p-4 border border-black/10 rounded-xl bg-zinc-50/50 dark:bg-white/5">
                 <FormField label="Overlay Text">
-                  <textarea value={form.milestone?.text || ""} onChange={e => setForm({...form, milestone: {...form.milestone, text: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none min-h-[80px]" />
+                  <textarea value={form.milestone?.text || ""} onChange={e => setForm({...form, milestone: {...form.milestone, text: e.target.value}})} className="w-full bg-white dark:bg-black/20 border border-border p-3 rounded-xl outline-none min-h-[80px]" />
                 </FormField>
                 <FormField label="Overlay Image">
                   <ImageUploader value={form.milestone?.imageUrl || ""} onChange={url => setForm({...form, milestone: {...form.milestone, imageUrl: url}})} />
@@ -202,8 +202,8 @@ export default function HomepageAdminPage() {
         </section>
 
         {/* SECTION 5: FEATURED CONTENT */}
-        <section className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8">
-          <h2 className="font-serif text-2xl font-bold mb-6 text-[#0B0907] dark:text-white">5. Featured Content</h2>
+        <section className="bg-surface border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="font-serif text-2xl font-bold mb-6 text-foreground">5. Featured Content</h2>
           <div className="space-y-6">
             
             <FormField label="Featured Ministers (Multi-select by ID or name)">
@@ -230,7 +230,7 @@ export default function HomepageAdminPage() {
               <select 
                 value={form.featuredAnnouncement || ""} 
                 onChange={e => setForm({...form, featuredAnnouncement: e.target.value})}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none"
               >
                 <option value="">-- Select Announcement --</option>
                 {announcements.map(a => (

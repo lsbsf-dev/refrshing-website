@@ -66,11 +66,11 @@ export default function AdminSettingsPage() {
     <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase flex items-center gap-3">
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
           <Settings className="h-8 w-8 text-[#C25627]" />
           System Settings
         </h1>
-        <p className="font-sans text-sm text-black/60 dark:text-white/60">
+        <p className="font-sans text-sm text-foreground-muted">
           Global configuration and active edition settings.
         </p>
       </div>
@@ -85,19 +85,19 @@ export default function AdminSettingsPage() {
       {/* Main Settings Card */}
       <form
         onSubmit={handleSave}
-        className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-8 shadow-sm"
+        className="bg-surface border border-border rounded-3xl p-6 sm:p-8 flex flex-col gap-8 shadow-sm"
       >
         <div className="flex flex-col gap-2">
-          <h2 className="font-serif text-xl font-bold uppercase text-[#0B0907] dark:text-[#FCFAF6]">
+          <h2 className="font-serif text-xl font-bold uppercase text-foreground">
             Active Conference Edition
           </h2>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Select the default edition that visitors see when they visit the root URL (e.g. refreshing.org.ng).
           </p>
         </div>
 
         <div className="max-w-md">
-          <label className="block text-xs font-sans font-bold uppercase mb-2 text-[#0B0907] dark:text-[#FCFAF6]">
+          <label className="block text-xs font-sans font-bold uppercase mb-2 text-foreground">
             Default Event ID
           </label>
           <CustomSelect

@@ -150,20 +150,20 @@ export default function AdvertisementsAdminPage() {
           <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Title">
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
             
             <FormField label="Sponsor">
-              <input type="text" value={sponsor} onChange={(e) => setSponsor(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="text" value={sponsor} onChange={(e) => setSponsor(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
           </div>
 
           <FormField label="Description (Plain text)">
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none min-h-[80px]" />
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none min-h-[80px]" />
           </FormField>
 
           <FormField label="Link URL">
-            <input type="url" placeholder="https://..." value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+            <input type="url" placeholder="https://..." value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
           </FormField>
 
           <FormField label="Ad Image">
@@ -175,11 +175,11 @@ export default function AdvertisementsAdminPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Order (Sort)">
-              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
 
             <FormField label="Status">
-              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none">
+              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none">
                 <option value="published">Published</option>
                 <option value="draft">Draft</option>
               </select>

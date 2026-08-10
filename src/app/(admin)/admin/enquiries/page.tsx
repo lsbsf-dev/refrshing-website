@@ -40,11 +40,11 @@ export default function EnquiriesAdminPage() {
     <div className="pb-20 max-w-5xl">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase mb-1 flex items-center gap-3">
+          <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1 flex items-center gap-3">
             <Mailbox className="h-8 w-8 text-[#C25627]" />
             Inbox
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             View all enquiries, testimonies, and prayer requests submitted through the contact page.
           </p>
         </div>
@@ -52,12 +52,12 @@ export default function EnquiriesAdminPage() {
 
       <div className="space-y-6">
         {enquiries.length === 0 ? (
-          <div className="p-12 text-center bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl">
+          <div className="p-12 text-center bg-surface border border-border rounded-2xl">
             <p className="text-zinc-500 text-sm">No messages found for this event.</p>
           </div>
         ) : (
           enquiries.map((enquiry) => (
-            <div key={enquiry.id} className="p-6 bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-2xl shadow-sm">
+            <div key={enquiry.id} className="p-6 bg-surface border border-border rounded-2xl shadow-sm">
               <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-4 mb-4">
                 <div className="flex items-center gap-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
@@ -68,7 +68,7 @@ export default function EnquiriesAdminPage() {
                     {enquiry.type}
                   </span>
                   <div>
-                    <h3 className="font-bold text-[#0B0907] dark:text-white text-sm">
+                    <h3 className="font-bold text-foreground text-sm">
                       {enquiry.name || "Anonymous"}
                     </h3>
                     {enquiry.email && (

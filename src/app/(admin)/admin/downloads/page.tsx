@@ -182,17 +182,17 @@ export default function DownloadsAdminPage() {
         >
           <div className="space-y-4">
           <FormField label="Title">
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
           </FormField>
 
           <FormField label="Description (Plain text)">
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none min-h-[80px]" />
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none min-h-[80px]" />
           </FormField>
 
           <FormField label="File Upload">
             <div className="flex flex-col gap-3">
               {fileUrl ? (
-                <div className="flex items-center gap-3 p-4 bg-zinc-50 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10">
+                <div className="flex items-center gap-3 p-4 bg-surface-muted rounded-xl border border-border">
                   <FileText className="h-6 w-6 text-zinc-400" />
                   <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-[#C25627] hover:underline break-all line-clamp-1">
                     {fileUrl}
@@ -202,7 +202,7 @@ export default function DownloadsAdminPage() {
                   </button>
                 </div>
               ) : (
-                <div className="relative border-2 border-dashed border-black/10 dark:border-white/10 rounded-xl p-8 text-center hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors">
+                <div className="relative border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors">
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -230,17 +230,17 @@ export default function DownloadsAdminPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="File Type (Auto-detected)">
-              <input type="text" value={fileType} onChange={(e) => setFileType(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none uppercase font-mono text-sm" />
+              <input type="text" value={fileType} onChange={(e) => setFileType(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none uppercase font-mono text-sm" />
             </FormField>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Order (Sort)">
-              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none" />
+              <input type="number" value={order} onChange={(e) => setOrder(e.target.value)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none" />
             </FormField>
 
             <FormField label="Status">
-              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-zinc-50 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 rounded-xl outline-none">
+              <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full bg-surface-muted border border-border p-3 rounded-xl outline-none">
                 <option value="published">Published</option>
                 <option value="draft">Draft</option>
               </select>

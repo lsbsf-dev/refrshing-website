@@ -66,6 +66,7 @@ export async function POST(req: Request) {
     name: userData?.name || "",
     email: userData?.email || "",
     role: authUser.customClaims?.role || "viewer",
+    permissions: Array.isArray(authUser.customClaims?.permissions) ? authUser.customClaims.permissions : [],
     allowedEvents: Array.isArray(authUser.customClaims?.allowedEvents) ? authUser.customClaims.allowedEvents : [],
   });
 }

@@ -122,7 +122,7 @@ export default function AdminAnnouncementsPage() {
     <div className="flex flex-col gap-8">
       
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-black/10 dark:border-white/10 pb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-6">
         <div>
           <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-1">
             SITE-WIDE ANNOUNCEMENT BROADCASTS
@@ -157,7 +157,7 @@ export default function AdminAnnouncementsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter announcements..."
-            className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
+            className="w-full bg-surface-alt border border-border focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
           />
         </div>
         <div className="w-full sm:w-48">
@@ -175,7 +175,7 @@ export default function AdminAnnouncementsPage() {
           <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+        <div className="text-center py-20 bg-surface-alt border border-border rounded-3xl">
           <AlertCircle className="h-10 w-10 text-zinc-400 mx-auto mb-4" />
           <p className="font-sans text-sm text-zinc-500">No announcements found.</p>
         </div>
@@ -184,7 +184,7 @@ export default function AdminAnnouncementsPage() {
         {filtered.map((ann) => (
           <div
             key={ann.id}
-            className="p-6 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-[#C25627]/40 transition-all shadow-sm"
+            className="p-6 bg-surface-alt border border-border rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-[#C25627]/40 transition-all shadow-sm"
           >
             <div className="flex flex-col gap-2 flex-1">
               <div className="flex items-center gap-3">
@@ -207,7 +207,7 @@ export default function AdminAnnouncementsPage() {
               <h3 className="font-serif text-xl font-bold mt-1">
                 {ann.title}
               </h3>
-              <p className="font-sans text-xs text-zinc-600 dark:text-white/70 font-light leading-relaxed">
+              <p className="font-sans text-xs text-foreground-muted font-light leading-relaxed">
                 {ann.content}
               </p>
             </div>
@@ -238,9 +238,9 @@ export default function AdminAnnouncementsPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleSave}
-            className="w-full max-w-xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 EDIT ANNOUNCEMENT
               </h3>
@@ -264,7 +264,7 @@ export default function AdminAnnouncementsPage() {
                 onChange={(e) =>
                   setEditingAnn({ ...editingAnn, title: e.target.value })
                 }
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -308,11 +308,11 @@ export default function AdminAnnouncementsPage() {
                 onChange={(e) =>
                   setEditingAnn({ ...editingAnn, content: e.target.value })
                 }
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
+                className="w-full bg-surface-muted border border-border text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setEditingAnn(null)}
@@ -338,9 +338,9 @@ export default function AdminAnnouncementsPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateNew}
-            className="w-full max-w-xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 CREATE ANNOUNCEMENT
               </h3>
@@ -363,7 +363,7 @@ export default function AdminAnnouncementsPage() {
                 value={newAnn.title}
                 onChange={(e) => setNewAnn({ ...newAnn, title: e.target.value })}
                 placeholder="e.g. Refreshing 2026 Registration Notice"
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -404,11 +404,11 @@ export default function AdminAnnouncementsPage() {
                 value={newAnn.content}
                 onChange={(e) => setNewAnn({ ...newAnn, content: e.target.value })}
                 placeholder="Enter announcement text..."
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
+                className="w-full bg-surface-muted border border-border text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewModalOpen(false)}

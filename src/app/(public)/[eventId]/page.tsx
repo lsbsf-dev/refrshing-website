@@ -71,40 +71,40 @@ export default function HomePage() {
 
   const daysConfig = [
     {
+      label: "DAY 1",
+      name: "Monday",
       date: "August 10, 2026",
-      label: "DAY ONE",
-      name: "MONDAY",
-      title: "Unveiled Glory",
-      summary: "Camp arrival, accreditation, hostel allocation, and the Opening Revival Charge: Unveiled Glory.",
+      title: "Monday Evening",
+      summary: "LEADERS CAMP (Moderator: Bro. Obanimi Ogunbisi)"
     },
     {
+      label: "DAY 2",
+      name: "Tuesday",
       date: "August 11, 2026",
-      label: "DAY TWO",
-      name: "TUESDAY",
-      title: "Awakening & Anointing",
-      summary: "A Call to Awakening study, BSF Orientation, and the Destined for Glory Anointing Night.",
+      title: "Morning, Afternoon & Night",
+      summary: "LEADERS CAMP (Morning, Afternoon Session, & Anointing Night)"
     },
     {
+      label: "DAY 3",
+      name: "Wednesday",
       date: "August 12, 2026",
-      label: "DAY THREE",
-      name: "WEDNESDAY",
-      title: "Who May Ascend?",
-      summary: "Morning Open Heaven devotion, and the evening Who May Ascend message.",
+      title: "Morning & Evening",
+      summary: "LEADERS CAMP & GENERAL CAMP (Arrival / Registration)"
     },
     {
+      label: "DAY 4",
+      name: "Thursday",
       date: "August 13, 2026",
-      label: "DAY FOUR",
-      name: "THURSDAY",
-      title: "Greater Generation",
-      summary: "The Greater Generation teaching, Academic & Career seminar, and Refreshing Night encounter.",
+      title: "Morning, Afternoon & Night",
+      summary: "GENERAL CAMP (Academic Seminar & Refreshing Night)"
     },
     {
+      label: "DAY 5",
+      name: "Friday",
       date: "August 14, 2026",
-      label: "DAY FIVE",
-      name: "FRIDAY",
-      title: "Arise: Pure & Undefiled",
-      summary: "Relationship Seminar, Refreshing @40 Grand Celebration, and Thanksgiving & Choice Night.",
-    },
+      title: "Relationship & Celebration",
+      summary: "GENERAL CAMP (Relationship Seminar, Refreshing @40 Celebration & Thanksgiving Choice Night)"
+    }
   ];
 
   const { data: eventData } = useQuery({
@@ -406,7 +406,7 @@ export default function HomePage() {
                 Through our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth.
               </p>
               <Link
-                href="/about"
+                href={`/${ACTIVE_EVENT_ID}/about`}
                 className="group inline-flex items-center gap-2 font-sans text-sm font-extrabold tracking-wider text-[#DDB94E] hover:text-white transition-all duration-300 mt-2 active-press"
               >
                 <span className="border-b border-[#DDB94E] group-hover:border-white pb-0.5 uppercase">
@@ -445,7 +445,7 @@ export default function HomePage() {
             ).map((min) => (
               <Link
                 key={min.id}
-                href={`/ministers/${min.slug}`}
+                href={`/${ACTIVE_EVENT_ID}/ministers/${min.slug}`}
                 className="group flex flex-col bg-white border border-black/10 rounded-2xl overflow-hidden hover:border-[#C25627]/40 hover:shadow-xl transition-all duration-300 p-5 active-press"
               >
                 <div className="flex items-center gap-4">
@@ -478,7 +478,7 @@ export default function HomePage() {
 
           <div data-reveal className="flex justify-center mt-12">
             <Link
-              href="/ministers"
+              href={`/${ACTIVE_EVENT_ID}/ministers`}
               className="group inline-flex items-center gap-3 px-8 py-3.5 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-xs tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 rounded-full active-press"
             >
               <span>Explore All Ministers →</span>
@@ -571,7 +571,7 @@ export default function HomePage() {
             )}
 
             <Link
-              href="/programme"
+              href={`/${ACTIVE_EVENT_ID}/programme`}
               className="group inline-flex items-center gap-2 font-sans text-sm font-extrabold tracking-wider text-[#C25627] hover:text-[#0B0907] transition-all duration-300 mt-4 active-press"
             >
               <span className="border-b border-[#C25627] group-hover:border-black pb-0.5 uppercase">
@@ -585,7 +585,7 @@ export default function HomePage() {
             {daysConfig.map((item, idx) => (
               <Link
                 key={idx}
-                href={`/programme?day=${idx}`}
+                href={`/${ACTIVE_EVENT_ID}/programme?day=${idx}`}
                 data-reveal
                 className="group flex flex-col sm:flex-row items-start gap-6 py-6 border-b border-black/10 hover:border-[#C25627]/20 transition-all duration-300 text-left active-press cursor-pointer block"
               >
@@ -723,7 +723,7 @@ export default function HomePage() {
 
           <div data-reveal className="mt-16">
             <Link
-              href="/gallery"
+              href={`/${ACTIVE_EVENT_ID}/gallery`}
               className="group inline-flex items-center gap-3 px-8 py-3.5 border border-black/15 hover:border-black/35 text-[#0B0907] font-sans font-bold text-xs tracking-widest uppercase transition-all duration-300 bg-black/5 hover:bg-black/10 rounded-full active-press"
             >
               <span>Explore Full Gallery →</span>

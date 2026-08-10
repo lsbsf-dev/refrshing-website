@@ -145,22 +145,22 @@ export default function AdminCheckInPage() {
       </div>
 
       {/* Header section with Stats */}
-      <div className="bg-white dark:bg-[#181612] rounded-3xl p-6 sm:p-8 border border-black/5 dark:border-white/5 shadow-xl shadow-black/5 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-black/5 dark:border-white/5 shadow-xl shadow-black/5 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C25627]/20 to-transparent rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3" />
         
         <div className="z-10">
           <span className="font-mono text-[10px] text-[#C25627] uppercase tracking-widest block font-bold mb-2">Live Operations</span>
-          <h1 className="font-serif text-3xl md:text-5xl font-bold text-[#0B0907] dark:text-[#FCFAF6] uppercase flex items-center gap-3">
+          <h1 className="font-serif text-3xl md:text-5xl font-bold text-foreground uppercase flex items-center gap-3">
             Check-In Desk
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60 mt-3 max-w-md leading-relaxed">
+          <p className="font-sans text-sm text-foreground-muted mt-3 max-w-md leading-relaxed">
             Quickly find and admit attendees using name, last 4 digits of phone, church, or registration ID.
           </p>
         </div>
 
         <div className="flex gap-4 z-10 w-full md:w-auto">
-           <div className="bg-zinc-50 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex-1 md:w-32 flex flex-col items-center justify-center text-center shadow-sm">
-             <span className="text-3xl font-serif font-light text-[#0B0907] dark:text-[#FCFAF6]">{totalAttendees}</span>
+           <div className="bg-surface-muted border border-black/5 dark:border-white/5 rounded-2xl p-4 flex-1 md:w-32 flex flex-col items-center justify-center text-center shadow-sm">
+             <span className="text-3xl font-serif font-light text-foreground">{totalAttendees}</span>
              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider mt-1">Found</span>
            </div>
            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 flex-1 md:w-32 flex flex-col items-center justify-center text-center shadow-sm">
@@ -173,7 +173,7 @@ export default function AdminCheckInPage() {
       {/* Search area with premium style */}
       <div className="relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-[#C25627] to-[#E05320] rounded-[2rem] blur-xl opacity-20 group-hover:opacity-30 transition-opacity -z-10" />
-        <div className="relative bg-white/80 dark:bg-[#181612]/80 backdrop-blur-xl border-2 border-transparent focus-within:border-[#C25627] rounded-[2rem] p-2 flex items-center transition-colors shadow-lg">
+        <div className="relative bg-surface/80 backdrop-blur-xl border-2 border-transparent focus-within:border-[#C25627] rounded-[2rem] p-2 flex items-center transition-colors shadow-lg">
           <div className="pl-6 pr-4">
             <Search className="h-6 w-6 text-zinc-400 group-focus-within:text-[#C25627] transition-colors" />
           </div>
@@ -183,14 +183,14 @@ export default function AdminCheckInPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             disabled={!selectedEventId}
-            className="w-full bg-transparent text-lg md:text-xl font-sans py-4 outline-none text-[#0B0907] dark:text-[#FCFAF6] placeholder:text-zinc-400"
+            className="w-full bg-transparent text-lg md:text-xl font-sans py-4 outline-none text-foreground placeholder:text-zinc-400"
             autoFocus
           />
         </div>
       </div>
 
       {/* Results area */}
-      <div className="bg-white/60 dark:bg-[#181612]/60 backdrop-blur-2xl border border-black/10 dark:border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+      <div className="bg-surface/60 backdrop-blur-2xl border border-border rounded-[2.5rem] overflow-hidden shadow-2xl">
         {filteredAttendees.length === 0 ? (
           <div className="p-20 text-center flex flex-col items-center justify-center">
             <div className="bg-black/5 dark:bg-white/5 p-6 rounded-full mb-4">
@@ -207,10 +207,10 @@ export default function AdminCheckInPage() {
                   {/* Top: Avatar and Name */}
                   <div className="flex items-center gap-4 mb-5">
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 border border-white dark:border-zinc-700 shadow-inner">
-                       <span className="font-serif font-bold text-zinc-600 dark:text-zinc-400 text-lg">{attendee.fullName.charAt(0)}</span>
+                       <span className="font-serif font-bold text-foreground-muted text-lg">{attendee.fullName.charAt(0)}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-base text-[#0B0907] dark:text-[#FCFAF6] truncate">{attendee.fullName}</div>
+                      <div className="font-bold text-base text-foreground truncate">{attendee.fullName}</div>
                       <div className="font-mono text-xs text-[#C25627] mt-0.5 tracking-wider truncate">{attendee.id}</div>
                     </div>
                   </div>
@@ -223,7 +223,7 @@ export default function AdminCheckInPage() {
                     </div>
                     <div className="flex items-start gap-2.5">
                       <MapPin className="h-4 w-4 text-zinc-400 shrink-0 mt-0.5" />
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2" title={attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "No Church listed"}>
+                      <span className="text-sm text-foreground-muted line-clamp-2" title={attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "No Church listed"}>
                         {attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "—"}
                       </span>
                     </div>
@@ -231,7 +231,7 @@ export default function AdminCheckInPage() {
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
                         attendee.memberStatus.toLowerCase().includes('exec') 
                           ? 'bg-purple-500/10 text-purple-600 border border-purple-500/20' 
-                          : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-400'
+                          : 'bg-surface-hover text-foreground-muted'
                       }`}>
                         {attendee.memberStatus}
                       </span>

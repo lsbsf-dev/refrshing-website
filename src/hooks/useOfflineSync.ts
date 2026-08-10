@@ -64,38 +64,37 @@ export function useOfflineSync(eventId: string) {
     
     setIsSyncing(true);
     try {
-      const pendingQueue = await db.checkinQueue
-        .where('eventId').equals(eventId)
-        .and(item => item.status === 'pending' || item.status === 'pending-undo')
-        .toArray();
+      let hasMore = true;
+      while (hasMore) {
+        const pendingQueue = await db.checkinQueue
+          .where('eventId').equals(eventId)
+          .and(item => item.status === 'pending' || item.status === 'pending-undo')
+          .toArray();
 
-      if (pendingQueue.length === 0) {
-        setIsSyncing(false);
-        return;
-      }
+        if (pendingQueue.length === 0) {
+          hasMore = false;
+          break;
+        }
 
-      const functions = getFunctions(app);
-      const markCheckedIn = httpsCallable<{ eventId: string, attendeeId: string }, any>(functions, "markCheckedIn");
-      const undoCheckInCall = httpsCallable<{ eventId: string, attendeeId: string, reason: string }, any>(functions, "undoCheckIn");
+        const functions = getFunctions(app);
+        const markCheckedIn = httpsCallable<{ eventId: string, attendeeId: string }, any>(functions, "markCheckedIn");
+        const undoCheckInCall = httpsCallable<{ eventId: string, attendeeId: string, reason: string }, any>(functions, "undoCheckIn");
 
-      for (const item of pendingQueue) {
-        try {
-          if (item.status === 'pending') {
-            await markCheckedIn({ eventId: item.eventId, attendeeId: item.attendeeId });
-          } else if (item.status === 'pending-undo') {
-            await undoCheckInCall({ eventId: item.eventId, attendeeId: item.attendeeId, reason: "Manual undo from check-in app" });
-          }
-          await db.checkinQueue.update(item.id!, { status: 'synced' });
-        } catch (error: any) {
-          // Check if error is because they are already checked in
-          // Firebase wraps HttpsError codes with 'functions/'
-          if (item.status === 'pending' && (error?.code === 'functions/already-exists' || error?.details?.status === 'already_checked_in')) {
-            // Silently mark as conflict and resolved
-            console.log(`Conflict resolved silently for ${item.attendeeId}: Already checked in elsewhere.`);
-            await db.checkinQueue.update(item.id!, { status: 'conflict' });
-          } else {
-            // Unhandled error (maybe permission or network), leave as pending for next retry
-            console.error(`Error syncing queue item ${item.id}:`, error);
+        for (const item of pendingQueue) {
+          try {
+            if (item.status === 'pending') {
+              await markCheckedIn({ eventId: item.eventId, attendeeId: item.attendeeId });
+            } else if (item.status === 'pending-undo') {
+              await undoCheckInCall({ eventId: item.eventId, attendeeId: item.attendeeId, reason: "Manual undo from check-in app" });
+            }
+            await db.checkinQueue.update(item.id!, { status: 'synced' });
+          } catch (error: any) {
+            if (item.status === 'pending' && (error?.code === 'functions/already-exists' || error?.details?.status === 'already_checked_in')) {
+              console.log(`Conflict resolved silently for ${item.attendeeId}: Already checked in elsewhere.`);
+              await db.checkinQueue.update(item.id!, { status: 'conflict' });
+            } else {
+              console.error(`Error syncing queue item ${item.id}:`, error);
+            }
           }
         }
       }
@@ -104,10 +103,14 @@ export function useOfflineSync(eventId: string) {
       await new Promise(resolve => setTimeout(resolve, 1500));
       // Sync down again to get canonical timestamps
       await syncDown();
+      
+      // Invalidate global queries so other pages (Attendees, Dashboard) refresh automatically
+      queryClient.invalidateQueries({ queryKey: ["admin", "attendees", eventId] });
+      queryClient.invalidateQueries({ queryKey: ["analytics", "summary", eventId] });
     } finally {
       setIsSyncing(false);
     }
-  }, [eventId, isOnline, isSyncing, syncDown]);
+  }, [eventId, isOnline, isSyncing, syncDown, queryClient]);
 
   // Initial sync & Listen to online status for syncUp
   useEffect(() => {

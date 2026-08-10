@@ -5,6 +5,11 @@
   /* Warm, illuminated base palette */
   --background: #FAF6EE;          /* Soft warm cream */
   --background-alt: #F2EDE3;      /* Aged warm paper */
+  --surface: #FFFFFF;             /* Crisp white card */
+  --surface-alt: #F9F5EC;         /* Off-white panel */
+  --surface-muted: #F4F1E9;       /* Muted panel (zinc-50 approx) */
+  --surface-hover: #EBE6DC;       /* Hover state (zinc-100 approx) */
+  
   --foreground: #1E1B16;          /* Deep warm brown-black */
   --foreground-muted: #7A7062;    /* Warm muted text */
 
@@ -36,6 +41,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-background-alt: var(--background-alt);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+  
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
   --color-primary: var(--primary);
@@ -67,6 +77,11 @@ body {
 html.dark {
   --background: #0B0907;
   --background-alt: #181612;
+  --surface: #181612;
+  --surface-alt: #14120E;
+  --surface-muted: rgba(255, 255, 255, 0.05); /* white/5 */
+  --surface-hover: rgba(255, 255, 255, 0.1);  /* white/10 */
+  
   --foreground: #FCFAF6;
   /* WCAG AA (4.5:1) compliant muted text against #0B0907. #A39A8E provides ~7.1:1 contrast ratio */
   --foreground-muted: #A39A8E;
@@ -77,9 +92,6 @@ html.dark {
   color: var(--foreground);
 }
 
-.dark * {
-  border-color: var(--border);
-}
 
 /* ─── Flyer/Event Visual Identity Styling ─── */
 

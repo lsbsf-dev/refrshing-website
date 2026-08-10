@@ -150,7 +150,7 @@ export default function AdminMinistersPage() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-[#14120E] p-4 rounded-2xl border border-black/10 dark:border-white/10">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-surface-alt p-4 rounded-2xl border border-border">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
           <input
@@ -158,7 +158,7 @@ export default function AdminMinistersPage() {
             placeholder="Search directory..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 focus:border-[#C25627] text-sm py-2.5 pl-10 pr-10 rounded-xl outline-none transition-all"
+            className="w-full bg-surface-muted border border-border focus:border-[#C25627] text-sm py-2.5 pl-10 pr-10 rounded-xl outline-none transition-all"
           />
           {searchQuery && (
             <button
@@ -193,7 +193,7 @@ export default function AdminMinistersPage() {
           <p className="text-sm">{(error as Error)?.message || "Permission Denied or Unknown Error"}</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+        <div className="text-center py-20 bg-surface-alt border border-border rounded-3xl">
           <AlertCircle className="h-10 w-10 text-zinc-400 mx-auto mb-4" />
           <p className="font-sans text-sm text-zinc-500">No ministers found.</p>
         </div>
@@ -202,11 +202,11 @@ export default function AdminMinistersPage() {
         {filtered.map((minister) => (
           <div
             key={minister.id}
-            className="group bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl p-5 hover:border-[#C25627]/50 transition-all flex flex-col gap-4 shadow-sm relative overflow-hidden"
+            className="group bg-surface-alt border border-border rounded-3xl p-5 hover:border-[#C25627]/50 transition-all flex flex-col gap-4 shadow-sm relative overflow-hidden"
           >
             <div className="flex items-center gap-4">
               {/* Avatar */}
-              <div className="h-16 w-16 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 relative shrink-0 border border-black/10 dark:border-white/10">
+              <div className="h-16 w-16 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 relative shrink-0 border border-border">
                 {minister.photoUrl ? (
                   <img
                     src={minister.photoUrl}
@@ -230,7 +230,7 @@ export default function AdminMinistersPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-between pt-4 border-t border-border">
               <span className="font-mono text-[10px] text-zinc-400 uppercase truncate max-w-[140px]">
                 ID: {minister.slug}
               </span>
@@ -262,9 +262,9 @@ export default function AdminMinistersPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleSave}
-            className="w-full max-w-xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <span className="font-mono text-[10px] text-[#C25627] uppercase tracking-widest block font-bold">
                   MINISTER MANAGEMENT
@@ -294,7 +294,7 @@ export default function AdminMinistersPage() {
                   onChange={(e) =>
                     setEditingMinister({ ...editingMinister, name: e.target.value })
                   }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
 
@@ -338,7 +338,7 @@ export default function AdminMinistersPage() {
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setEditingMinister(null)}
@@ -364,9 +364,9 @@ export default function AdminMinistersPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateNew}
-            className="w-full max-w-xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <span className="font-mono text-[10px] text-[#C25627] uppercase tracking-widest block font-bold">
                   DIRECTORY ENTRY
@@ -395,7 +395,7 @@ export default function AdminMinistersPage() {
                   value={newMinister.name}
                   onChange={(e) => setNewMinister({ ...newMinister, name: e.target.value })}
                   placeholder="e.g. Rev'd. John Doe"
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
 
@@ -430,11 +430,11 @@ export default function AdminMinistersPage() {
                 value={newMinister.biography}
                 onChange={(e) => setNewMinister({ ...newMinister, biography: e.target.value })}
                 placeholder="Enter official biography..."
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
+                className="w-full bg-surface-muted border border-border text-xs font-sans p-4 rounded-xl outline-none leading-relaxed"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewModalOpen(false)}

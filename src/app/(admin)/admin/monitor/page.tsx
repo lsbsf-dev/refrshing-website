@@ -103,11 +103,11 @@ export default function AdminMonitorPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase flex items-center gap-3">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
             <Activity className="h-8 w-8 text-[#C25627]" />
             Camp Monitor
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Real-time live dashboard for registrations and check-ins.
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function AdminMonitorPage() {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-[#181612] p-4 rounded-2xl border border-black/10 dark:border-white/10 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-surface p-4 rounded-2xl border border-border shadow-sm">
         <CustomSelect
           options={[
             { value: "all", label: "All Conferences" },
@@ -180,12 +180,12 @@ export default function AdminMonitorPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-[#181612] p-6 rounded-3xl border border-black/10 dark:border-white/10 shadow-sm flex flex-col gap-2">
+        <div className="bg-surface p-6 rounded-3xl border border-border shadow-sm flex flex-col gap-2">
           <div className="flex items-center gap-2 text-zinc-500">
             <Users className="h-5 w-5" />
             <h3 className="font-bold text-sm uppercase tracking-wider">Registrations</h3>
           </div>
-          <p className="font-serif text-5xl font-bold text-[#0B0907] dark:text-[#FCFAF6]">
+          <p className="font-serif text-5xl font-bold text-foreground">
             {totalRegistered.toLocaleString()}
           </p>
         </div>
@@ -214,10 +214,10 @@ export default function AdminMonitorPage() {
       </div>
 
       {/* Recent Check-ins */}
-      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
+      <div className="bg-surface border border-border rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
         <div className="flex items-center gap-2 text-zinc-500">
           <Clock className="h-5 w-5" />
-          <h2 className="font-serif text-xl font-bold text-[#0B0907] dark:text-[#FCFAF6]">Recent Check-ins</h2>
+          <h2 className="font-serif text-xl font-bold text-foreground">Recent Check-ins</h2>
         </div>
         
         {recentCheckIns.length === 0 ? (
@@ -227,9 +227,9 @@ export default function AdminMonitorPage() {
         ) : (
           <div className="space-y-4">
             {recentCheckIns.map(a => (
-              <div key={a.id} className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 dark:bg-white/5 border border-black/5 dark:border-white/5 animate-fade-in">
+              <div key={a.id} className="flex items-center justify-between p-4 rounded-2xl bg-surface-muted border border-black/5 dark:border-white/5 animate-fade-in">
                 <div>
-                  <p className="font-bold text-[#0B0907] dark:text-[#FCFAF6]">{a.fullName}</p>
+                  <p className="font-bold text-foreground">{a.fullName}</p>
                   <p className="text-xs text-zinc-500 capitalize">{a.conferenceName || a.conferenceId.replace('_', ' ')} • {a.associationName || a.campusFellowshipName || "-"}</p>
                 </div>
                 <div className="text-right">

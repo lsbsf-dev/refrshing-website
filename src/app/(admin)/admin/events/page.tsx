@@ -115,10 +115,10 @@ export default function AdminEventsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#0B0907] dark:text-[#FCFAF6] mb-2 uppercase">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase">
             Event Editions
           </h1>
-          <p className="font-sans text-sm text-black/60 dark:text-white/60">
+          <p className="font-sans text-sm text-foreground-muted">
             Manage all conference editions, themes, and schedules.
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function AdminEventsPage() {
       )}
 
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-[#181612] p-2 border border-black/10 dark:border-white/10 rounded-2xl shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-surface p-2 border border-border rounded-2xl shadow-sm">
         <div className="relative w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
           <input
@@ -147,7 +147,7 @@ export default function AdminEventsPage() {
             placeholder="Search by name or theme..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none text-sm font-sans py-3 pl-10 pr-4 outline-none text-[#0B0907] dark:text-[#FCFAF6] placeholder:text-zinc-500"
+            className="w-full bg-transparent border-none text-sm font-sans py-3 pl-10 pr-4 outline-none text-foreground placeholder:text-zinc-500"
           />
           {searchQuery && (
              <button
@@ -161,11 +161,11 @@ export default function AdminEventsPage() {
       </div>
 
       {/* Table / List */}
-      <div className="bg-white dark:bg-[#181612] border border-black/10 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-black/10 dark:border-white/10">
+              <tr className="border-b border-border">
                 <th className="px-6 py-4 font-sans text-xs font-bold text-black/50 dark:text-white/50 uppercase tracking-wider">
                   Event Details
                 </th>
@@ -206,10 +206,10 @@ export default function AdminEventsPage() {
                   <tr key={event.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
-                        <span className="font-serif text-lg font-bold text-[#0B0907] dark:text-[#FCFAF6]">
+                        <span className="font-serif text-lg font-bold text-foreground">
                           {event.name}
                         </span>
-                        <span className="font-sans text-xs text-black/60 dark:text-white/60 flex items-center gap-2">
+                        <span className="font-sans text-xs text-foreground-muted flex items-center gap-2">
                           <span className="font-bold text-[#DDB94E]">THEME:</span> {event.theme}
                           {event.isMilestone && (
                             <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] font-bold uppercase rounded-full">
@@ -268,9 +268,9 @@ export default function AdminEventsPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleSave}
-            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 EDIT EVENT
               </h3>
@@ -293,7 +293,7 @@ export default function AdminEventsPage() {
                   required
                   value={editingEvent.name}
                   onChange={(e) => setEditingEvent({ ...editingEvent, name: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -318,7 +318,7 @@ export default function AdminEventsPage() {
                 required
                 value={editingEvent.theme}
                 onChange={(e) => setEditingEvent({ ...editingEvent, theme: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -331,7 +331,7 @@ export default function AdminEventsPage() {
                 required
                 value={editingEvent.scripture}
                 onChange={(e) => setEditingEvent({ ...editingEvent, scripture: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -345,7 +345,7 @@ export default function AdminEventsPage() {
                   required
                   value={editingEvent.startDate}
                   onChange={(e) => setEditingEvent({ ...editingEvent, startDate: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -357,7 +357,7 @@ export default function AdminEventsPage() {
                   required
                   value={editingEvent.endDate}
                   onChange={(e) => setEditingEvent({ ...editingEvent, endDate: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -371,7 +371,7 @@ export default function AdminEventsPage() {
                 required
                 value={editingEvent.venue}
                 onChange={(e) => setEditingEvent({ ...editingEvent, venue: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -404,7 +404,7 @@ export default function AdminEventsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border mt-2">
               <button
                 type="button"
                 onClick={() => setEditingEvent(null)}
@@ -430,9 +430,9 @@ export default function AdminEventsPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateNew}
-            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 CREATE EVENT
               </h3>
@@ -460,7 +460,7 @@ export default function AdminEventsPage() {
                     const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
                     setNewEvent({ ...newEvent, name, id });
                   }}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -473,7 +473,7 @@ export default function AdminEventsPage() {
                   placeholder="e.g. refreshing-2026"
                   value={newEvent.id}
                   onChange={(e) => setNewEvent({ ...newEvent, id: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -488,7 +488,7 @@ export default function AdminEventsPage() {
                 placeholder="e.g. Greater Glory"
                 value={newEvent.theme}
                 onChange={(e) => setNewEvent({ ...newEvent, theme: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -502,7 +502,7 @@ export default function AdminEventsPage() {
                 placeholder="e.g. Haggai 2:9"
                 value={newEvent.scripture}
                 onChange={(e) => setNewEvent({ ...newEvent, scripture: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -516,7 +516,7 @@ export default function AdminEventsPage() {
                   required
                   value={newEvent.startDate}
                   onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
               <div>
@@ -528,7 +528,7 @@ export default function AdminEventsPage() {
                   required
                   value={newEvent.endDate}
                   onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -542,7 +542,7 @@ export default function AdminEventsPage() {
                 required
                 value={newEvent.venue}
                 onChange={(e) => setNewEvent({ ...newEvent, venue: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -575,7 +575,7 @@ export default function AdminEventsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10 mt-2">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border mt-2">
               <button
                 type="button"
                 onClick={() => setIsNewModalOpen(false)}

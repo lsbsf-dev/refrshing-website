@@ -132,7 +132,7 @@ export default function AdminResourcesPage() {
     <div className="flex flex-col gap-8">
       
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-black/10 dark:border-white/10 pb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-6">
         <div>
           <span className="font-mono text-xs font-bold tracking-[0.3em] text-[#DDB94E] uppercase block mb-1">
             RESOURCES BOOKLET CONTROL
@@ -166,7 +166,7 @@ export default function AdminResourcesPage() {
             placeholder="Search resources by title or author..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm outline-none focus:border-[#C25627] transition-colors"
+            className="w-full bg-surface-alt border border-border rounded-xl py-3 pl-11 pr-4 text-sm outline-none focus:border-[#C25627] transition-colors"
           />
         </div>
         <div className="w-full sm:w-56 shrink-0">
@@ -189,7 +189,7 @@ export default function AdminResourcesPage() {
           <p className="text-sm">{(error as Error)?.message || "Permission Denied or Unknown Error"}</p>
         </div>
       ) : filteredResources.length === 0 ? (
-        <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">
+        <div className="text-center py-20 bg-surface-alt border border-border rounded-3xl">
           <p className="font-sans text-sm text-zinc-500">No resources found matching your search.</p>
         </div>
       ) : (
@@ -197,7 +197,7 @@ export default function AdminResourcesPage() {
         {filteredResources.map((res) => (
           <div
             key={res.id}
-            className="p-6 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-2xl flex flex-col justify-between gap-5 hover:border-[#C25627]/40 transition-all shadow-sm"
+            className="p-6 bg-surface-alt border border-border rounded-2xl flex flex-col justify-between gap-5 hover:border-[#C25627]/40 transition-all shadow-sm"
           >
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
@@ -217,7 +217,7 @@ export default function AdminResourcesPage() {
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-between pt-4 border-t border-border">
               <span className="font-mono text-[10px] text-zinc-400 uppercase">
                 slug: {res.slug}
               </span>
@@ -248,9 +248,9 @@ export default function AdminResourcesPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleSave}
-            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 EDIT RESOURCE
               </h3>
@@ -274,7 +274,7 @@ export default function AdminResourcesPage() {
                 onChange={(e) =>
                   setEditingResource({ ...editingResource, title: e.target.value })
                 }
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -289,7 +289,7 @@ export default function AdminResourcesPage() {
                   onChange={(e) =>
                     setEditingResource({ ...editingResource, category: e.target.value as any })
                   }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
 
@@ -303,7 +303,7 @@ export default function AdminResourcesPage() {
                   onChange={(e) =>
                     setEditingResource({ ...editingResource, author: e.target.value })
                   }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -320,7 +320,7 @@ export default function AdminResourcesPage() {
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setEditingResource(null)}
@@ -346,9 +346,9 @@ export default function AdminResourcesPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateNew}
-            className="w-full max-w-2xl bg-white dark:bg-[#181612] text-[#0B0907] dark:text-[#FCFAF6] border border-black/15 dark:border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="font-serif text-2xl font-bold uppercase">
                 ADD NEW RESOURCE
               </h3>
@@ -372,7 +372,7 @@ export default function AdminResourcesPage() {
                 onChange={(e) =>
                   setNewResource({ ...newResource, title: e.target.value })
                 }
-                className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>
 
@@ -400,7 +400,7 @@ export default function AdminResourcesPage() {
                   onChange={(e) =>
                     setNewResource({ ...newResource, author: e.target.value })
                   }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -417,7 +417,7 @@ export default function AdminResourcesPage() {
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/10 dark:border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewModalOpen(false)}

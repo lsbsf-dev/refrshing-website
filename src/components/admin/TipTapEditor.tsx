@@ -35,7 +35,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
     }`;
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-black/10 dark:border-white/10 p-2 bg-zinc-50 dark:bg-black/20 rounded-t-xl">
+    <div className="flex flex-wrap items-center gap-1 border-b border-border p-2 bg-zinc-50 dark:bg-black/20 rounded-t-xl">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={btnClass(editor.isActive("bold"))}
@@ -151,7 +151,7 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
   }, [content, editor]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-white dark:bg-[#181612] rounded-xl overflow-hidden">
+    <div className="flex flex-col w-full h-full bg-surface rounded-xl overflow-hidden">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} className="flex-1 overflow-y-auto cursor-text" />
     </div>
