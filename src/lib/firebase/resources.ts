@@ -73,13 +73,22 @@ export async function getResourceBySlug(eventId: string, slug: string): Promise<
 
 export async function updateResource(eventId: string, resourceId: string, data: Partial<Resource>): Promise<void> {
   const ref = doc(db, "events", eventId, "resources", resourceId).withConverter(resourceConverter);
-  await setDoc(ref, data as Resource, { merge: true });
+  // Ensure publishedAt field exists for Firestore conversion
+  const safeData: Resource = {
+    ...data as any,
+    publishedAt: (data as any).publishedAt || "",
+  } as Resource;
+  await setDoc(ref, safeData, { merge: true });
 }
 
 export async function createResource(eventId: string, resource: Omit<Resource, "id">): Promise<string> {
   const slug = resource.slug || resource.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const ref = doc(db, "events", eventId, "resources", slug).withConverter(resourceConverter);
-  await setDoc(ref, resource as Resource);
+  const safeResource = {
+    ...resource,
+    publishedAt: resource.publishedAt || "",
+  } as Resource;
+  await setDoc(ref, safeResource);
   return slug;
 }
 
