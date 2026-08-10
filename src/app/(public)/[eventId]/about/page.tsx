@@ -8,6 +8,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { REGISTRATION_URL } from "@/lib/constants";
+import { ThemeArchiveEntry } from "@/lib/firebase/cms";
 import { Cross, BookOpen, Building2, GraduationCap, Globe } from "lucide-react";
 
 export const metadata = {
@@ -46,12 +47,25 @@ const pillars = [
 
 import { TimelineSection } from "@/components/public/TimelineSection";
 import { CommitteeSection } from "@/components/public/CommitteeSection";
-import { getEventScopedDocs, AboutSettings } from "@/lib/firebase/cms";
-// Server-side data fetching; no client hooks needed
-export default async function AboutPage({ params }: { params: Promise<{ eventId: string }> }) {
-  const { eventId } = await params;
-  const settingsDocs = await getEventScopedDocs<AboutSettings>(eventId, "aboutSettings");
-  const settings = settingsDocs[0] || null;
+// Static content for About page, no fetching required
+const staticSettings = {
+  aboutLsbsfHtml: `
+    <p>The Nigerian Baptist Convention's Christian witness and ministry in institutions of higher learning are in response to the Lord's command to make the gospel known to all persons.</p>
+    <p>Because schools are engaged in the quest for knowledge and truth of which God is the Source, the Christian perspective is essential to realize the ultimate in education. The unique nature of the student life and campus community demands a specialized ministry of the church to the individual need of students for redemption and Christian nurture within that community.</p>`,
+  historyHtml: `
+    <p>Since its inception in 1986, the Lagos State Baptist Student Fellowship (LSBSF) has served as a central pillar for student ministry across the state. What began as a passionate network of prayer movements has grown into a unified, transformative force.</p>
+    <p>Through our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth. As we reach this historic 40th anniversary, we celebrate the lives transformed, the ministries birthed, and the enduring global legacy built by those who came before us.</p>`,
+  visionHtml: `
+    <p>Our vision placeholder content.</p>`,
+  missionHtml: `
+    <p>Our mission placeholder content.</p>`,
+  // Explicitly type the archive as ThemeArchiveEntry[] to avoid never[] inference
+  themeArchive: [] as ThemeArchiveEntry[]
+};
+export default function AboutPage({ params }: { params: { eventId: string } }) {
+  const settings = staticSettings;
+  const eventId = params.eventId;
+  // const settings = staticSettings; // duplicate removed
 
 
   return (
