@@ -117,9 +117,9 @@ export async function POST(request: Request) {
             errors.push({ field: fieldName as keyof AttendeeData, code: 'missing', message: 'Association / Campus is required for this conference.' });
           } else if (!resolvedAssocId) {
              const searchTarget = cleanStr(rawAssoc);
-             const possibleAssocs = associationsMaster.filter(a => a.conferenceId === resolvedConfId);
+             const possibleAssocs = associationsMaster.filter((a: any) => a.conferenceId === resolvedConfId);
              
-             const exactMatch = possibleAssocs.find(a => cleanStr(a.name) === searchTarget);
+             const exactMatch = possibleAssocs.find((a: any) => cleanStr(a.name) === searchTarget);
              
              if (exactMatch) {
                 resolvedAssocId = exactMatch.id;
@@ -152,9 +152,9 @@ export async function POST(request: Request) {
              errors.push({ field: 'churchRaw', code: 'missing', message: 'Church is required for Lagos East/West/Central conferences.' });
            } else if (!resolvedChurchId) {
               const searchTarget = cleanStr(rawChurch);
-              const possibleChurches = resolvedAssocId ? churchesMaster.filter(c => c.associationId === resolvedAssocId) : churchesMaster;
+              const possibleChurches = resolvedAssocId ? churchesMaster.filter((c: any) => c.associationId === resolvedAssocId) : churchesMaster;
               
-              const exactMatch = possibleChurches.find(c => {
+              const exactMatch = possibleChurches.find((c: any) => {
                  if (cleanStr(c.canonicalName) === searchTarget) return true;
                  if (c.aliases && Array.isArray(c.aliases)) {
                     return c.aliases.some((alias: string) => cleanStr(alias) === searchTarget);
@@ -362,7 +362,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
     const snapshot = await adminDb.collection('events').doc(eventId).collection('attendees').get();
-    return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map(d => d.data()) });
+    return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map((d: any) => d.data()) });
   } catch(e: any) {
     return NextResponse.json({ error: e.message });
   }
