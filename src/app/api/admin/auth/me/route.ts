@@ -30,10 +30,10 @@ export async function POST(req: Request) {
       name: userData?.name || "",
       email: userData?.email || "",
       role: authUser.customClaims?.role || "viewer",
-      allowedEvents: authUser.customClaims?.allowedEvents || [],
+      allowedEvents: Array.isArray(authUser.customClaims?.allowedEvents) ? authUser.customClaims.allowedEvents : [],
     });
   } catch (error: any) {
-    console.error("Auth Session API Error:", error);
+    console.error("Auth Session API Error");
     return NextResponse.json({ error: "Failed to verify session" }, { status: 500 });
   }
 }

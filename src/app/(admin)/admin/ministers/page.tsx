@@ -17,12 +17,13 @@ import toast from "react-hot-toast";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
 export default function AdminMinistersPage() {
-  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
+  const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: ministersList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "ministers", ACTIVE_EVENT_ID],
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
+    enabled: !isEventLoading && !!ACTIVE_EVENT_ID,
   });
 
   const [searchQuery, setSearchQuery] = useState("");

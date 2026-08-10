@@ -38,18 +38,14 @@ export const ministerConverter: FirestoreDataConverter<Minister> = {
 
 export async function getMinisters(eventId: string): Promise<Minister[]> {
   try {
-    const ref = collection(db, "ministers").withConverter(ministerConverter);
-    const q = query(
-      ref,
-      where("eventId", "==", eventId),
-      where("status", "==", "published")
-    );
+    const ref = collection(db, "events", eventId, "ministers").withConverter(ministerConverter);
+    const q = query(ref, where("status", "==", "published"));
     const snap = await getDocs(q);
-    if (snap.empty) return [];
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getMinisters failed:", error);
-    return [];
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Firestore query getMinisters failed:", error);
+    throw new Error(`Failed to load ministers for ${eventId}: ${message}`);
   }
 }
 
@@ -58,19 +54,15 @@ export async function getMinisterBySlug(
   slug: string
 ): Promise<Minister | null> {
   try {
-    const ref = collection(db, "ministers").withConverter(ministerConverter);
-    const q = query(
-      ref,
-      where("eventId", "==", eventId),
-      where("slug", "==", slug),
-      where("status", "==", "published")
-    );
+    const ref = collection(db, "events", eventId, "ministers").withConverter(ministerConverter);
+    const q = query(ref, where("slug", "==", slug), where("status", "==", "published"));
     const snap = await getDocs(q);
     if (snap.empty) return null;
     return snap.docs[0].data();
   } catch (error) {
-    console.warn("Firestore query getMinisterBySlug failed:", error);
-    return null;
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Firestore query getMinisterBySlug failed:", error);
+    throw new Error(`Failed to load minister ${slug}: ${message}`);
   }
 }
 

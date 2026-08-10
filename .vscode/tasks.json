@@ -1,0 +1,64 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Deploy storage rules",
+			"type": "shell",
+			"command": "firebase deploy --only storage",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run content import",
+			"type": "shell",
+			"command": "node scripts/import-content.js",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Next dev server",
+			"type": "shell",
+			"command": "npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Next dev server (foreground)",
+			"type": "shell",
+			"command": "npm run dev -- --hostname 127.0.0.1 --port 3000",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Next dev server (port 3001)",
+			"type": "shell",
+			"command": "npm run dev -- --hostname 127.0.0.1 --port 3001",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Deploy Firebase changes",
+			"type": "shell",
+			"command": "firebase deploy --only functions,storage",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Deploy Firebase functions only",
+			"type": "shell",
+			"command": "firebase deploy --only functions",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Run content seed import",
+			"type": "shell",
+			"command": "node scripts/import-content.js",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

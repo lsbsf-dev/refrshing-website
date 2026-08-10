@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminDataTable, Column } from "@/components/admin/AdminDataTable";
-import { getEventScopedDocs, setEventScopedDoc, deleteEventScopedDoc, Download, uploadCMSMedia } from "@/lib/firebase/cms";
+import { getEventScopedDocs, setEventScopedDoc, deleteEventScopedDoc, Download } from "@/lib/firebase/cms";
 import { Modal } from "@/components/shared/Modal";
 import { FormField } from "@/components/shared/FormField";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
@@ -99,10 +99,38 @@ export default function DownloadsAdminPage() {
 
     setIsUploading(true);
     try {
-      const url = await uploadCMSMedia(file, "downloads");
-      setFileUrl(url);
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'unknown';
-      setFileType(ext);
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_DOWNLOAD_PRESET;
+      
+      if (!cloudName || !uploadPreset) {
+        throw new Error("Cloudinary configuration is missing.");
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      // We use XMLHttpRequest here to allow Cloudinary to accept non-image files via 'auto' or 'raw'
+      const xhr = new XMLHttpRequest();
+      
+      // Cloudinary recommends using 'auto' for resource type so it can handle pdf/docs
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
+      
+      await new Promise<void>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const data = JSON.parse(xhr.responseText);
+            setFileUrl(data.secure_url);
+            const ext = file.name.split('.').pop()?.toLowerCase() || 'unknown';
+            setFileType(ext);
+            resolve();
+          } else {
+            reject(new Error("Cloudinary upload failed: " + xhr.responseText));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network error during upload"));
+        xhr.send(formData);
+      });
     } catch (err) {
       console.error("Upload failed", err);
       alert("Failed to upload file.");

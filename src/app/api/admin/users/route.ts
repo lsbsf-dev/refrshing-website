@@ -4,19 +4,30 @@ import { verifyApiRequest } from "@/lib/api-auth";
 import { Permissions } from "@/lib/permissions";
 import { logAudit } from "@/lib/audit";
 
+function sanitizeUserRecord(doc: FirebaseFirestore.DocumentSnapshot) {
+  const data = doc.data() || {};
+
+  return {
+    id: doc.id,
+    name: data.name || "",
+    email: data.email || "",
+    role: data.role || "viewer",
+    allowedEvents: Array.isArray(data.allowedEvents) ? data.allowedEvents : [],
+    isActive: data.isActive ?? true,
+    createdAt: data.createdAt || "",
+  };
+}
+
 export async function GET(req: Request) {
   try {
     await verifyApiRequest(req, Permissions.Users.Read);
 
     const snap = await firestore.collection("users").orderBy("createdAt", "desc").get();
-    const users = snap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const users = snap.docs.map(sanitizeUserRecord);
     return NextResponse.json({ users });
   } catch (error: any) {
-    console.error("Admin Users API GET Error:", error);
-    return NextResponse.json({ error: error.message }, { status: error.message.includes("permission") ? 403 : 500 });
+    console.error("Admin Users API GET Error");
+    return NextResponse.json({ error: "Unable to load users." }, { status: error?.message?.includes("permission") ? 403 : 500 });
   }
 }
 
@@ -73,7 +84,6 @@ export async function POST(req: Request) {
     }
 
     if (action === "update") {
-      console.log("Admin Users API: Starting update for uid:", uid);
       const { _updatedAt: clientUpdatedAt } = data; // from client for optimistic locking
       
       const beforeDoc = await firestore.collection("users").doc(uid).get();
@@ -99,14 +109,11 @@ export async function POST(req: Request) {
       if (email) updateData.email = email;
       
       try {
-        console.log("Admin Users API: Updating firestore document...");
         await firestore.collection("users").doc(uid).set(updateData, { merge: true });
-        console.log("Admin Users API: Firestore update complete.");
 
         if (role || allowedEvents) {
            const mergedRole = role || beforeData?.role;
            const mergedEvents = allowedEvents || beforeData?.allowedEvents || [];
-           console.log("Admin Users API: Updating custom claims...");
            await auth.setCustomUserClaims(uid, {
              role: mergedRole,
              allowedEvents: mergedEvents
@@ -131,25 +138,22 @@ export async function POST(req: Request) {
       
       if (displayName || email || password) {
         try {
-          console.log("Admin Users API: Updating auth profile...");
           await auth.updateUser(uid, {
             ...(displayName && { displayName }),
             ...(email && { email }),
             ...(password && { password }),
           });
-          console.log("Admin Users API: Auth update complete.");
         } catch (e: any) {
-          console.error("Admin Users API: Failed to update auth profile:", e.message);
+          console.error("Admin Users API: Failed to update auth profile");
         }
       }
       
-      console.log("Admin Users API: Update successful.");
       return NextResponse.json({ success: true });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
-    console.error("Admin Users API Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Admin Users API Error");
+    return NextResponse.json({ error: "Unable to update user." }, { status: 500 });
   }
 }

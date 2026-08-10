@@ -44,53 +44,46 @@ export const resourceConverter: FirestoreDataConverter<Resource> = {
 
 export async function getResources(eventId: string): Promise<Resource[]> {
   try {
-    const ref = collection(db, "resources").withConverter(resourceConverter);
-    const q = query(
-      ref,
-      where("eventId", "==", eventId),
-      where("status", "==", "published")
-    );
+    const ref = collection(db, "events", eventId, "resources").withConverter(resourceConverter);
+    const q = query(ref, where("status", "==", "published"));
     const snap = await getDocs(q);
     return snap.empty ? [] : snap.docs.map((doc) => doc.data());
   } catch (error) {
-    console.warn("Firestore query getResources failed:", error);
-    return [];
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Firestore query getResources failed:", error);
+    throw new Error(`Failed to load resources for ${eventId}: ${message}`);
   }
 }
 
 export async function getResourceBySlug(eventId: string, slug: string): Promise<Resource | null> {
   try {
-    const ref = collection(db, "resources").withConverter(resourceConverter);
-    const q = query(
-      ref,
-      where("eventId", "==", eventId),
-      where("slug", "==", slug),
-      where("status", "==", "published")
-    );
+    const ref = collection(db, "events", eventId, "resources").withConverter(resourceConverter);
+    const q = query(ref, where("slug", "==", slug), where("status", "==", "published"));
     const snap = await getDocs(q);
     if (!snap.empty) {
       return snap.docs[0].data();
     }
     return null;
   } catch (error) {
-    console.warn("Firestore query getResourceBySlug failed:", error);
-    return null;
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Firestore query getResourceBySlug failed:", error);
+    throw new Error(`Failed to load resource ${slug}: ${message}`);
   }
 }
 
-export async function updateResource(resourceId: string, data: Partial<Resource>): Promise<void> {
-  const ref = doc(db, "resources", resourceId).withConverter(resourceConverter);
+export async function updateResource(eventId: string, resourceId: string, data: Partial<Resource>): Promise<void> {
+  const ref = doc(db, "events", eventId, "resources", resourceId).withConverter(resourceConverter);
   await setDoc(ref, data as Resource, { merge: true });
 }
 
-export async function createResource(resource: Omit<Resource, "id">): Promise<string> {
+export async function createResource(eventId: string, resource: Omit<Resource, "id">): Promise<string> {
   const slug = resource.slug || resource.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  const ref = doc(db, "resources", slug).withConverter(resourceConverter);
+  const ref = doc(db, "events", eventId, "resources", slug).withConverter(resourceConverter);
   await setDoc(ref, resource as Resource);
   return slug;
 }
 
-export async function deleteResource(resourceId: string): Promise<void> {
-  const ref = doc(db, "resources", resourceId);
+export async function deleteResource(eventId: string, resourceId: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "resources", resourceId);
   await updateDoc(ref, { status: "deleted" });
 }

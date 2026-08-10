@@ -15,12 +15,13 @@ import { RichTextEditor } from "@/components/shared/RichTextEditor";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
 export default function AdminResourcesPage() {
-  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
+  const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: resourcesList = [], isLoading } = useQuery({
+  const { data: resourcesList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "resources", ACTIVE_EVENT_ID],
     queryFn: () => getResources(ACTIVE_EVENT_ID),
+    enabled: !isEventLoading && !!ACTIVE_EVENT_ID,
   });
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -51,7 +52,7 @@ export default function AdminResourcesPage() {
 
   // Mutations
   const updateMutation = useMutation({
-    mutationFn: (data: Resource) => updateResource(data.id || data.slug, data),
+    mutationFn: (data: Resource) => updateResource(ACTIVE_EVENT_ID, data.id || data.slug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "resources"] });
       setEditingResource(null);
@@ -113,6 +114,11 @@ export default function AdminResourcesPage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : isError ? (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl flex flex-col items-center justify-center py-20 text-center">
+          <p className="font-sans font-bold text-lg mb-2">Failed to load resources</p>
+          <p className="text-sm">{(error as Error)?.message || "Permission Denied or Unknown Error"}</p>
         </div>
       ) : filteredResources.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 rounded-3xl">

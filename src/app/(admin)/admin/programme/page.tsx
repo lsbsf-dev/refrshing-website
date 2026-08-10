@@ -14,12 +14,13 @@ import { Session } from "@/types/programme";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
 export default function AdminProgrammePage() {
-  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
+  const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: sessionsList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
+    enabled: !isEventLoading && !!ACTIVE_EVENT_ID,
   });
   const [selectedDayFilter, setSelectedDayFilter] = useState("all");
   const [editingSession, setEditingSession] = useState<Session | null>(null);
@@ -68,7 +69,7 @@ export default function AdminProgrammePage() {
 
   // Mutations
   const updateMutation = useMutation({
-    mutationFn: (data: Session) => updateSession(data.id || data.slug, data),
+    mutationFn: (data: Session) => updateSession(ACTIVE_EVENT_ID, data.id || data.slug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
       setEditingSession(null);
@@ -78,7 +79,7 @@ export default function AdminProgrammePage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: Omit<Session, "id">) => createSession(data),
+    mutationFn: (data: Omit<Session, "id">) => createSession(ACTIVE_EVENT_ID, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
       setEditingSession(null);

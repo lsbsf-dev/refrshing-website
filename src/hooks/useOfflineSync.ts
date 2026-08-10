@@ -95,6 +95,8 @@ export function useOfflineSync(eventId: string) {
         }
       }
       
+      // Wait for syncCheckinView trigger to propagate the timestamp to checkinView
+      await new Promise(resolve => setTimeout(resolve, 1500));
       // Sync down again to get canonical timestamps
       await syncDown();
     } finally {

@@ -6,10 +6,11 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 const eventId = process.env.NEXT_PUBLIC_ACTIVE_EVENT_ID || process.env.FIREBASE_PROJECT_ID || 'refreshing-2026';
 const projectId = process.env.FIREBASE_PROJECT_ID || 'refreshing-website';
 
+const rawKey = (process.env.FIREBASE_PRIVATE_KEY || '').replace(/^"|"$/g, '');
 const serviceAccount = {
   projectId,
   clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-  privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
+  privateKey: rawKey.replace(/\\n/g, '\n')
 };
 
 if (!serviceAccount.clientEmail || !serviceAccount.privateKey) {
@@ -205,31 +206,28 @@ function bestMinisterMatch(targetName, ministerDocs) {
   return best;
 }
 
-async function writeMinisterBios() {
-  const bios = readSeedFile('seed_ministerBios.json');
-  const ministerCollectionRef = db.collection('events').doc(eventId).collection('ministers');
-  const ministerSnapshot = await ministerCollectionRef.get();
-  const ministerDocs = ministerSnapshot.docs;
+async function writeMinisters() {
+  const filePath = path.join(__dirname, '..', 'src', 'lib', 'firebase', 'seedMinisters.json');
+  if (!fs.existsSync(filePath)) {
+    console.warn('Missing seedMinisters.json at ' + filePath);
+    return 0;
+  }
+  const ministers = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const collectionRef = db.collection('events').doc(eventId).collection('ministers');
+  let written = 0;
 
-  let matched = 0;
-  const unmatched = [];
-
-  for (const bioEntry of bios) {
-    const match = bestMinisterMatch(bioEntry.matchName || '', ministerDocs);
-
-    if (!match) {
-      unmatched.push(bioEntry.matchName || 'Unknown');
-      console.warn(`No minister match found for: ${bioEntry.matchName || 'Unknown'}`);
-      continue;
-    }
-
-    const ministerRef = match.ministerDoc.ref;
-    const biographyText = String(bioEntry.biography || '').trim();
-    await ministerRef.set({ biography: biographyText, updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-    matched += 1;
+  for (const minister of ministers) {
+    const docId = minister.id || minister.slug || slugify(minister.name);
+    const payload = {
+      ...minister,
+      eventId,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+    await collectionRef.doc(docId).set(payload, { merge: true });
+    written += 1;
   }
 
-  return { matched, unmatched };
+  return written;
 }
 
 async function writeAboutSettings() {
@@ -266,20 +264,19 @@ async function main() {
     const sessionCount = await writeSessions();
     const bibleStudyCount = (await writeBibleStudies());
     const articleCount = (await writeArticles());
-    const ministerStats = await writeMinisterBios();
+    const ministerCount = await writeMinisters();
     await writeAboutSettings();
 
     console.log('\n=== IMPORT SUMMARY ===');
     console.log(`Sessions written: ${sessionCount}`);
     console.log(`Bible studies written: ${bibleStudyCount}`);
     console.log(`Articles written: ${articleCount}`);
-    console.log(`Ministers matched/updated: ${ministerStats.matched}`);
-    console.log(`Ministers with no match found: ${ministerStats.unmatched.length}`);
-    console.log('Unmatched minister names:', ministerStats.unmatched.length ? ministerStats.unmatched.join(', ') : 'None');
+    console.log(`Ministers written: ${ministerCount}`);
   } catch (error) {
     console.error('Import failed:', error);
     process.exit(1);
   }
+  process.exit(0);
 }
 
 main();

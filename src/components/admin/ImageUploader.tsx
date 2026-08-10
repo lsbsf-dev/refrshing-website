@@ -9,8 +9,6 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Upload, X, Image as ImageIcon, Trash2, Check, RefreshCw, Loader2 } from "lucide-react";
 import imageCompression from "browser-image-compression";
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { storage } from "@/lib/firebase/app";
 
 interface ImageUploaderProps {
   value: string;
@@ -45,26 +43,49 @@ export function ImageUploader({
       };
       const compressedFile = await imageCompression(file, options);
 
-      // 2. Upload to Local Repo via API Route
-      const formData = new FormData();
-      formData.append("file", compressedFile);
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Upload failed on server");
+      // 2. Upload directly to Cloudinary using Unsigned Upload
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_PRESET;
+      
+      if (!cloudName || !uploadPreset) {
+        throw new Error("Cloudinary configuration is missing.");
       }
 
-      const data = await res.json();
-      onChange(data.url);
-      setUploading(false);
-      setUploadProgress(100);
-      
-      // Simulate progress for UI feedback since fetch doesn't have native progress easily exposed
-      setTimeout(() => setUploadProgress(0), 1000);
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append("upload_preset", uploadPreset);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const progress = Math.round((e.loaded / e.total) * 100);
+          setUploadProgress(progress);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          onChange(data.secure_url);
+          setUploading(false);
+          setUploadProgress(100);
+          setTimeout(() => setUploadProgress(0), 1000);
+        } else {
+          console.error("Upload failed on Cloudinary", xhr.responseText);
+          alert("An error occurred while uploading the image to Cloudinary.");
+          setUploading(false);
+        }
+      };
+
+      xhr.onerror = () => {
+        console.error("Upload error");
+        alert("An error occurred while connecting to Cloudinary.");
+        setUploading(false);
+      };
+
+      xhr.send(formData);
 
     } catch (error) {
       console.error("Compression/Upload error:", error);

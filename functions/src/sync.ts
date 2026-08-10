@@ -30,18 +30,20 @@ export const syncCheckinView = functions.firestore
     // Note: checkinView intentionally omits full phone and email fields to reduce PII exposure
     // for checkinStaff volunteers on shared kiosk devices. Masked phone (last 4 digits) is included
     // to allow disambiguating same-name attendees without exposing the full number.
-    const phone = data.phone || "";
-    const phoneMasked = phone.length > 4 ? `***-***-${phone.slice(-4)}` : phone;
+    const phoneNumber = data.phoneNumber || data.phone || "";
+    const phoneMasked = phoneNumber.length > 4 ? `***-***-${phoneNumber.slice(-4)}` : phoneNumber;
 
     const checkinSafeData = {
       id: attendeeId,
-      name: data.name || "Anonymous",
+      eventId,
+      fullName: data.fullName || data.name || "Anonymous",
       photoUrl: data.photoUrl || "",
-      ticketStatus: data.ticketStatus || data.registrationStatus || "pending",
-      checkedInAt: data.checkedInAt || null,
+      memberStatus: data.memberStatus || data.ticketStatus || "Member",
+      checkedInAt: data.checkIn?.checkedInAt || data.checkedInAt || null,
       phoneMasked,
-      church: data.church || "",
-      association: data.association || "",
+      churchName: data.churchName || data.church || "",
+      associationName: data.associationName || data.association || "",
+      campusFellowshipName: data.campusFellowshipName || "",
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 

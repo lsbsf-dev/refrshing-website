@@ -2,32 +2,20 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { logAudit } from "./audit";
 
-/**
- * Callable function for check-in actions.
- * Validates checkinStaff, registrationStaff, eventAdmin, or superAdmin role limits.
- */
-export const markCheckedIn = functions.https.onCall(async (data, context) => {
-  // 1. Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      "unauthenticated",
-      "The request must be authenticated."
-    );
-  }
+function setCorsHeaders(res: functions.Response) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+}
 
-  const { eventId, attendeeId } = data;
-  if (!eventId || !attendeeId) {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "Both eventId and attendeeId are required arguments."
-    );
-  }
-
-  const token = context.auth.token;
-  const role = token.role as string;
-  const allowedEvents = (token.allowedEvents || []) as string[];
-
-  // 2. Validate permissions (MFA removed)
+async function performCheckIn(
+  eventId: string,
+  attendeeId: string,
+  uid: string,
+  email: string,
+  role: string,
+  allowedEvents: string[]
+) {
   const isSuper = role === "superAdmin";
   const isEventAdm = role === "eventAdmin" && allowedEvents.includes(eventId);
   const isRegStaff = role === "registrationStaff" && allowedEvents.includes(eventId);
@@ -47,40 +35,115 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
     .collection("attendees")
     .doc(attendeeId);
 
-  try {
-    const timestamp = admin.firestore.FieldValue.serverTimestamp();
+  const timestamp = admin.firestore.FieldValue.serverTimestamp();
 
-    await db.runTransaction(async (transaction) => {
-      const doc = await transaction.get(attendeeRef);
-      if (!doc.exists) {
-        throw new Error("Attendee record not found");
-      }
+  await db.runTransaction(async (transaction) => {
+    const doc = await transaction.get(attendeeRef);
+    if (!doc.exists) {
+      throw new Error("Attendee record not found");
+    }
 
-      const currentData = doc.data() || {};
-      if (currentData.checkedInAt) {
-        throw new functions.https.HttpsError("already-exists", "Attendee is already checked in");
-      }
+    const currentData = doc.data() || {};
+    if (currentData.checkedInAt) {
+      throw new functions.https.HttpsError("already-exists", "Attendee is already checked in");
+    }
 
-      // Update canonical record
-      transaction.update(attendeeRef, {
-        checkedInAt: timestamp,
-        ticketStatus: "checked-in",
-      });
+    transaction.update(attendeeRef, {
+      checkedInAt: timestamp,
+      ticketStatus: "checked-in",
     });
+  });
 
-    // Write audit log
-    await logAudit(db, "attendee_checked_in", context.auth.uid, token.email || "unknown@lsbsf.org", {
+  await logAudit(db, "attendee_checked_in", uid, email || "unknown@lsbsf.org", {
+    eventId,
+    attendeeId,
+  });
+
+  return { success: true, message: "Attendee checked in successfully." };
+}
+
+/**
+ * Callable function for check-in actions.
+ * Validates checkinStaff, registrationStaff, eventAdmin, or superAdmin role limits.
+ */
+export const markCheckedIn = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "The request must be authenticated."
+    );
+  }
+
+  const { eventId, attendeeId } = data;
+  if (!eventId || !attendeeId) {
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "Both eventId and attendeeId are required arguments."
+    );
+  }
+
+  const token = context.auth.token;
+  const role = (token.role as string) || "";
+  const allowedEvents = (token.allowedEvents || []) as string[];
+
+  try {
+    return await performCheckIn(
       eventId,
       attendeeId,
-    });
-
-    return { success: true, message: "Attendee checked in successfully." };
+      context.auth.uid,
+      token.email || "unknown@lsbsf.org",
+      role,
+      allowedEvents
+    );
   } catch (error: any) {
     console.error("Check-in transaction failed:", error);
     if (error.code === "already-exists") {
       throw error;
     }
     throw new functions.https.HttpsError("internal", error.message || "Failed to check in attendee.");
+  }
+});
+
+export const markCheckedInHttp = functions.https.onRequest(async (req, res) => {
+  setCorsHeaders(res);
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Method not allowed" });
+    return;
+  }
+
+  try {
+    const authHeader = req.headers.authorization || "";
+    const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    const decodedToken = bearer ? await admin.auth().verifyIdToken(bearer) : null;
+
+    if (!decodedToken) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { eventId, attendeeId } = req.body || {};
+    if (!eventId || !attendeeId) {
+      res.status(400).json({ error: "Both eventId and attendeeId are required arguments." });
+      return;
+    }
+
+    const token = decodedToken;
+    const role = (token.role as string) || "";
+    const allowedEvents = ((token.allowedEvents as string[]) || []) as string[];
+
+    const result = await performCheckIn(eventId, attendeeId, decodedToken.uid, token.email || "unknown@lsbsf.org", role, allowedEvents);
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.error("HTTP check-in failed:", error);
+    const message = error?.message || "Failed to check in attendee.";
+    const statusCode = error?.code === "already-exists" ? 409 : 500;
+    res.status(statusCode).json({ error: message });
   }
 });
 

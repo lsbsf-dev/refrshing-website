@@ -206,7 +206,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             <div className={`flex items-center gap-2 px-1 pt-1 ${isCollapsed ? "justify-center" : "justify-between"}`}>
               {!isCollapsed && (
                 <div className="flex flex-col min-w-0">
-                  <span className={`font-sans text-xs font-bold truncate max-w-[120px] ${isDark ? "text-white" : "text-zinc-900"}`}>
+                  <span className={`font-sans text-xs font-bold truncate max-w-30 ${isDark ? "text-white" : "text-zinc-900"}`}>
                     {profile?.email || "admin@lsbsf.org"}
                   </span>
                   <span className="font-mono text-[9px] text-[#DDB94E] uppercase font-semibold">
@@ -298,7 +298,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-w-0 min-h-screen">
           
           {/* Top Bar Header with SINGLE collapse button & Theme Toggle */}
-          <header className={`h-16 border-b backdrop-blur-md sticky top-0 z-20 px-6 flex items-center justify-between transition-colors ${
+          <header className={`h-16 border-b backdrop-blur-md sticky top-0 z-20 px-3 sm:px-6 flex items-center justify-between transition-colors ${
             isDark ? "bg-[#12100C]/90 border-white/10" : "bg-white/90 border-black/10 shadow-xs"
           }`}>
             <div className="flex items-center gap-3">
@@ -359,7 +359,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Main Content Dashboard */}
-          <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto overflow-x-hidden">
             {children}
           </main>
         </div>

@@ -12,7 +12,7 @@ service firebase.storage {
     }
 
     function isEditorOrSuperAdmin() {
-      return hasRole('superadmin') || hasRole('editor');
+      return hasRole('superAdmin') || hasRole('editor');
     }
 
     // Helper functions for validating file uploads

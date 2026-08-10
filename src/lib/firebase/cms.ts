@@ -9,7 +9,7 @@ import {
   orderBy, 
   serverTimestamp 
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Can be removed once fully migrated, but keeping for now if used elsewhere
 
 // ==========================================
 // TYPES
@@ -199,14 +199,4 @@ export async function deleteTimelineEntry(id: string): Promise<void> {
   await deleteDoc(doc(db, "timelineEntries", id));
 }
 
-// ==========================================
-// UPLOAD HELPER
-// ==========================================
-
-export async function uploadCMSMedia(file: File, folder: string): Promise<string> {
-  const ext = file.name.split(".").pop();
-  const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
-  const fileRef = ref(storage, `cms/${folder}/${filename}`);
-  await uploadBytes(fileRef, file);
-  return await getDownloadURL(fileRef);
-}
+// uploadCMSMedia removed: migrated to Cloudinary unsigned uploads
