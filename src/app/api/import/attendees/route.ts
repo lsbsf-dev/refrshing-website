@@ -24,9 +24,9 @@ export async function POST(request: Request) {
       adminDb.collection('churches').where('active', '==', true).get()
     ]);
 
-    const existingAttendees = existingAttendeesSnap.docs.map(d => d.data());
-    const associationsMaster = associationsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-    const churchesMaster = churchesSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+    const existingAttendees = existingAttendeesSnap.docs.map((d: any) => d.data());
+    const associationsMaster = associationsSnap.docs.map((d: any) => ({ id: d.id, ...d.data() } as any));
+    const churchesMaster = churchesSnap.docs.map((d: any) => ({ id: d.id, ...d.data() } as any));
 
     const result = {
       processed: attendees.length,
