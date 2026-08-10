@@ -39,8 +39,23 @@ export default function AdminLoginPage() {
       });
 
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to fetch user profile");
+        const contentType = res.headers.get('content-type') || '';
+        let errMessage = 'Failed to fetch user profile';
+        if (contentType.includes('application/json')) {
+          const errData = await res.json();
+          errMessage = errData.error || errMessage;
+        } else {
+          const text = await res.text();
+          errMessage = text || errMessage;
+        }
+        throw new Error(errMessage);
+      }
+
+      // Ensure the response is JSON before parsing
+      const responseContentType = res.headers.get('content-type') || '';
+      if (!responseContentType.includes('application/json')) {
+        const text = await res.text();
+        throw new Error('Unexpected response format from server');
       }
 
       const profile = await res.json();

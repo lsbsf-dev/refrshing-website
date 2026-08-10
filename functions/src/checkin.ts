@@ -33,6 +33,8 @@ async function performCheckIn(
 
   const timestamp = admin.firestore.FieldValue.serverTimestamp();
 
+  let alreadyCheckedIn = false;
+
   await db.runTransaction(async (transaction) => {
     const doc = await transaction.get(attendeeRef);
     if (!doc.exists) {
@@ -40,15 +42,22 @@ async function performCheckIn(
     }
 
     const currentData = doc.data() || {};
-    if (currentData.checkedInAt) {
-      throw new functions.https.HttpsError("already-exists", "Attendee is already checked in");
+    if (currentData.checkIn?.checkedIn || currentData.checkedInAt) {
+      alreadyCheckedIn = true;
+      return;
     }
 
     transaction.update(attendeeRef, {
-      checkedInAt: timestamp,
-      ticketStatus: "checked-in",
+      "checkIn.checkedIn": true,
+      "checkIn.checkedInAt": timestamp,
+      "checkIn.checkedInBy": email || "unknown@lsbsf.org",
+      ticketStatus: "checked-in", // keep for backwards compatibility if needed
     });
   });
+
+  if (alreadyCheckedIn) {
+    return { success: true, message: "Attendee was already checked in.", alreadyCheckedIn: true };
+  }
 
   await logAudit(db, "attendee_checked_in", uid, email || "unknown@lsbsf.org", {
     eventId,
@@ -153,15 +162,18 @@ export const undoCheckIn = functions.https.onCall(async (data, context) => {
       }
 
       const currentData = doc.data() || {};
-      if (!currentData.checkedInAt) {
-        throw new Error("Attendee is not checked in, cannot undo.");
+      const originalCheckedInAt = currentData.checkIn?.checkedInAt || currentData.checkedInAt;
+      
+      if (!currentData.checkIn?.checkedIn && !currentData.checkedInAt) {
+        return; // Already undone or not checked in
       }
-
-      const originalCheckedInAt = currentData.checkedInAt;
 
       // Reverse check-in status
       transaction.update(attendeeRef, {
-        checkedInAt: null,
+        "checkIn.checkedIn": false,
+        "checkIn.checkedInAt": admin.firestore.FieldValue.delete(),
+        "checkIn.checkedInBy": admin.firestore.FieldValue.delete(),
+        checkedInAt: admin.firestore.FieldValue.delete(),
         ticketStatus: "registered",
       });
 
@@ -169,7 +181,7 @@ export const undoCheckIn = functions.https.onCall(async (data, context) => {
       await logAudit(db, "attendee_checkin_reversed", context.auth!.uid, token.email || "unknown@lsbsf.org", {
         eventId,
         attendeeId,
-        previousCheckedInAt: originalCheckedInAt,
+        previousCheckedInAt: originalCheckedInAt || null,
         reason: data.reason || "Manual reversal by staff",
       });
     });

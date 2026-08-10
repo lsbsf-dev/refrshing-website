@@ -149,9 +149,10 @@ export default function MinisterDetailPage({
               <span className="font-sans text-xs text-[#C25627] tracking-widest uppercase font-bold">
                 Biography
               </span>
-              <div className="font-sans text-sm sm:text-base text-[#3D3530] leading-relaxed font-light whitespace-pre-line space-y-4 break-words">
-                {minister.biography}
-              </div>
+              <div 
+                className="font-sans text-sm sm:text-base text-[#3D3530] leading-relaxed font-light space-y-4 break-words"
+                dangerouslySetInnerHTML={{ __html: minister.biography }}
+              />
             </div>
 
             {/* Sessions */}

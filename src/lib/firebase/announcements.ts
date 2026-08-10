@@ -40,36 +40,76 @@ export const announcementConverter: FirestoreDataConverter<Announcement> = {
 
 export async function getAnnouncements(eventId: string): Promise<Announcement[]> {
   try {
-    const ref = collection(db, "announcements").withConverter(announcementConverter);
-    const q = query(
-      ref,
-      where("eventId", "==", eventId),
-      where("status", "==", "published"),
-      orderBy("publishedAt", "desc")
-    );
-    const snap = await getDocs(q);
-    if (snap.empty) return [];
-    return snap.docs.map((doc) => doc.data());
+    const ref = collection(db, "events", eventId, "announcements").withConverter(announcementConverter);
+  const q = query(
+    ref,
+    where("status", "==", "published"),
+    orderBy("publishedAt", "desc")
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) return [];
+  return snap.docs.map((doc) => doc.data());
   } catch (error) {
     console.warn("Firestore query getAnnouncements failed:", error);
     return [];
   }
 }
 
-export async function updateAnnouncement(announcementId: string, data: Partial<Announcement>): Promise<void> {
-  const ref = doc(db, "announcements", announcementId).withConverter(announcementConverter);
-  await setDoc(ref, data as Announcement, { merge: true });
+// Update Announcement with overloads
+export async function updateAnnouncement(eventId: string, announcementId: string, data: Partial<Announcement>): Promise<void>;
+export async function updateAnnouncement(combinedId: string, data: Partial<Announcement>): Promise<void>;
+export async function updateAnnouncement(arg1: string, arg2: string | Partial<Announcement>, arg3?: Partial<Announcement>): Promise<void> {
+  if (typeof arg2 === 'object') {
+    // Called as overload (combinedId, data)
+    const combinedId = arg1;
+    const parts = combinedId.split('/');
+    if (parts.length === 2) {
+      const [eventId, announcementId] = parts;
+      const docRef = doc(db, 'events', eventId, 'announcements', announcementId).withConverter(announcementConverter);
+      await setDoc(docRef, arg2 as Partial<Announcement>, { merge: true });
+      return;
+    }
+    // Fallback to UNKNOWN eventId
+    const docRef = doc(db, 'events', 'UNKNOWN', 'announcements', combinedId).withConverter(announcementConverter);
+    await setDoc(docRef, arg2 as Partial<Announcement>, { merge: true });
+    return;
+  } else {
+    // Called with full parameters (eventId, announcementId, data)
+    const docRef = doc(db, 'events', arg1, 'announcements', arg2 as string).withConverter(announcementConverter);
+    await setDoc(docRef, arg3 as Partial<Announcement>, { merge: true });
+  }
 }
 
+
 export async function createAnnouncement(announcement: Omit<Announcement, "id">): Promise<string> {
-  // Let firestore generate the ID for announcements, or use a combination of eventId + timestamp
+  // Use the eventId from the announcement object to store under the correct subcollection
   const generatedId = `ann-${Date.now()}`;
-  const ref = doc(db, "announcements", generatedId).withConverter(announcementConverter);
+  const ref = doc(db, "events", announcement.eventId, "announcements", generatedId).withConverter(announcementConverter);
   await setDoc(ref, announcement as Announcement);
   return generatedId;
 }
 
-export async function deleteAnnouncement(announcementId: string): Promise<void> {
-  const ref = doc(db, "announcements", announcementId);
-  await updateDoc(ref, { status: "deleted" });
+// Delete Announcement with overloads
+export async function deleteAnnouncement(eventId: string, announcementId: string): Promise<void>;
+export async function deleteAnnouncement(combinedId: string): Promise<void>;
+export async function deleteAnnouncement(arg1: string, arg2?: string): Promise<void> {
+  if (typeof arg2 === 'undefined') {
+    // Called with combinedId only
+    const combinedId = arg1;
+    const parts = combinedId.split('/');
+    if (parts.length === 2) {
+      const [eventId, announcementId] = parts;
+      const docRef = doc(db, 'events', eventId, 'announcements', announcementId);
+      await updateDoc(docRef, { status: 'deleted' });
+      return;
+    }
+    const docRef = doc(db, 'events', 'UNKNOWN', 'announcements', combinedId);
+    await updateDoc(docRef, { status: 'deleted' });
+    return;
+  } else {
+    // Called with explicit eventId and announcementId
+    const docRef = doc(db, 'events', arg1, 'announcements', arg2);
+    await updateDoc(docRef, { status: 'deleted' });
+  }
 }
+

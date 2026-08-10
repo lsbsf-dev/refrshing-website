@@ -28,6 +28,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   QrCode,
+  Mailbox,
+  ImageIcon,
 } from "lucide-react";
 import { QueryProvider } from "@/components/shared/QueryProvider";
 import { AuthProvider, useAuth } from "@/lib/contexts/AuthContext";
@@ -47,6 +49,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     const savedTheme = localStorage.getItem("admin_theme") as "dark" | "light";
     if (savedTheme) {
       setTheme(savedTheme);
+    } else if (typeof window !== "undefined") {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? "dark" : "light");
     }
   }, []);
 
@@ -69,6 +74,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       "/admin/attendees": Permissions.Registrations.Read,
       "/admin/checkin": Permissions.Registrations.CheckIn,
       "/admin/users": Permissions.Users.Read,
+      "/admin/enquiries": Permissions.Enquiries.Read,
+      "/admin/gallery": Permissions.Gallery.Read,
     };
 
     const matchedRoute = Object.keys(routePermissions).find((route) => pathname.startsWith(route));
@@ -103,8 +110,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     ...(hasPermission(profile.role, Permissions.Programme.Read) ? [{ label: "Programme", href: "/admin/programme", icon: Calendar }] : []),
     ...(hasPermission(profile.role, Permissions.Announcements.Read) ? [{ label: "Announcements", href: "/admin/announcements", icon: Megaphone }] : []),
     ...(hasPermission(profile.role, Permissions.Resources.Read) ? [{ label: "Resources", href: "/admin/resources", icon: BookOpen }] : []),
+    ...(hasPermission(profile.role, Permissions.Gallery.Read) ? [{ label: "Gallery", href: "/admin/gallery", icon: ImageIcon }] : []),
     ...(hasPermission(profile.role, Permissions.Registrations.Read) ? [{ label: "Attendees", href: "/admin/attendees", icon: UserCheck }] : []),
     ...(hasPermission(profile.role, Permissions.Registrations.CheckIn) ? [{ label: "Check-In", href: "/admin/checkin", icon: QrCode }] : []),
+    ...(hasPermission(profile.role, Permissions.Enquiries.Read) ? [{ label: "Inbox", href: "/admin/enquiries", icon: Mailbox }] : []),
     ...(hasPermission(profile.role, Permissions.Users.Read) ? [{ label: "Users & Roles", href: "/admin/users", icon: ShieldCheck }] : []),
   ];
 
@@ -113,8 +122,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className={`min-h-screen flex flex-col lg:flex-row font-sans transition-colors duration-300 ${isDark ? "dark" : ""} ${isDark ? "bg-[#0B0907] text-[#FCFAF6]" : "bg-[#F7F4EE] text-[#0B0907]"}`}>
       {/* ── Desktop Sidebar ── */}
-      <aside className={`hidden lg:flex flex-col border-r shrink-0 p-4 transition-all duration-300 z-30 sticky top-0 h-screen overflow-y-auto custom-scrollbar ${isCollapsed ? "w-20" : "w-60"} ${isDark ? "bg-[#12100C] border-white/10" : "bg-white border-black/10 shadow-sm"}`}>
-        <div className="flex items-center justify-start gap-3 mb-6 pb-4 border-b border-black/10 dark:border-white/10 px-1">
+      <aside className={`hidden lg:flex flex-col border-r shrink-0 p-4 transition-all duration-300 z-30 sticky top-0 h-screen ${isCollapsed ? "w-20" : "w-60"} ${isDark ? "bg-[#12100C] border-white/10" : "bg-white border-black/10 shadow-sm"}`}>
+        <div className="flex items-center justify-start gap-3 mb-6 pb-4 border-b border-black/10 dark:border-white/10 px-1 shrink-0">
           <Link href="/admin" className="flex items-center gap-3 active-press min-w-0">
             <div className="relative h-10 w-10 bg-white p-1 rounded-xl flex items-center justify-center shadow-md shrink-0 border border-black/10">
               <Image src="/refreshing-logo.png" alt="LSBSF Logo" fill className="object-contain" priority />
@@ -129,7 +138,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             )}
           </Link>
         </div>
-        <nav className="flex flex-col gap-1.5 flex-1">
+        <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
@@ -146,7 +155,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex flex-col gap-2">
+        <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex flex-col gap-2 shrink-0">
           <Link
             href="/"
             target="_blank"
@@ -201,13 +210,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
       {mobileOpen && (
         <div className={`lg:hidden fixed inset-0 z-50 backdrop-blur-md flex flex-col p-6 animate-fade-in ${isDark ? "bg-[#0B0907]/95 text-white" : "bg-white/95 text-[#0B0907]"}`}>
-          <div className="flex items-center justify-between pb-6 border-b border-black/10 dark:border-white/10 mb-6">
+          <div className="flex items-center justify-between pb-6 border-b border-black/10 dark:border-white/10 mb-6 shrink-0">
             <span className="font-serif text-lg font-bold uppercase">REFRESHING OS ADMIN</span>
             <button onClick={() => setMobileOpen(false)} className="p-2">
               <X className="h-6 w-6" />
             </button>
           </div>
-          <nav className="flex flex-col gap-3 flex-1">
+          <nav className="flex flex-col gap-3 flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -224,7 +233,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <button onClick={logout} className="py-3.5 bg-red-500/10 text-red-500 rounded-xl font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-auto">
+          <button onClick={logout} className="py-3.5 bg-red-500/10 text-red-500 rounded-xl font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-6 shrink-0">
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
           </button>

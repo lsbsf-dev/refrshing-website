@@ -66,10 +66,14 @@ export default function ArticlesAdminPage() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const generatedSlug = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const isDuplicate = articles.some(a => a.slug === generatedSlug && a.id !== editingItem?.id);
+      if (isDuplicate) throw new Error("An article with this slug already exists.");
+
       const payload: Article = {
         id: editingItem?.id || Date.now().toString(),
         title,
-        slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        slug: generatedSlug,
         author,
         summary,
         content,

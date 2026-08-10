@@ -75,35 +75,35 @@ export default function HomePage() {
       label: "DAY ONE",
       name: "MONDAY",
       title: "Unveiled Glory",
-      summary: "Camp arrival, accreditation, hostel allocation, and the Opening Revival Charge.",
+      summary: "Camp arrival, accreditation, hostel allocation, and the Opening Revival Charge: Unveiled Glory.",
     },
     {
       date: "August 11, 2026",
       label: "DAY TWO",
       name: "TUESDAY",
       title: "Awakening & Anointing",
-      summary: "Elijah & Elisha study series, BSF orientation, and the Anointing Night encounter.",
+      summary: "A Call to Awakening study, BSF Orientation, and the Destined for Glory Anointing Night.",
     },
     {
       date: "August 12, 2026",
       label: "DAY THREE",
       name: "WEDNESDAY",
       title: "Who May Ascend?",
-      summary: "Morning consecration, prayer walks, leadership workshops, and evening message.",
+      summary: "Morning Open Heaven devotion, and the evening Who May Ascend message.",
     },
     {
       date: "August 13, 2026",
       label: "DAY FOUR",
       name: "THURSDAY",
       title: "Greater Generation",
-      summary: "Academic & Career seminar, Refreshing @40 celebration, and Refreshing Night.",
+      summary: "The Greater Generation teaching, Academic & Career seminar, and Refreshing Night encounter.",
     },
     {
       date: "August 14, 2026",
       label: "DAY FIVE",
       name: "FRIDAY",
       title: "Arise: Pure & Undefiled",
-      summary: "Relationship seminar, song ministrations, closing charge, and commissioning.",
+      summary: "Relationship Seminar, Refreshing @40 Grand Celebration, and Thanksgiving & Choice Night.",
     },
   ];
 
@@ -531,7 +531,7 @@ export default function HomePage() {
                         )}
                         <div>
                           <h4 className="font-serif text-lg text-white group-hover:text-[#DDB94E] transition-colors">{art.title}</h4>
-                          <span className="text-xs text-white/50 block mt-1">{art.author}</span>
+                          <span className="text-xs text-white/50 block mt-1">{art.author || "Editorial Board"}</span>
                         </div>
                       </Link>
                     );

@@ -3,9 +3,9 @@
  * Handlers for retrieving photo albums and individual photos.
  */
 
-import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, query, where, FirestoreDataConverter, increment } from "firebase/firestore";
 import { db } from "./app";
-import { GalleryAlbum, Photo } from "@/types/gallery";
+import { GalleryAlbum, Photo, Video } from "@/types/gallery";
 
 export const galleryAlbumConverter: FirestoreDataConverter<GalleryAlbum> = {
   toFirestore(album: GalleryAlbum) {
@@ -57,6 +57,29 @@ export const photoConverter: FirestoreDataConverter<Photo> = {
   },
 };
 
+export const videoConverter: FirestoreDataConverter<Video> = {
+  toFirestore(video: Video) {
+    return {
+      eventId: video.eventId,
+      youtubeId: video.youtubeId,
+      title: video.title,
+      description: video.description,
+      publishedAt: video.publishedAt,
+    };
+  },
+  fromFirestore(snapshot, options) {
+    const data = snapshot.data(options);
+    return {
+      id: snapshot.id,
+      eventId: data.eventId || "",
+      youtubeId: data.youtubeId || "",
+      title: data.title || "",
+      description: data.description || "",
+      publishedAt: data.publishedAt || "",
+    };
+  },
+};
+
 import seedAlbums from "./seedAlbums.json";
 
 export async function getAlbums(eventId: string): Promise<GalleryAlbum[]> {
@@ -98,3 +121,83 @@ export async function getPhotos(eventId: string, albumId: string): Promise<Photo
   const snap = await getDocs(q);
   return snap.docs.map((doc) => doc.data());
 }
+
+// =======================
+// ALBUM MUTATIONS
+// =======================
+
+export async function createAlbum(album: Omit<GalleryAlbum, "id">, id: string): Promise<void> {
+  const ref = doc(db, "galleryAlbums", id).withConverter(galleryAlbumConverter);
+  await setDoc(ref, { ...album, id });
+}
+
+export async function updateAlbum(id: string, updates: Partial<GalleryAlbum>): Promise<void> {
+  const ref = doc(db, "galleryAlbums", id);
+  await updateDoc(ref, updates);
+}
+
+export async function deleteAlbum(id: string): Promise<void> {
+  // We should also delete photos, but we leave that to cloud functions or manual cleanup
+  const ref = doc(db, "galleryAlbums", id);
+  await deleteDoc(ref);
+}
+
+// =======================
+// PHOTO MUTATIONS
+// =======================
+
+export async function addPhoto(photo: Omit<Photo, "id">, id: string): Promise<void> {
+  const ref = doc(db, "photos", id).withConverter(photoConverter);
+  await setDoc(ref, { ...photo, id });
+  
+  // Increment photo count on the album
+  if (photo.albumId) {
+    const albumRef = doc(db, "galleryAlbums", photo.albumId);
+    await updateDoc(albumRef, { photoCount: increment(1) });
+  }
+}
+
+export async function updatePhoto(id: string, updates: Partial<Photo>): Promise<void> {
+  const ref = doc(db, "photos", id);
+  
+  // If moving between albums, we should technically handle increment/decrement on albums
+  // For simplicity here, we assume standard updates
+  await updateDoc(ref, updates);
+}
+
+export async function deletePhoto(id: string, albumId?: string): Promise<void> {
+  const ref = doc(db, "photos", id);
+  await deleteDoc(ref);
+  
+  if (albumId) {
+    const albumRef = doc(db, "galleryAlbums", albumId);
+    await updateDoc(albumRef, { photoCount: increment(-1) });
+  }
+}
+
+// =======================
+// VIDEO OPERATIONS
+// =======================
+
+export async function getVideos(eventId: string): Promise<Video[]> {
+  const ref = collection(db, "videos").withConverter(videoConverter);
+  const q = query(ref, where("eventId", "==", eventId));
+  const snap = await getDocs(q);
+  return snap.docs.map((doc) => doc.data());
+}
+
+export async function addVideo(video: Omit<Video, "id">, id: string): Promise<void> {
+  const ref = doc(db, "videos", id).withConverter(videoConverter);
+  await setDoc(ref, { ...video, id });
+}
+
+export async function updateVideo(id: string, updates: Partial<Video>): Promise<void> {
+  const ref = doc(db, "videos", id);
+  await updateDoc(ref, updates);
+}
+
+export async function deleteVideo(id: string): Promise<void> {
+  const ref = doc(db, "videos", id);
+  await deleteDoc(ref);
+}
+

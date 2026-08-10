@@ -48,6 +48,10 @@ export const Permissions = {
   Settings: {
     Read: "settings.read",
     Write: "settings.write",
+  },
+  Enquiries: {
+    Read: "enquiries.read",
+    Write: "enquiries.write",
   }
 } as const;
 
@@ -64,7 +68,8 @@ export type Permission =
   | typeof Permissions.Registrations[keyof typeof Permissions.Registrations]
   | typeof Permissions.Analytics[keyof typeof Permissions.Analytics]
   | typeof Permissions.Reports[keyof typeof Permissions.Reports]
-  | typeof Permissions.Settings[keyof typeof Permissions.Settings];
+  | typeof Permissions.Settings[keyof typeof Permissions.Settings]
+  | typeof Permissions.Enquiries[keyof typeof Permissions.Enquiries];
 
 export const RolePermissions: Record<string, Permission[]> = {
   superAdmin: [
@@ -80,6 +85,7 @@ export const RolePermissions: Record<string, Permission[]> = {
     ...Object.values(Permissions.Analytics),
     ...Object.values(Permissions.Reports),
     ...Object.values(Permissions.Settings),
+    ...Object.values(Permissions.Enquiries),
   ],
   eventAdmin: [
     ...Object.values(Permissions.Programme),
@@ -90,8 +96,9 @@ export const RolePermissions: Record<string, Permission[]> = {
     Permissions.Reports.Read,
     Permissions.Reports.Export,
     Permissions.Analytics.Read,
+    ...Object.values(Permissions.Enquiries),
   ],
-  mediaTeam: [
+  editor: [
     ...Object.values(Permissions.Gallery),
     ...Object.values(Permissions.MediaLibrary),
     ...Object.values(Permissions.Announcements),
@@ -99,12 +106,16 @@ export const RolePermissions: Record<string, Permission[]> = {
     Permissions.Homepage.Write,
     Permissions.Homepage.Read,
   ],
-  registrationTeam: [
+  registrationStaff: [
     ...Object.values(Permissions.Registrations),
     Permissions.Reports.Read,
     Permissions.Reports.Export,
   ],
-  analyticsViewer: [
+  checkinStaff: [
+    Permissions.Registrations.Read,
+    Permissions.Registrations.CheckIn,
+  ],
+  viewer: [
     Permissions.Analytics.Read,
     Permissions.Reports.Read,
     Permissions.Registrations.Read,

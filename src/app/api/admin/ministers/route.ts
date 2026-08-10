@@ -7,10 +7,9 @@ export async function POST(req: Request) {
   try {
     await verifyApiRequest(req, Permissions.Ministers.Write);
     const data = await req.json();
-    const { action, ministerId, payload } = data;
+    const { action, ministerId, payload, eventId } = data;
 
     if (action === "create") {
-      const eventId = payload.eventId;
       if (!eventId) return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
       const slug = payload.slug || payload.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       await firestore.collection("events").doc(eventId).collection("ministers").doc(slug).set(payload);
@@ -18,7 +17,6 @@ export async function POST(req: Request) {
     }
 
     if (action === "update") {
-      const eventId = payload.eventId;
       if (!eventId) return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
       await firestore.collection("events").doc(eventId).collection("ministers").doc(ministerId).set(payload, { merge: true });
       return NextResponse.json({ success: true });

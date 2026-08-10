@@ -66,7 +66,7 @@ export function useOfflineSync(eventId: string) {
     try {
       const pendingQueue = await db.checkinQueue
         .where('eventId').equals(eventId)
-        .and(item => item.status === 'pending')
+        .and(item => item.status === 'pending' || item.status === 'pending-undo')
         .toArray();
 
       if (pendingQueue.length === 0) {
@@ -76,15 +76,20 @@ export function useOfflineSync(eventId: string) {
 
       const functions = getFunctions(app);
       const markCheckedIn = httpsCallable<{ eventId: string, attendeeId: string }, any>(functions, "markCheckedIn");
+      const undoCheckInCall = httpsCallable<{ eventId: string, attendeeId: string, reason: string }, any>(functions, "undoCheckIn");
 
       for (const item of pendingQueue) {
         try {
-          await markCheckedIn({ eventId: item.eventId, attendeeId: item.attendeeId });
+          if (item.status === 'pending') {
+            await markCheckedIn({ eventId: item.eventId, attendeeId: item.attendeeId });
+          } else if (item.status === 'pending-undo') {
+            await undoCheckInCall({ eventId: item.eventId, attendeeId: item.attendeeId, reason: "Manual undo from check-in app" });
+          }
           await db.checkinQueue.update(item.id!, { status: 'synced' });
         } catch (error: any) {
           // Check if error is because they are already checked in
           // Firebase wraps HttpsError codes with 'functions/'
-          if (error?.code === 'functions/already-exists' || error?.details?.status === 'already_checked_in') {
+          if (item.status === 'pending' && (error?.code === 'functions/already-exists' || error?.details?.status === 'already_checked_in')) {
             // Silently mark as conflict and resolved
             console.log(`Conflict resolved silently for ${item.attendeeId}: Already checked in elsewhere.`);
             await db.checkinQueue.update(item.id!, { status: 'conflict' });
@@ -139,10 +144,39 @@ export function useOfflineSync(eventId: string) {
     return true;
   };
 
+  // Undo check-in offline or online
+  const handleUndoCheckIn = async (attendeeId: string) => {
+    const timestamp = new Date().toISOString();
+    
+    // Optimistic update in Dexie
+    await db.attendees.update(attendeeId, {
+      checkedInAt: null
+    });
+
+    // Add to queue
+    await db.checkinQueue.add({
+      attendeeId,
+      eventId,
+      timestamp,
+      status: 'pending-undo' as any,
+      idempotencyKey: `undo-${attendeeId}-${Date.now()}`
+    });
+
+    // Invalidate local queries to trigger UI update
+    queryClient.invalidateQueries({ queryKey: ["admin", "offline-attendees", eventId] });
+
+    if (isOnline) {
+      syncUp();
+    }
+    
+    return true;
+  };
+
   return {
     isOnline,
     isSyncing,
     handleCheckIn,
+    handleUndoCheckIn,
     syncDown,
     syncUp
   };

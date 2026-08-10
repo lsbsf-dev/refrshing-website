@@ -18,7 +18,7 @@ export interface CheckinQueueItem {
   attendeeId: string;
   eventId: string;
   timestamp: string;
-  status: 'pending' | 'synced' | 'conflict';
+  status: 'pending' | 'pending-undo' | 'synced' | 'conflict';
   idempotencyKey: string;
 }
 

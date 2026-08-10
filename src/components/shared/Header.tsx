@@ -59,7 +59,7 @@ export function Header() {
   }, [mobileMenuOpen]);
 
   const primaryNavLinks = [
-    { label: "Home", href: `${basePath}/` },
+    { label: "Home", href: basePath || "/" },
     { label: "About", href: `${basePath}/about` },
     { label: "Programme", href: `${basePath}/programme` },
     { label: "Ministers", href: `${basePath}/ministers` },
@@ -70,7 +70,6 @@ export function Header() {
   const secondaryNavLinks = [
     { label: "Announcements", href: `${basePath}/announcements` },
     { label: "Contact", href: `${basePath}/contact` },
-    { label: "FAQ", href: `${basePath}/faq` },
   ];
 
   const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks];
@@ -118,7 +117,8 @@ export function Header() {
         {/* Center: Streamlined Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-4">
           {primaryNavLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== `${basePath}/` && link.href !== "/" && pathname.startsWith(link.href));
+            const isHome = link.href === "/" || link.href === basePath;
+            const isActive = isHome ? (pathname === basePath || pathname === `${basePath}/` || pathname === "/") : pathname.startsWith(link.href);
             return (
               <Link
                 key={link.label}
@@ -205,7 +205,8 @@ export function Header() {
         <div className="lg:hidden fixed inset-0 bg-[#0B0907]/95 backdrop-blur-lg z-40 flex flex-col px-6 pt-32 pb-8 overflow-y-auto animate-fade-in text-white">
           <nav className="flex flex-col gap-5 text-left mb-8">
             {allNavLinks.map((link) => {
-              const isActive = pathname === link.href || (link.href !== `${basePath}/` && link.href !== "/" && pathname.startsWith(link.href));
+              const isHome = link.href === "/" || link.href === basePath;
+              const isActive = isHome ? (pathname === basePath || pathname === `${basePath}/` || pathname === "/") : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.label}

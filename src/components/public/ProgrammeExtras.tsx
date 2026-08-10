@@ -163,7 +163,7 @@ export function ProgrammeExtras({ eventId, activeDayLabel }: { eventId: string, 
                 <div>
                   <div className="flex items-center gap-3 text-xs font-sans text-zinc-500 mb-2">
                     <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" /> {article.publishedDate}</span>
-                    <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" /> {article.author}</span>
+                    <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" /> {article.author || "Editorial Board"}</span>
                   </div>
                   <h4 className="font-serif text-xl font-bold text-[#0B0907] group-hover:text-[#C25627] transition-colors line-clamp-2 mb-2">{article.title}</h4>
                   <p className="font-sans text-sm text-zinc-600 font-light line-clamp-3 leading-relaxed">{article.summary}</p>

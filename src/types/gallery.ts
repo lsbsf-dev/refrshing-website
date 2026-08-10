@@ -22,3 +22,12 @@ export interface Photo {
   altText: string;
   uploadedAt: string; // ISO string
 }
+
+export interface Video {
+  id: string;
+  eventId: string;
+  youtubeId: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+}

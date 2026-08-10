@@ -67,6 +67,19 @@ export interface AboutSettings extends BaseEventScopedDoc {
   themeArchive: ThemeArchiveEntry[];
 }
 
+export interface ContactPerson {
+  id: string;
+  name: string;
+  role: string;
+  phone: string;
+  email?: string;
+}
+
+export interface ContactSettings extends BaseEventScopedDoc {
+  address: string;
+  contacts: ContactPerson[];
+}
+
 export type PublishStatus = 'draft' | 'published';
 
 export interface BaseEventScopedDoc {

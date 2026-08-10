@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Megaphone, Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Bell, Loader2 } from "lucide-react";
+import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAnnouncements, updateAnnouncement, createAnnouncement, deleteAnnouncement } from "@/lib/firebase/announcements";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
@@ -24,6 +25,13 @@ export default function AdminAnnouncementsPage() {
   const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const categories = useMemo(() => {
+    const uniq = Array.from(new Set(announcementsList.map((a) => a.category)));
+    return ["All", ...uniq];
+  }, [announcementsList]);
 
   const [newAnn, setNewAnn] = useState({
     title: "",
@@ -43,14 +51,15 @@ export default function AdminAnnouncementsPage() {
     };
   }, [editingAnn, isNewModalOpen]);
 
-  const filtered = announcementsList.filter((a) =>
-    a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = announcementsList.filter((a) => {
+    const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase()) || a.content.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || a.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   // Mutations
   const updateMutation = useMutation({
-    mutationFn: (data: Announcement) => updateAnnouncement(data.id, data),
+    mutationFn: (data: Announcement) => updateAnnouncement(ACTIVE_EVENT_ID, data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
       setEditingAnn(null);
@@ -69,7 +78,7 @@ export default function AdminAnnouncementsPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteAnnouncement(id),
+    mutationFn: (id: string) => deleteAnnouncement(ACTIVE_EVENT_ID, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
       triggerSuccessBanner();
@@ -139,24 +148,25 @@ export default function AdminAnnouncementsPage() {
         </div>
       )}
 
-      {/* Search Bar */}
-      <div className="relative w-full max-w-md">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Filter announcements..."
-          className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 hover:text-[#C25627] transition-colors flex items-center justify-center cursor-pointer"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        )}
+      {/* Search Bar & Filter */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Filter announcements..."
+            className="w-full bg-white dark:bg-[#14120E] border border-black/10 dark:border-white/10 focus:border-[#C25627] text-xs font-sans py-3.5 pl-11 pr-10 rounded-xl outline-none transition-all"
+          />
+        </div>
+        <div className="w-full sm:w-48">
+          <CustomSelect
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+            options={categories.map((cat) => ({ value: cat, label: cat }))}
+          />
+        </div>
       </div>
 
       {/* ── Announcements Cards Grid ── */}
@@ -263,14 +273,11 @@ export default function AdminAnnouncementsPage() {
                 <label className="block text-xs font-sans font-bold uppercase mb-1">
                   Category
                 </label>
-                <input
-                  type="text"
-                  value={editingAnn.category}
-                  onChange={(e) =>
-                    setEditingAnn({ ...editingAnn, category: e.target.value as any })
-                  }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-                />
+                <CustomSelect
+                 value={editingAnn.category}
+                 onChange={(val) => setEditingAnn({ ...editingAnn, category: val as any })}
+                 options={categories.filter(c => c !== "All").map((cat) => ({ value: cat, label: cat }))}
+               />
               </div>
 
               <div>
@@ -365,13 +372,11 @@ export default function AdminAnnouncementsPage() {
                 <label className="block text-xs font-sans font-bold uppercase mb-1">
                   Category
                 </label>
-                <input
-                  type="text"
-                  value={newAnn.category}
-                  onChange={(e) => setNewAnn({ ...newAnn, category: e.target.value as any })}
-                  placeholder="General"
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
-                />
+                <CustomSelect
+                 value={newAnn.category}
+                 onChange={(val) => setNewAnn({ ...newAnn, category: val as any })}
+                 options={categories.filter(c => c !== "All").map((cat) => ({ value: cat, label: cat }))}
+               />
               </div>
 
               <div>

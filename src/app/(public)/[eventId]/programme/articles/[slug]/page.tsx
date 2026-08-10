@@ -59,7 +59,7 @@ export default function ArticlePage({ params }: { params: Promise<{ eventId: str
           </h1>
           <div className="flex flex-wrap items-center gap-6 text-sm font-sans text-white/80">
             <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {article.publishedDate}</span>
-            <span className="flex items-center gap-2"><User className="h-4 w-4" /> {article.author}</span>
+            <span className="flex items-center gap-2"><User className="h-4 w-4" /> {article.author || "Editorial Board"}</span>
           </div>
         </div>
       </section>

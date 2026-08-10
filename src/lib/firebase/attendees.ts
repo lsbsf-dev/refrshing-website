@@ -90,7 +90,9 @@ export const attendeeConverter: FirestoreDataConverter<Attendee> = {
       campusFellowshipName: data.campusFellowshipName || undefined,
       otherSchool: data.otherSchool || undefined,
       expectation: data.expectation || undefined,
-      checkIn: data.checkIn || { checkedIn: false },
+      checkIn: data.checkIn 
+        ? { ...data.checkIn, checkedIn: data.checkIn.checkedIn ?? !!data.checkIn.checkedInAt }
+        : { checkedIn: !!data.checkedInAt, checkedInAt: data.checkedInAt },
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };

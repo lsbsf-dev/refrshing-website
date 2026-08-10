@@ -171,6 +171,17 @@ service cloud.firestore {
         allow write: if false;
       }
 
+      // Analytics Summary (Only admins and analytics viewers)
+      match /analyticsSummary/{docId} {
+        allow read: if isSuperAdmin() || isEventAdmin(eventId) || (isSessionValid() && request.auth.token.role == 'viewer' && request.auth.token.allowedEvents != null && eventId in request.auth.token.allowedEvents);
+        allow write: if false; // Written exclusively by Cloud Functions
+        
+        match /byAssociation/{slug} {
+          allow read: if isSuperAdmin() || isEventAdmin(eventId) || (isSessionValid() && request.auth.token.role == 'viewer' && request.auth.token.allowedEvents != null && eventId in request.auth.token.allowedEvents);
+          allow write: if false;
+        }
+      }
+
       // Committee Members Subcollection
       match /committeeMembers/{memberId} {
         allow read: if isPublished() || isSuperAdmin() || isEventAdmin(eventId) || isEditor(eventId) || isViewer(eventId);

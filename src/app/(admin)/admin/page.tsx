@@ -22,6 +22,7 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { hasPermission, Permissions } from "@/lib/permissions";
 import { getEventScopedDocs } from "@/lib/firebase/cms";
 import { getMinisters } from "@/lib/firebase/ministers";
+import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 
 export default function AdminDashboardHome() {
   const { profile } = useAuth();
@@ -54,18 +55,9 @@ export default function AdminDashboardHome() {
     staleTime: Infinity
   });
 
-  // Mocking attendees count for now until the Attendees collection logic is built out
-  const { data: attendeesCount = 0, isFetching: isFetchingAttendees } = useQuery({
-    queryKey: ["dashboard", "attendees", eventId],
-    queryFn: async () => {
-       const docs = await getEventScopedDocs(eventId, "attendees");
-       return docs.length;
-    },
-    enabled: !!eventId && canReadRegistrations,
-    staleTime: Infinity
-  });
+  const canReadAnalytics = hasPermission(role, Permissions.Analytics.Read);
 
-  const isFetching = isFetchingMinisters || isFetchingAnnouncements || isFetchingAttendees;
+  const isFetching = isFetchingMinisters || isFetchingAnnouncements;
 
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -113,27 +105,7 @@ export default function AdminDashboardHome() {
       {/* ── Role-Specific Widgets Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {canReadRegistrations && (
-          <div className="p-6 bg-white border border-zinc-200 rounded-2xl flex flex-col justify-between shadow-sm">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
-                  <UserCheck className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-serif font-bold text-lg text-zinc-900 leading-none">Registrations</h3>
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-zinc-400">Total Approved</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-end justify-between">
-              <span className="font-serif text-5xl font-light text-zinc-900">{attendeesCount}</span>
-              <Link href="/admin/attendees" className="text-xs font-bold text-[#C25627] hover:text-[#9c431d] uppercase tracking-wider flex items-center gap-1">
-                Manage <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </div>
-        )}
+
 
         {canReadMinisters && (
           <div className="p-6 bg-white border border-zinc-200 rounded-2xl flex flex-col justify-between shadow-sm">
@@ -236,6 +208,23 @@ export default function AdminDashboardHome() {
 
          </div>
       </div>
+
+      {/* ── Advanced Analytics ── */}
+      {canReadAnalytics && (
+        <div className="mt-4 pt-8 border-t border-zinc-200 dark:border-white/10">
+           <div className="flex items-center justify-between mb-6">
+              <div>
+                 <span className="font-sans text-[10px] font-bold tracking-[0.2em] text-[#C25627] uppercase block mb-1">
+                   Telemetry & Insights
+                 </span>
+                 <h2 className="font-serif text-2xl font-bold uppercase text-zinc-900 dark:text-white">
+                   Attendance Analytics
+                 </h2>
+              </div>
+           </div>
+           <AnalyticsDashboard />
+        </div>
+      )}
 
     </div>
   );

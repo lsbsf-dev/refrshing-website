@@ -160,7 +160,7 @@ export default function BookletSlugPage({
           <div className="flex flex-wrap items-center gap-4 font-sans text-sm text-white/40 uppercase tracking-widest">
             <span className="flex items-center gap-1">
               <User className="h-3 w-3" />
-              {resource.author}
+              {resource.author || "Editorial Board"}
             </span>
             {resource.publishedAt && (
               <span>
@@ -185,7 +185,7 @@ export default function BookletSlugPage({
           {resource.fileUrl && (
             <div className="mt-12 border-t border-black/5 pt-10 text-center">
               <a
-                href={resource.fileUrl}
+                href={`/api/download?url=${encodeURIComponent(resource.fileUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 bg-[#C25627] hover:bg-[#A8451D] text-white font-sans font-bold text-xs tracking-widest uppercase py-4 px-8 transition-colors duration-300 active-press cursor-pointer"

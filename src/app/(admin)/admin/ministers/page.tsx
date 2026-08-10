@@ -169,21 +169,16 @@ export default function AdminMinistersPage() {
             </button>
           )}
         </div>
-        <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
-          {["all", "keynote", "music"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilterCategory(cat)}
-              className={`px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-xl whitespace-nowrap transition-colors ${
-                filterCategory === cat
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "bg-black/5 text-black/60 hover:bg-black/10 dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10"
-              }`}
-            >
-              {cat === "keynote" ? "Speakers" : cat === "music" ? "Music" : "All"}
-            </button>
-          ))}
-        </div>
+          {/* Category Filter Dropdown */}
+          <CustomSelect
+            value={filterCategory}
+            onChange={(val) => setFilterCategory(val as string)}
+            options={[
+              { value: "all", label: "All" },
+              ...Array.from(new Set(ministersList.map((m) => m.category || "unknown"))).map((cat) => ({ value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) })),
+            ]}
+            // ARIA handled within CustomSelect component
+          />
       </div>
 
       {/* Grid */}

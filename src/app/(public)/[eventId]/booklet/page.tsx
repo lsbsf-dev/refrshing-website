@@ -198,7 +198,7 @@ export default function BookletPage() {
 
                     {/* Author */}
                     <p className="font-sans text-sm text-[#7A7062] font-light mt-auto">
-                      {resource.author}
+                      {resource.author || "Editorial Board"}
                     </p>
 
                     {/* CTA */}

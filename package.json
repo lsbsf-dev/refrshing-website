@@ -31,6 +31,7 @@
     "react-hot-toast": "^2.6.0",
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.8.3",
+    "recharts": "^3.10.1",
     "tiptap-markdown": "^0.9.0",
     "turndown": "^7.2.4",
     "xlsx": "^0.18.5",
