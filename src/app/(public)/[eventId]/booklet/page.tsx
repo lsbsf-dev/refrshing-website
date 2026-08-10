@@ -13,7 +13,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getResources } from "@/lib/firebase/resources";
 import { useParams } from "next/navigation";
 import { REGISTRATION_URL } from "@/lib/constants";
-import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 import { BookOpen, FileText, Music, BookMarked, Download, ChevronRight } from "lucide-react";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
@@ -45,15 +44,35 @@ export default function BookletPage() {
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
   const [search, setSearch] = useState("");
 
-  const { data: resources = [] } = useQuery({
-    queryKey: ["resources", ACTIVE_EVENT_ID],
-    queryFn: () => getResources(ACTIVE_EVENT_ID),
+  const { data: rawResources = [], isLoading } = useQuery({
+    queryKey: ["resources", "all", ACTIVE_EVENT_ID],
+    queryFn: async () => {
+      const [articles, bibleStudies, resourcesData] = await Promise.all([
+        import("@/lib/firebase/articles").then(m => m.getArticles(ACTIVE_EVENT_ID)),
+        import("@/lib/firebase/bible-studies").then(m => m.getBibleStudies(ACTIVE_EVENT_ID)),
+        getResources(ACTIVE_EVENT_ID)
+      ]);
+      return [...articles, ...bibleStudies, ...resourcesData];
+    },
     staleTime: 6 * 60 * 60 * 1000,
-    initialData: () =>
-      (seedResources as unknown as Resource[]).filter(
-        (r) => r.eventId === ACTIVE_EVENT_ID && r.status === "published"
-      ),
   });
+
+  const resources = rawResources;
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex-1 bg-[#FAF6EE] animate-pulse">
+        <div className="h-[30dvh] bg-[#0B0907]" />
+        <div className="max-w-7xl mx-auto py-10 sm:py-16 px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-48 bg-black/5 rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const matchesSearch = (r: Resource) =>
     !search ||

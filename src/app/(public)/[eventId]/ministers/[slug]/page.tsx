@@ -14,10 +14,6 @@ import { ChevronLeft, Clock, MapPin, BookOpen } from "lucide-react";
 import { getMinisterBySlug } from "@/lib/firebase/ministers";
 import { getSessions } from "@/lib/firebase/programme";
 import { getResources } from "@/lib/firebase/resources";
-import { useParams } from "next/navigation";
-import seedMinisters from "@/lib/firebase/seedMinisters.json";
-import seedSessions from "@/lib/firebase/seedSessions.json";
-import seedResources from "@/lib/firebase/seedResources.json";
 import { Minister } from "@/types/minister";
 import { Session } from "@/types/programme";
 import { Resource } from "@/types/resource";
@@ -36,10 +32,6 @@ export default function MinisterDetailPage({
     queryKey: ["minister", ACTIVE_EVENT_ID, slug],
     queryFn: () => getMinisterBySlug(ACTIVE_EVENT_ID, slug),
     staleTime: 6 * 60 * 60 * 1000,
-    initialData: () =>
-      (seedMinisters as Minister[]).find(
-        (m) => m.slug === slug && m.eventId === ACTIVE_EVENT_ID
-      ),
   });
 
   // Assigned sessions query
@@ -47,15 +39,20 @@ export default function MinisterDetailPage({
     queryKey: ["sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
     staleTime: 30 * 60 * 1000,
-    initialData: () => seedSessions as Session[],
   });
 
   // Authored resources query
   const { data: allResources = [] } = useQuery({
-    queryKey: ["resources", ACTIVE_EVENT_ID],
-    queryFn: () => getResources(ACTIVE_EVENT_ID),
+    queryKey: ["resources", "all", ACTIVE_EVENT_ID],
+    queryFn: async () => {
+      const [articles, bibleStudies, resourcesData] = await Promise.all([
+        import("@/lib/firebase/articles").then(m => m.getArticles(ACTIVE_EVENT_ID)),
+        import("@/lib/firebase/bible-studies").then(m => m.getBibleStudies(ACTIVE_EVENT_ID)),
+        getResources(ACTIVE_EVENT_ID)
+      ]);
+      return [...articles, ...bibleStudies, ...resourcesData];
+    },
     staleTime: 30 * 60 * 1000,
-    initialData: () => seedResources as unknown as Resource[],
   });
 
   const sessions = minister

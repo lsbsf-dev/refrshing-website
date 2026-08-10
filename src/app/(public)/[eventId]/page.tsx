@@ -14,7 +14,6 @@ import { getEventScopedDocs, HomepageSettings, Article } from "@/lib/firebase/cm
 import { getEventById } from "@/lib/firebase/events";
 import { useParams } from "next/navigation";
 import { REGISTRATION_URL } from "@/lib/constants";
-import seedMinisters from "@/lib/firebase/seedMinisters.json";
 import { Minister } from "@/types/minister";
 import { Announcement } from "@/types/announcement";
 
@@ -35,10 +34,6 @@ export default function HomePage() {
     queryKey: ["ministers", ACTIVE_EVENT_ID],
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000,
-    initialData: () =>
-      (seedMinisters as Minister[]).filter(
-        (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
-      ),
   });
 
   const { data: announcements = [] } = useQuery({

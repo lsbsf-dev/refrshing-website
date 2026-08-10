@@ -17,7 +17,6 @@ import { getMinisters } from "@/lib/firebase/ministers";
 import { getResources } from "@/lib/firebase/resources";
 import { useParams } from "next/navigation";
 import { logAnalyticsEvent } from "@/lib/analytics";
-import seedResources from "@/lib/firebase/seedResources.json";
 import { Resource } from "@/types/resource";
 
 export default function SessionSlugPage({
@@ -57,14 +56,17 @@ export default function SessionSlugPage({
   });
 
   const { data: allResources = [] } = useQuery({
-    queryKey: ["resources", ACTIVE_EVENT_ID],
-    queryFn: () => getResources(ACTIVE_EVENT_ID),
+    queryKey: ["resources", "all", ACTIVE_EVENT_ID],
+    queryFn: async () => {
+      const [articles, bibleStudies, resourcesData] = await Promise.all([
+        import("@/lib/firebase/articles").then(m => m.getArticles(ACTIVE_EVENT_ID)),
+        import("@/lib/firebase/bible-studies").then(m => m.getBibleStudies(ACTIVE_EVENT_ID)),
+        getResources(ACTIVE_EVENT_ID)
+      ]);
+      return [...articles, ...bibleStudies, ...resourcesData];
+    },
     enabled: !!session,
     staleTime: 6 * 60 * 60 * 1000,
-    initialData: () =>
-      (seedResources as unknown as Resource[]).filter(
-        (r) => r.eventId === ACTIVE_EVENT_ID && r.status === "published"
-      ),
   });
 
   if (loadingSession) {

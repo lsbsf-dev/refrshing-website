@@ -1,15 +1,13 @@
 /**
  * Admin Seed Page Component
- *  * Database seeding utilities for admin.
+ * Database seeding utilities for admin.
  */
 
 "use client";
 
 import React, { useState } from "react";
-import { Database, RefreshCw, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
-import seedMinisters from "@/lib/firebase/seedMinisters.json";
-import seedSessions from "@/lib/firebase/seedSessions.json";
-import seedResources from "@/lib/firebase/seedResources.json";
+import { Database, RefreshCw } from "lucide-react";
+import { runDatabaseSeedAction } from "./actions";
 
 export default function AdminSeedPage() {
   const [seeding, setSeeding] = useState(false);
@@ -19,38 +17,36 @@ export default function AdminSeedPage() {
   const runDatabaseSeed = async () => {
     setSeeding(true);
     setCompleted(false);
-    setSeedLogs(["Initializing Database Connection...", "Validating collection paths..."]);
+    setSeedLogs(["Initializing Database Connection...", "Executing Seed & Sync..."]);
 
-    setTimeout(() => {
-      setSeedLogs((prev) => [
-        ...prev,
-        `Seeding 16 Ministers to /events/refreshing-2026/ministers...`,
-      ]);
-    }, 600);
+    try {
+      const results = await runDatabaseSeedAction();
 
-    setTimeout(() => {
-      setSeedLogs((prev) => [
-        ...prev,
-        `Seeding 11 Programme Sessions to /events/refreshing-2026/sessions...`,
-      ]);
-    }, 1200);
+      const newLogs = [];
+      if (results.sessions > 0) newLogs.push(`✅ ${results.sessions} Sessions written`);
+      if (results.bibleStudies > 0) newLogs.push(`✅ ${results.bibleStudies} Bible Studies written`);
+      if (results.articles > 0) newLogs.push(`✅ ${results.articles} Articles written`);
+      if (results.ministersMatched > 0) newLogs.push(`✅ ${results.ministersMatched} Minister bios matched and updated`);
+      
+      if (results.ministersUnmatched.length > 0) {
+        newLogs.push(`⚠️ ${results.ministersUnmatched.length} Minister(s) unmatched: ${results.ministersUnmatched.join(", ")}`);
+      }
+      
+      if (results.aboutContent) newLogs.push(`✅ About Content mapped and written`);
 
-    setTimeout(() => {
-      setSeedLogs((prev) => [
-        ...prev,
-        `Seeding 7 Camp Booklet Resources to /events/refreshing-2026/resources...`,
-      ]);
-    }, 1800);
+      if (results.errors.length > 0) {
+        newLogs.push(`❌ Errors encountered: ${results.errors.join(" | ")}`);
+      } else {
+        newLogs.push("✅ Database sync completed successfully!");
+      }
 
-    setTimeout(() => {
-      setSeedLogs((prev) => [
-        ...prev,
-        "Creating index for checkinView and RBAC custom claims...",
-        "✅ Database sync completed with 0 errors!",
-      ]);
+      setSeedLogs((prev) => [...prev, ...newLogs]);
+    } catch (error: any) {
+      setSeedLogs((prev) => [...prev, `❌ Failed: ${error.message || "Unknown error"}`]);
+    } finally {
       setSeeding(false);
       setCompleted(true);
-    }, 2400);
+    }
   };
 
   return (
@@ -76,7 +72,7 @@ export default function AdminSeedPage() {
               <span>Official Conference Dataset</span>
             </h3>
             <p className="font-sans text-xs text-white/70 font-light max-w-xl leading-relaxed">
-              Click below to sync the official JSON dataset (16 Ministers, 11 Sessions, and 7 Booklet Resources) to the database.
+              Click below to sync the official JSON dataset (sessions, articles, minister bios, etc.) to the database using your local edited files.
             </p>
           </div>
 
@@ -96,9 +92,9 @@ export default function AdminSeedPage() {
             <span className="text-white/40 italic">Ready to run database sync...</span>
           ) : (
             seedLogs.map((log, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <span className="text-[#DDB94E] font-bold">&gt;</span>
-                <span className={log.includes("✅") ? "text-emerald-400 font-bold" : "text-white/90"}>
+              <div key={idx} className="flex items-start gap-2">
+                <span className="text-[#DDB94E] font-bold mt-0.5">&gt;</span>
+                <span className={log.includes("✅") ? "text-emerald-400 font-bold" : log.includes("❌") || log.includes("⚠️") ? "text-amber-400 font-bold" : "text-white/90"}>
                   {log}
                 </span>
               </div>

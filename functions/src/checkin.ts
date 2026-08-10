@@ -2,11 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { logAudit } from "./audit";
 
-function setCorsHeaders(res: functions.Response) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-}
+
 
 async function performCheckIn(
   eventId: string,
@@ -104,48 +100,6 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
   }
 });
 
-export const markCheckedInHttp = functions.https.onRequest(async (req, res) => {
-  setCorsHeaders(res);
-
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-    return;
-  }
-
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
-  try {
-    const authHeader = req.headers.authorization || "";
-    const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    const decodedToken = bearer ? await admin.auth().verifyIdToken(bearer) : null;
-
-    if (!decodedToken) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
-
-    const { eventId, attendeeId } = req.body || {};
-    if (!eventId || !attendeeId) {
-      res.status(400).json({ error: "Both eventId and attendeeId are required arguments." });
-      return;
-    }
-
-    const token = decodedToken;
-    const role = (token.role as string) || "";
-    const allowedEvents = ((token.allowedEvents as string[]) || []) as string[];
-
-    const result = await performCheckIn(eventId, attendeeId, decodedToken.uid, token.email || "unknown@lsbsf.org", role, allowedEvents);
-    res.status(200).json(result);
-  } catch (error: any) {
-    console.error("HTTP check-in failed:", error);
-    const message = error?.message || "Failed to check in attendee.";
-    const statusCode = error?.code === "already-exists" ? 409 : 500;
-    res.status(statusCode).json({ error: message });
-  }
-});
 
 /**
  * Callable function to undo a check-in.

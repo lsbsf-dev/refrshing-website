@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getMinisters } from "@/lib/firebase/ministers";
 import { useParams } from "next/navigation";
 import { REGISTRATION_URL } from "@/lib/constants";
-import seedMinisters from "@/lib/firebase/seedMinisters.json";
 import { Minister } from "@/types/minister";
 import { ScrollableTabBar } from "@/components/shared/ScrollableTabBar";
 
@@ -36,10 +35,6 @@ export default function MinistersPage() {
     queryKey: ["ministers", ACTIVE_EVENT_ID],
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000,
-    initialData: () =>
-      (seedMinisters as Minister[]).filter(
-        (m) => m.eventId === ACTIVE_EVENT_ID && m.status === "published"
-      ),
   });
 
   // Sort ministers: Speakers first, Music at the end

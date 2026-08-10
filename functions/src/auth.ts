@@ -15,7 +15,7 @@ const inviteSchema = z.object({
  * Callable function to invite a new administrator user.
  * Gated strictly to superAdmin.
  */
-export const createInvite = functions.runWith({ secrets: ["EMAIL_API_KEY"] }).https.onCall(async (data, context) => {
+export const createInvite = functions.https.onCall(async (data, context) => {
   // 1. Verify caller has superAdmin privileges
   if (!context.auth || context.auth.token.role !== "superAdmin") {
     throw new functions.https.HttpsError(
