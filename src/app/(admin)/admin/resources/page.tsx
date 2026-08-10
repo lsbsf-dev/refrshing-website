@@ -13,6 +13,7 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Resource } from "@/types/resource";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
 import { CustomSelect } from "@/components/shared/CustomSelect";
+import toast from "react-hot-toast";
 
 export default function AdminResourcesPage() {
   const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
@@ -380,13 +381,12 @@ export default function AdminResourcesPage() {
                 <label className="block text-xs font-sans font-bold uppercase mb-1">
                   Category
                 </label>
-                <input
-                  type="text"
-                  value={newResource.category}
-                  onChange={(e) =>
-                    setNewResource({ ...newResource, category: e.target.value as any })
+                <CustomSelect
+                  value={newResource.category || "Study Guide"}
+                  onChange={(val) =>
+                    setNewResource({ ...newResource, category: val as any })
                   }
-                  className="w-full bg-zinc-50 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  options={categories.filter(c => c !== "All").map(c => ({ value: c, label: c }))}
                 />
               </div>
 
