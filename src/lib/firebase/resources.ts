@@ -18,7 +18,7 @@ export const resourceConverter: FirestoreDataConverter<Resource> = {
       description: resource.description,
       category: resource.category,
       author: resource.author,
-      publishedAt: resource.publishedAt,
+      publishedAt: resource.publishedAt || "",
       fileUrl: resource.fileUrl || null,
       embedUrl: resource.embedUrl || null,
       status: resource.status,

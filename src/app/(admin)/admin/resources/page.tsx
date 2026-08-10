@@ -13,6 +13,7 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Resource } from "@/types/resource";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
 import { CustomSelect } from "@/components/shared/CustomSelect";
+import toast from "react-hot-toast";
 
 export default function AdminResourcesPage() {
   const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
