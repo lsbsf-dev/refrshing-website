@@ -65,12 +65,20 @@ body {
 .dark,
 .dark body,
 html.dark {
-  background-color: #0B0907;
-  color: #FCFAF6;
+  --background: #0B0907;
+  --background-alt: #181612;
+  --foreground: #FCFAF6;
+  /* WCAG AA (4.5:1) compliant muted text against #0B0907. #A39A8E provides ~7.1:1 contrast ratio */
+  --foreground-muted: #A39A8E;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .dark * {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--border);
 }
 
 /* ─── Flyer/Event Visual Identity Styling ─── */

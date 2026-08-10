@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, CheckCircle, AlertCircle, UserCheck, WifiOff, Loader2, Undo2, Users } from "lucide-react";
+import { Search, CheckCircle, AlertCircle, UserCheck, WifiOff, Loader2, Undo2, Users, Phone, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useLiveQuery } from "dexie-react-hooks";
 import { getSystemSettings } from "@/lib/firebase/settings";
@@ -200,62 +200,62 @@ export default function AdminCheckInPage() {
             <p className="text-sm text-zinc-500 mt-2">No records match "{searchInput}". Try searching with a different term.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-sans text-sm">
-              <thead className="bg-zinc-100/50 dark:bg-white/[0.02] border-b border-black/10 dark:border-white/10 text-[10px] uppercase font-bold text-zinc-500 tracking-wider">
-                <tr>
-                  <th className="px-8 py-5">Attendee</th>
-                  <th className="px-8 py-5">Contact & Church</th>
-                  <th className="px-8 py-5">Registration</th>
-                  <th className="px-8 py-5 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5 dark:divide-white/5">
-                {filteredAttendees.slice(0, displayCount).map((attendee) => (
-                  <tr key={attendee.id} className="hover:bg-zinc-50/80 dark:hover:bg-white/[0.04] transition-colors group">
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 border border-white dark:border-zinc-700 shadow-sm">
-                           <span className="font-serif font-bold text-zinc-600 dark:text-zinc-400">{attendee.fullName.charAt(0)}</span>
-                        </div>
-                        <div>
-                          <div className="font-bold text-base text-[#0B0907] dark:text-[#FCFAF6]">{attendee.fullName}</div>
-                          <div className="font-mono text-xs text-[#C25627] mt-1 tracking-wider">{attendee.id}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6 text-zinc-600 dark:text-zinc-400">
-                      <div className="font-medium text-zinc-900 dark:text-zinc-300">{attendee.phoneMasked || "No Phone"}</div>
-                      <div className="text-xs mt-1 truncate max-w-[200px]" title={attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "No Church listed"}>
-                        {attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "-"}
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+          <div className="flex flex-col">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 md:p-6">
+              {filteredAttendees.slice(0, displayCount).map((attendee) => (
+                <div key={attendee.id} className="flex flex-col bg-white/80 dark:bg-white/[0.03] border border-black/5 dark:border-white/5 rounded-[1.5rem] p-5 hover:border-[#C25627]/30 transition-all shadow-sm hover:shadow-md group">
+                  {/* Top: Avatar and Name */}
+                  <div className="flex items-center gap-4 mb-5">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 border border-white dark:border-zinc-700 shadow-inner">
+                       <span className="font-serif font-bold text-zinc-600 dark:text-zinc-400 text-lg">{attendee.fullName.charAt(0)}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-base text-[#0B0907] dark:text-[#FCFAF6] truncate">{attendee.fullName}</div>
+                      <div className="font-mono text-xs text-[#C25627] mt-0.5 tracking-wider truncate">{attendee.id}</div>
+                    </div>
+                  </div>
+
+                  {/* Middle: Details */}
+                  <div className="flex-1 flex flex-col gap-3 mb-6">
+                    <div className="flex items-center gap-2.5">
+                      <Phone className="h-4 w-4 text-zinc-400 shrink-0" />
+                      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate">{attendee.phoneMasked || "No Phone"}</span>
+                    </div>
+                    <div className="flex items-start gap-2.5">
+                      <MapPin className="h-4 w-4 text-zinc-400 shrink-0 mt-0.5" />
+                      <span className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2" title={attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "No Church listed"}>
+                        {attendee.churchName || attendee.associationName || attendee.campusFellowshipName || "—"}
+                      </span>
+                    </div>
+                    <div className="mt-1">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
                         attendee.memberStatus.toLowerCase().includes('exec') 
                           ? 'bg-purple-500/10 text-purple-600 border border-purple-500/20' 
                           : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-400'
                       }`}>
                         {attendee.memberStatus}
                       </span>
-                    </td>
-                    <td className="px-8 py-6 text-right">
+                    </div>
+                  </div>
+
+                  {/* Bottom: Action */}
+                  <div className="mt-auto pt-4 border-t border-black/5 dark:border-white/5">
                       {attendee.checkedInAt ? (
-                        <div className="flex items-center justify-end gap-3">
-                          <div className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold shadow-sm">
-                            <CheckCircle className="h-4 w-4" />
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1 inline-flex justify-center items-center gap-1.5 px-4 py-3 sm:py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-sm sm:text-xs font-bold">
+                            <CheckCircle className="h-4 w-4 shrink-0" />
                             Admitted
                           </div>
                           <button
                             onClick={() => setUndoAttendeeId(attendee.id)}
                             disabled={processingId === attendee.id}
                             title="Undo Check-in"
-                            className="p-2.5 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all disabled:opacity-50"
+                            className="p-3 sm:p-2.5 flex items-center justify-center text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all disabled:opacity-50"
                           >
                             {processingId === attendee.id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <Loader2 className="h-5 w-5 sm:h-4 sm:w-4 animate-spin" />
                             ) : (
-                              <Undo2 className="h-4 w-4" />
+                              <Undo2 className="h-5 w-5 sm:h-4 sm:w-4" />
                             )}
                           </button>
                         </div>
@@ -263,23 +263,22 @@ export default function AdminCheckInPage() {
                         <button
                           onClick={() => onCheckIn(attendee.id)}
                           disabled={processingId === attendee.id}
-                          className="inline-flex items-center justify-center gap-2 px-8 py-3 min-h-[44px] bg-[#C25627] hover:bg-[#E05320] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 min-h-[48px] sm:min-h-[44px] bg-[#C25627] hover:bg-[#E05320] text-white font-bold text-sm sm:text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
                         >
                           {processingId === attendee.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="h-5 w-5 sm:h-4 sm:w-4 animate-spin shrink-0" />
                           ) : (
-                            <CheckCircle className="h-4 w-4" />
+                            <CheckCircle className="h-5 w-5 sm:h-4 sm:w-4 shrink-0" />
                           )}
                           Admit
                         </button>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </div>
+                </div>
+              ))}
+            </div>
             {filteredAttendees.length > displayCount && (
-              <div className="p-6 text-center text-xs text-zinc-500 bg-zinc-50/50 dark:bg-white/[0.02]">
+              <div className="p-6 text-center text-xs text-zinc-500 bg-zinc-50/50 dark:bg-white/[0.01] border-t border-black/5 dark:border-white/5">
                 Showing <span className="font-bold">{displayCount}</span> of <span className="font-bold">{filteredAttendees.length}</span> results. Keep scrolling to load more.
               </div>
             )}
