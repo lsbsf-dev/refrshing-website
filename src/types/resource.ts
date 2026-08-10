@@ -9,7 +9,7 @@ export interface Resource {
   slug: string;
   title: string;
   description: string;
-  category: "Bible Studies" | "Articles" | "Session Notes" | "Presentation Slides" | "Sermon Recordings" | "Videos" | "Worship Lyrics" | "Downloads" | "Devotionals" | "Publications";
+  category: "Bible Studies" | "Articles" | "Session Notes" | "Presentation Slides" | "Sermon Recordings" | "Videos" | "Worship Lyrics" | "Downloads" | "Devotionals" | "Publications" | "Study Guide";
   author: string;
   publishedAt: string; // ISO string
   fileUrl?: string; // Download file url

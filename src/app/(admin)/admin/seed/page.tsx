@@ -22,7 +22,7 @@ export default function AdminSeedPage() {
     try {
       const results = await runDatabaseSeedAction();
 
-      const newLogs = [];
+      const newLogs: string[] = [];
       if (results.sessions > 0) newLogs.push(`✅ ${results.sessions} Sessions written`);
       if (results.bibleStudies > 0) newLogs.push(`✅ ${results.bibleStudies} Bible Studies written`);
       if (results.articles > 0) newLogs.push(`✅ ${results.articles} Articles written`);
