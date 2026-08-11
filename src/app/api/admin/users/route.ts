@@ -67,8 +67,17 @@ export async function POST(req: Request) {
         createdAt: new Date().toISOString()
       };
 
+      let permissions: string[] = [];
+      if (newRecord.role) {
+        const roleDoc = await firestore.collection('settings').doc('global').collection('roles').doc(newRecord.role).get();
+        if (roleDoc.exists) {
+          permissions = roleDoc.data()?.permissions || [];
+        }
+      }
+
       await auth.setCustomUserClaims(userRecord.uid, {
         role: newRecord.role,
+        permissions: permissions,
         allowedEvents: newRecord.allowedEvents
       });
 
@@ -118,8 +127,18 @@ export async function POST(req: Request) {
         if (role || allowedEvents) {
            const mergedRole = role || beforeData?.role;
            const mergedEvents = allowedEvents || beforeData?.allowedEvents || [];
+           
+           let permissions: string[] = [];
+           if (mergedRole) {
+             const roleDoc = await firestore.collection('settings').doc('global').collection('roles').doc(mergedRole).get();
+             if (roleDoc.exists) {
+               permissions = roleDoc.data()?.permissions || [];
+             }
+           }
+
            await auth.setCustomUserClaims(uid, {
              role: mergedRole,
+             permissions: permissions,
              allowedEvents: mergedEvents
            });
         }

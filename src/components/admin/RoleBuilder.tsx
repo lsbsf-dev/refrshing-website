@@ -43,6 +43,11 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
+  const triggerErrorBanner = (msg: string) => {
+    setErrorToast(msg);
+    setTimeout(() => setErrorToast(null), 5000);
+  };
+
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       const functions = getFunctions(app);
@@ -62,7 +67,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
       setSelectedRole(null);
     },
     onError: (err: any) => {
-      alert(`Error saving role: ${err.message}`);
+      triggerErrorBanner(`Error saving role: ${err.message}`);
     }
   });
 
@@ -99,10 +104,24 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.id.trim()) {
-      alert("Role ID is required.");
-      return;
+    if (!formData.id || !formData.name) return;
+
+    if (isCreating) {
+      const isDuplicate = roles.some(
+        (r: any) => r.id.toLowerCase() === formData.id.toLowerCase() || r.name.toLowerCase() === formData.name.toLowerCase()
+      );
+      if (isDuplicate) {
+        triggerErrorBanner("A role with this ID or Display Name already exists.");
+        return;
+      }
     }
+
+    if (selectedRole?.isSystemRole && selectedRole?.id !== 'superAdmin') {
+      if (!confirm(`WARNING: '${formData.name}' is a core system role.\n\nChanging its permissions could break intended application behavior for users relying on it.\n\nAre you absolutely sure you want to modify this system role?`)) {
+        return;
+      }
+    }
+
     saveMutation.mutate(formData);
   };
 
@@ -117,6 +136,13 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
+      {errorToast && (
+        <div className="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] animate-fade-in flex items-center gap-3">
+          <Shield className="h-6 w-6" />
+          <span className="font-sans text-base font-bold">{errorToast}</span>
+        </div>
+      )}
+
       {/* Roles List */}
       <div className="w-full md:w-1/3 flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -175,13 +201,22 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                   Configure access levels for this role.
                 </p>
               </div>
+              {isCreating && (
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 border border-border rounded-xl font-bold font-sans text-xs hover:bg-black/5 dark:hover:bg-white/5 active-press"
+                >
+                  Cancel
+                </button>
+              )}
               <button
                 type="submit"
-                disabled={saveMutation.isPending}
-                className="px-6 py-2.5 bg-[#C25627] hover:bg-[#E05320] text-white font-sans font-bold text-xs uppercase rounded-full flex items-center gap-2 shadow-md cursor-pointer disabled:opacity-50 transition-colors"
+                disabled={saveMutation.isPending || formData.id === 'superAdmin'}
+                className="px-6 py-2 bg-[#C25627] text-white rounded-xl font-bold font-sans text-xs disabled:opacity-50 active-press flex items-center gap-2"
               >
                 {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                <span>Save Role</span>
+                {isCreating ? "Create Role" : "Save Changes"}
               </button>
             </div>
 
@@ -205,7 +240,8 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                   required
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  disabled={formData.id === 'superAdmin'}
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none disabled:opacity-50"
                   placeholder="e.g. Guest Speaker"
                 />
               </div>
@@ -215,7 +251,8 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                   type="text"
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
+                  disabled={formData.id === 'superAdmin'}
+                  className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none disabled:opacity-50"
                   placeholder="What is this role for?"
                 />
               </div>
@@ -238,7 +275,8 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                       type="checkbox"
                       checked={formData.permissions.includes(perm.id)}
                       onChange={() => handleTogglePermission(perm.id)}
-                      className="mt-0.5"
+                      disabled={formData.id === 'superAdmin'}
+                      className="mt-0.5 disabled:opacity-50"
                     />
                     <div className="flex flex-col">
                       <span className="font-sans text-xs font-bold text-foreground leading-tight">{perm.label}</span>
