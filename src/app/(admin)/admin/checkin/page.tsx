@@ -1,7 +1,7 @@
 // "use client" directive ensures client-side rendering
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Search, CheckCircle, AlertCircle, UserCheck, WifiOff, Loader2, Undo2, Users, Phone, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -49,23 +49,25 @@ export default function AdminCheckInPage() {
   );
 
   // Client‑side filtering based on search input
-  const filteredAttendees = attendees.filter((a) => {
-    if (!searchInput.trim()) return true;
-    const term = searchInput.toLowerCase();
-    return (
-      a.fullName.toLowerCase().includes(term) ||
-      (a.phoneMasked && a.phoneMasked.toLowerCase().includes(term)) ||
-      (a.churchName && a.churchName.toLowerCase().includes(term)) ||
-      (a.associationName && a.associationName.toLowerCase().includes(term)) ||
-      (a.campusFellowshipName && a.campusFellowshipName.toLowerCase().includes(term)) ||
-      a.id.toLowerCase().includes(term)
-    );
-  });
+  const filteredAttendees = useMemo(() => {
+    return attendees.filter((a) => {
+      if (!searchInput.trim()) return true;
+      const term = searchInput.toLowerCase();
+      return (
+        a.fullName.toLowerCase().includes(term) ||
+        (a.phoneMasked && a.phoneMasked.toLowerCase().includes(term)) ||
+        (a.churchName && a.churchName.toLowerCase().includes(term)) ||
+        (a.associationName && a.associationName.toLowerCase().includes(term)) ||
+        (a.campusFellowshipName && a.campusFellowshipName.toLowerCase().includes(term)) ||
+        a.id.toLowerCase().includes(term)
+      );
+    });
+  }, [attendees, searchInput]);
 
-  // Reset displayed count whenever the filtered list changes (new search)
+  // Reset displayed count whenever the search input changes (new search)
   useEffect(() => {
     setDisplayCount(PAGE_SIZE);
-  }, [filteredAttendees]);
+  }, [searchInput]);
 
   // Infinite‑scroll sentinel reference
   const loadMoreRef = useRef<HTMLDivElement>(null);
