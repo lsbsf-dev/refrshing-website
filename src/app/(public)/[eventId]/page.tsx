@@ -48,27 +48,6 @@ export default function HomePage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const testimonies = [
-    {
-      quote:
-        "Refreshing 2018 at Baptist Academy was where my call to ministry became crystal clear. The atmosphere of prayer altered my life direction.",
-      name: "Bro. Emmanuel Adeleke",
-      role: "Alumni, Class of 2019",
-    },
-    {
-      quote:
-        "The fellowship across associations is unmatched. You enter camp as a student and leave as a kingdom leader with clear vision.",
-      name: "Sis. Timi Idowu",
-      role: "Campus Executive, LASU",
-    },
-    {
-      quote:
-        "For 40 years, God has used LSBSF to raise leaders for church and society. Refreshing 2026 will be our greatest convergence yet.",
-      name: "Rev'd Dr. Enoch Abimbola",
-      role: "ALBA Moderator",
-    },
-  ];
-
   const daysConfig = [
     {
       label: "DAY 1",
@@ -781,45 +760,6 @@ export default function HomePage() {
             </div>
 
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          SCENE 9: TESTIMONIES (Rounded 2XL Cards)
-          ═══════════════════════════════════════ */}
-      <section className="relative w-full py-28 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#0B0907] overflow-hidden border-t border-black/5">
-        
-        <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
-          
-          <span className="font-sans text-sm font-bold tracking-[0.3em] text-[#C25627] uppercase block mb-3">
-            TESTIMONIALS
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-light text-[#0B0907] uppercase leading-none mb-16">
-            Alumni & Student <span className="font-serif italic font-extralight text-[#C25627]">Voices</span>
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left w-full">
-            {testimonies.map((test, idx) => (
-              <div
-                key={idx}
-                data-reveal
-                className="p-8 border border-black/10 bg-white flex flex-col justify-between min-h-[220px] shadow-sm rounded-2xl active-press cursor-pointer hover:border-[#C25627]/40 transition-all"
-              >
-                <p className="font-serif text-base italic font-light text-zinc-700 leading-relaxed mb-6">
-                  &ldquo;{test.quote}&rdquo;
-                </p>
-                <div>
-                  <h4 className="font-sans text-xs font-bold text-[#C25627] uppercase">
-                    {test.name}
-                  </h4>
-                  <span className="font-sans text-sm text-zinc-500 tracking-wider uppercase mt-0.5 block">
-                    {test.role}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
         </div>
       </section>
 
