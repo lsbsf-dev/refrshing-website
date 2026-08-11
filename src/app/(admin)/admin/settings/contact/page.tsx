@@ -22,7 +22,7 @@ export default function ContactSettingsAdminPage() {
     status: "published",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    address: "Baptist Academy Hall, Obanikoro, Ikorodu Road, Lagos, Nigeria.",
+    address: "Shepherd Hill Baptist Church, Obanikoro Road, Lagos, Nigeria.",
     contacts: [
       { id: "1", name: "Mr Sunday Oguntola", role: "Alumni President", phone: "08034309265" },
       { id: "2", name: "Emmanuel Adeyemi", role: "Contact Person", phone: "09020537794" },

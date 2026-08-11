@@ -34,7 +34,7 @@ export default function ContactPage() {
   const contactSettings = (settingsDocs.find(doc => doc.id === "contact") as ContactSettings) || {
     id: "contact",
     status: "published",
-    address: "Baptist Academy Hall, Obanikoro, Ikorodu Road, Lagos, Nigeria.",
+    address: "Shepherd Hill Baptist Church, Obanikoro Road, Lagos, Nigeria.",
     contacts: [
       { id: "1", name: "Mr Sunday Oguntola", role: "Alumni President", phone: "08034309265" },
       { id: "2", name: "Emmanuel Adeyemi", role: "Contact Person", phone: "09020537794" },

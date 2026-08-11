@@ -306,7 +306,7 @@ export default function AdminProgrammePage() {
                 onChange={(e) =>
                   setEditingSession({ ...editingSession, venue: e.target.value })
                 }
-                placeholder="Baptist Academy Auditorium"
+                placeholder="Shepherd Hill Baptist Church"
                 className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none"
               />
             </div>

@@ -28,7 +28,7 @@ export default function AdminEventsPage() {
     scripture: "",
     startDate: "",
     endDate: "",
-    venue: "Baptist Academy, Obanikoro, Lagos",
+    venue: "Shepherd Hill Baptist Church, Obanikoro Road, Lagos, Nigeria",
     status: "upcoming" as const,
     isMilestone: false,
   });
@@ -76,7 +76,7 @@ export default function AdminEventsPage() {
         scripture: "",
         startDate: "",
         endDate: "",
-        venue: "Baptist Academy, Obanikoro, Lagos",
+        venue: "Shepherd Hill Baptist Church, Obanikoro Road, Lagos, Nigeria",
         status: "upcoming",
         isMilestone: false,
       });

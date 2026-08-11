@@ -247,7 +247,7 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center gap-3 mt-1 font-mono text-xs tracking-widest text-[#DDB94E] uppercase animate-hero-item delay-400">
             <span>AUGUST 10–14, 2026</span>
             <span>·</span>
-            <span>BAPTIST ACADEMY, OBANIKORO, LAGOS</span>
+            <span>SHEPHERD HILL BAPTIST CHURCH, OBANIKORO ROAD, LAGOS, NIGERIA</span>
           </div>
 
         </div>

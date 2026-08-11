@@ -94,71 +94,89 @@ export default function AboutPage({ params }: { params: { eventId: string } }) {
         </div>
       </section>
 
-      {/* ── OUR PHILOSOPHY & HISTORY ── */}
-      <section className="relative w-full py-20 sm:py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] overflow-hidden">
-        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-
-          {/* Left: Historic photo frame (No sharp corners, NO incorrect tag) */}
-          <div className="lg:col-span-5 relative flex justify-center lg:justify-start overflow-hidden py-4">
-            <div className="relative w-full max-w-md aspect-[3/4] border border-black/10 shadow-xl bg-white overflow-hidden rotate-[-2deg] hover:rotate-0 transition-transform duration-500 rounded-2xl p-2.5 active-press cursor-pointer">
-              <div className="relative w-full h-full overflow-hidden rounded-xl">
-                <Image
-                  src="/pictures/Image 14.jpg"
-                  alt="Historic student fellowship moment"
-                  fill
-                  className="object-cover filter sepia-[0.3] brightness-[0.9] contrast-[1.05]"
-                />
+      {/* ── SECTION 1: OUR PHILOSOPHY ── */}
+      {settings?.aboutLsbsfHtml && (
+        <section className="relative w-full py-20 sm:py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] overflow-hidden">
+          <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left: Historic photo frame */}
+            <div className="lg:col-span-5 relative flex justify-center lg:justify-start overflow-hidden py-4">
+              <div className="relative w-full max-w-md aspect-[3/4] border border-black/10 shadow-xl bg-white overflow-hidden rotate-[-2deg] hover:rotate-0 transition-transform duration-500 rounded-2xl p-2.5 active-press cursor-pointer">
+                <div className="relative w-full h-full overflow-hidden rounded-xl">
+                  <Image
+                    src="/pictures/Image 14.jpg"
+                    alt="Historic student fellowship moment"
+                    fill
+                    className="object-cover filter sepia-[0.3] brightness-[0.9] contrast-[1.05]"
+                  />
+                </div>
               </div>
             </div>
+            
+            {/* Right: Narrative */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left text-[#0B0907]">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                OUR PHILOSOPHY
+              </span>
+              <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 prose-p:text-lg max-w-none" dangerouslySetInnerHTML={{ __html: settings.aboutLsbsfHtml }} />
+            </div>
           </div>
-          
-          {/* Right: History & Philosophy narrative */}
-          <div className="lg:col-span-7 flex flex-col items-start gap-10 text-left text-[#0B0907]">
-            
-            {settings?.visionHtml && (
-              <div className="w-full">
-                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
-                  OUR VISION
-                </span>
-                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.visionHtml }} />
-              </div>
-            )}
+        </section>
+      )}
 
-            {settings?.missionHtml && (
-              <div className="w-full pt-6 border-t border-black/10">
-                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
-                  OUR MISSION
-                </span>
-                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.missionHtml }} />
-              </div>
-            )}
-
-            {settings?.aboutLsbsfHtml && (
-              <div className="w-full pt-6 border-t border-black/10">
-                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
-                  ABOUT LSBSF
-                </span>
-                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.aboutLsbsfHtml }} />
-              </div>
-            )}
-
-            {settings?.historyHtml && (
-              <div className="w-full pt-6 border-t border-black/10">
-                <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
-                  OUR HISTORY
-                </span>
-                <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 max-w-none" dangerouslySetInnerHTML={{ __html: settings.historyHtml }} />
-              </div>
-            )}
-            
-            {!settings && (
-              <p className="text-zinc-500 italic">About page content has not been configured yet.</p>
-            )}
-            
+      {/* ── SECTION 2: A LEGACY OF COVENANT ── */}
+      {settings?.historyHtml && (
+        <section className="relative w-full py-20 sm:py-24 px-4 sm:px-6 md:px-16 bg-white text-[#1E1B16] border-t border-black/5">
+          <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+            <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-6">
+              A LEGACY OF COVENANT
+            </span>
+            <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 prose-p:text-lg sm:prose-p:text-xl max-w-none" dangerouslySetInnerHTML={{ __html: settings.historyHtml }} />
           </div>
+        </section>
+      )}
 
-        </div>
-      </section>
+      {/* ── SECTION 3: THE GREATER GLORY ── */}
+      {settings?.visionHtml && (
+        <section className="relative w-full py-20 sm:py-24 px-4 sm:px-6 md:px-16 bg-[#FAF6EE] text-[#1E1B16] border-t border-black/5">
+          <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col items-start text-left">
+              <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#C25627] uppercase block mb-4">
+                THE GREATER GLORY
+              </span>
+              <div className="prose prose-zinc prose-p:font-light prose-p:leading-relaxed prose-p:text-zinc-700 prose-p:text-lg max-w-none" dangerouslySetInnerHTML={{ __html: settings.visionHtml }} />
+            </div>
+            
+            <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border border-black/10">
+              <Image
+                src="/pictures/Image 1.jpg"
+                alt="Worship and fellowship"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── SECTION 4: AN INVITATION FOR ALL ── */}
+      {settings?.missionHtml && (
+        <section className="relative w-full py-24 sm:py-32 px-4 sm:px-6 md:px-16 bg-[#0B0907] text-white overflow-hidden">
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+             <Image
+                src="/pictures/Image 2.jpg"
+                alt="Background texture"
+                fill
+                className="object-cover grayscale"
+             />
+          </div>
+          <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+            <span className="font-sans text-sm font-bold tracking-[0.25em] text-[#DDB94E] uppercase block mb-6">
+              AN INVITATION FOR ALL
+            </span>
+            <div className="prose prose-invert prose-p:font-light prose-p:leading-relaxed prose-p:text-white/80 prose-p:text-lg sm:prose-p:text-2xl max-w-none" dangerouslySetInnerHTML={{ __html: settings.missionHtml }} />
+          </div>
+        </section>
+      )}
 
       {/* ── CORE PILLARS & OBJECTIVES ── */}
       <section className="relative w-full py-20 px-4 sm:px-6 md:px-16 bg-white text-[#0B0907] border-t border-black/5">
