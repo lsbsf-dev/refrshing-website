@@ -8,6 +8,7 @@ import { getEvents } from "@/lib/firebase/events";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 
 import { RoleBuilder } from "@/components/admin/RoleBuilder";
+import { Toast } from "@/components/admin/Toast";
 
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();
@@ -40,6 +41,11 @@ export default function AdminUsersPage() {
   
   const [isProvisionModalOpen, setIsProvisionModalOpen] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 5000);
+  };
 
   const [newUser, setNewUser] = useState({
     name: "",
@@ -95,7 +101,7 @@ export default function AdminUsersPage() {
       triggerSuccessBanner();
     },
     onError: (error: any) => {
-      alert(`Error provisioning account: ${error.message}`);
+      showToast(`Error provisioning account: ${error.message}`, "error");
     }
   });
 
@@ -121,7 +127,7 @@ export default function AdminUsersPage() {
       triggerSuccessBanner();
     },
     onError: (error: any) => {
-      alert(`Error updating account: ${error.message}`);
+      showToast(`Error updating account: ${error.message}`, "error");
     }
   });
 
@@ -154,6 +160,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      {toast && <Toast message={toast.message} variant={toast.variant} isVisible={true} onClose={() => setToast(null)} />}
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>

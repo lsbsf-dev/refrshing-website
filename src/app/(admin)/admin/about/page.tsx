@@ -8,6 +8,7 @@ import { ImageUploader } from "@/components/admin/ImageUploader";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Loader2, Save, Plus, Trash2 } from "lucide-react";
 import { TipTapEditor } from "@/components/admin/TipTapEditor";
+import { Toast } from "@/components/admin/Toast";
 
 export default function AboutAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
@@ -32,6 +33,11 @@ export default function AboutAdminPage() {
   };
 
   const [form, setForm] = useState<AboutSettings>(defaultSettings);
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     if (settingsDocs.length > 0) {
@@ -45,7 +51,7 @@ export default function AboutAdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "aboutSettings", selectedEventId] });
-      alert("About Page Settings saved successfully!");
+      showToast("About Page Settings saved successfully!", "success");
     }
   });
 
@@ -96,6 +102,7 @@ export default function AboutAdminPage() {
 
   return (
     <div className="pb-20 max-w-4xl">
+      {toast && <Toast message={toast.message} variant={toast.variant} isVisible={true} onClose={() => setToast(null)} />}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1">

@@ -6,6 +6,7 @@ import { getEventScopedDocs, setEventScopedDoc, ContactSettings, ContactPerson }
 import { FormField } from "@/components/shared/FormField";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Loader2, Save, Plus, Trash2, Phone } from "lucide-react";
+import { Toast } from "@/components/admin/Toast";
 
 export default function ContactSettingsAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
@@ -31,6 +32,11 @@ export default function ContactSettingsAdminPage() {
   };
 
   const [form, setForm] = useState<ContactSettings>(defaultSettings);
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     // Filter to find the contact settings doc specifically, since getEventScopedDocs returns all docs in aboutSettings
@@ -46,7 +52,7 @@ export default function ContactSettingsAdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "aboutSettings", selectedEventId, "contact"] });
-      alert("Contact Settings saved successfully!");
+      showToast("Contact Settings saved successfully!", "success");
     }
   });
 
@@ -97,6 +103,7 @@ export default function ContactSettingsAdminPage() {
 
   return (
     <div className="pb-20 max-w-4xl">
+      {toast && <Toast message={toast.message} variant={toast.variant} isVisible={true} onClose={() => setToast(null)} />}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1 flex items-center gap-3">

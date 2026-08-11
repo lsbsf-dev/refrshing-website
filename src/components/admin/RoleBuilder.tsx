@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Permissions, Permission } from "@/lib/permissions";
 import { Loader2, Shield, Sparkles, Plus, Save, Trash2, ShieldAlert } from "lucide-react";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "@/lib/firebase/app";
+import { ConfirmModal } from "./ConfirmModal";
+import { Toast } from "./Toast";
 
 // Flatten Permissions object for the UI
 const availablePermissions = Object.entries(Permissions).flatMap(([module, actions]) => 
@@ -21,8 +23,18 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
   const queryClient = useQueryClient();
   const [selectedRole, setSelectedRole] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [savedSuccess, setSavedSuccess] = useState(false);
-  const [errorToast, setErrorToast] = useState<string | null>(null);
+  
+  // Toast state
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState<{
+    title: string;
+    message: string;
+    confirmLabel: string;
+    variant: "danger" | "warning" | "default";
+    onConfirm: () => void;
+  } | null>(null);
   
   const [formData, setFormData] = useState({
     id: "",
@@ -31,7 +43,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
     permissions: [] as string[]
   });
 
-  const { data: roles = [], isLoading } = useQuery({
+  const { data: roles = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "roles"],
     queryFn: async () => {
       const snap = await getDocs(collection(db, "settings", "global", "roles"));
@@ -39,36 +51,47 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
     }
   });
 
-  const triggerSuccessBanner = () => {
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
-  };
-
-  const triggerErrorBanner = (msg: string) => {
-    setErrorToast(msg);
-    setTimeout(() => setErrorToast(null), 5000);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 4000);
   };
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const functions = getFunctions(app);
-      const updateRole = httpsCallable<any, any>(functions, "updateRole");
-      await updateRole({
-        roleId: data.id,
+      const ref = doc(db, "settings", "global", "roles", data.id);
+      await setDoc(ref, {
+        id: data.id,
         name: data.name,
         description: data.description,
-        permissions: data.permissions
-      });
+        permissions: data.permissions,
+        isSystemRole: selectedRole?.isSystemRole || false,
+      }, { merge: true });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      triggerSuccessBanner();
+      showToast("Role saved successfully!", "success");
       setIsCreating(false);
       setSelectedRole(null);
     },
     onError: (err: any) => {
-      triggerErrorBanner(`Error saving role: ${err.message}`);
+      showToast(`Error saving role: ${err.message}`, "error");
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (roleId: string) => {
+      const ref = doc(db, "settings", "global", "roles", roleId);
+      await deleteDoc(ref);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
+      showToast("Role deleted successfully.", "success");
+      setSelectedRole(null);
+      setFormData({ id: "", name: "", description: "", permissions: [] });
+    },
+    onError: (err: any) => {
+      showToast(`Error deleting role: ${err.message}`, "error");
     }
   });
 
@@ -112,18 +135,50 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
         (r: any) => r.id.toLowerCase() === formData.id.toLowerCase() || r.name.toLowerCase() === formData.name.toLowerCase()
       );
       if (isDuplicate) {
-        triggerErrorBanner("A role with this ID or Display Name already exists.");
+        showToast("A role with this ID or Display Name already exists.", "error");
         return;
       }
     }
 
     if (selectedRole?.isSystemRole && selectedRole?.id !== 'superAdmin') {
-      if (!confirm(`WARNING: '${formData.name}' is a core system role.\n\nChanging its permissions could break intended application behavior for users relying on it.\n\nAre you absolutely sure you want to modify this system role?`)) {
-        return;
-      }
+      setConfirmModal({
+        title: "Modify System Role",
+        message: `'${formData.name}' is a core system role.\n\nChanging its permissions could break intended application behavior for users relying on it.\n\nAre you absolutely sure?`,
+        confirmLabel: "Modify Role",
+        variant: "warning",
+        onConfirm: () => {
+          setConfirmModal(null);
+          saveMutation.mutate(formData);
+        }
+      });
+      return;
     }
 
     saveMutation.mutate(formData);
+  };
+
+  const handleDelete = () => {
+    if (!selectedRole) return;
+    
+    if (selectedRole.isSystemRole) {
+      showToast("System roles cannot be deleted.", "warning");
+      return;
+    }
+
+    const assignedUsers = usersList?.filter(u => u.role === selectedRole.id).length || 0;
+
+    setConfirmModal({
+      title: "Delete Role",
+      message: assignedUsers > 0
+        ? `This role has ${assignedUsers} user(s) currently assigned to it.\n\nDeleting it will leave those users without a valid role. Are you sure you want to permanently delete '${selectedRole.name}'?`
+        : `Are you sure you want to permanently delete the role '${selectedRole.name}'?\n\nThis action cannot be undone.`,
+      confirmLabel: "Delete Role",
+      variant: "danger",
+      onConfirm: () => {
+        setConfirmModal(null);
+        deleteMutation.mutate(selectedRole.id);
+      }
+    });
   };
 
   if (isLoading) {
@@ -135,19 +190,45 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 text-red-500">
+        <ShieldAlert className="h-8 w-8 mb-4 opacity-80" />
+        <span className="text-sm font-sans font-bold mb-2">Error Loading Roles</span>
+        <span className="text-xs font-mono text-red-500/80">{(error as Error)?.message || "Permission Denied"}</span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row gap-6">
-      {errorToast && (
-        <div className="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] animate-fade-in flex items-center gap-3">
-          <Shield className="h-6 w-6" />
-          <span className="font-sans text-base font-bold">{errorToast}</span>
-        </div>
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          variant={toast.variant}
+          isVisible={true}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {/* Confirm Modal */}
+      {confirmModal && (
+        <ConfirmModal
+          isOpen={true}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          confirmLabel={confirmModal.confirmLabel}
+          variant={confirmModal.variant}
+          onConfirm={confirmModal.onConfirm}
+          onCancel={() => setConfirmModal(null)}
+        />
       )}
 
       {/* Roles List */}
       <div className="w-full md:w-1/3 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-serif text-lg font-bold text-foreground uppercase">Custom Roles</h3>
+          <h3 className="font-serif text-lg font-bold text-foreground uppercase">Roles</h3>
           <button 
             onClick={handleCreateNew}
             className="p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-colors text-zinc-600 dark:text-zinc-300"
@@ -168,14 +249,21 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                   : "bg-surface border-border hover:border-black/30 dark:hover:border-white/30"
               }`}
             >
-              <h4 className="font-sans font-bold text-sm text-foreground">{r.name || r.id}</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="font-sans font-bold text-sm text-foreground">{r.name || r.id}</h4>
+                {r.isSystemRole && (
+                  <span className="text-[9px] font-mono font-bold text-[#DDB94E] bg-[#DDB94E]/10 border border-[#DDB94E]/20 px-2 py-0.5 rounded-full uppercase">
+                    System
+                  </span>
+                )}
+              </div>
               <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mt-1">{r.permissions?.length || 0} Permissions</p>
             </button>
           ))}
           {roles.length === 0 && !isCreating && (
             <div className="p-8 text-center border border-dashed border-black/20 dark:border-white/20 rounded-2xl">
               <ShieldAlert className="h-8 w-8 mx-auto text-zinc-400 mb-2 opacity-50" />
-              <p className="font-sans text-xs text-zinc-500">No custom roles found.</p>
+              <p className="font-sans text-xs text-zinc-500">No roles found.</p>
             </div>
           )}
         </div>
@@ -185,13 +273,6 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
       <div className="w-full md:w-2/3">
         {(selectedRole || isCreating) ? (
           <form onSubmit={handleSave} className="bg-surface border border-border rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
-            
-            {savedSuccess && (
-              <div className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in">
-                <Sparkles className="h-5 w-5" />
-                <span className="font-sans text-sm font-bold">Role updated successfully!</span>
-              </div>
-            )}
 
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
@@ -202,23 +283,37 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
                   Configure access levels for this role.
                 </p>
               </div>
-              {isCreating && (
+              <div className="flex items-center gap-2">
+                {/* Delete button — only for non-system, non-creating roles */}
+                {!isCreating && selectedRole && !selectedRole.isSystemRole && (
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={deleteMutation.isPending}
+                    className="px-4 py-2 border border-red-500/30 text-red-500 rounded-xl font-bold font-sans text-xs hover:bg-red-500/10 active-press flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {deleteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                    Delete
+                  </button>
+                )}
+                {isCreating && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCreating(false)}
+                    className="px-4 py-2 border border-border rounded-xl font-bold font-sans text-xs hover:bg-black/5 dark:hover:bg-white/5 active-press"
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button
-                  type="button"
-                  onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 border border-border rounded-xl font-bold font-sans text-xs hover:bg-black/5 dark:hover:bg-white/5 active-press"
+                  type="submit"
+                  disabled={saveMutation.isPending || formData.id === 'superAdmin'}
+                  className="px-6 py-2 bg-[#C25627] text-white rounded-xl font-bold font-sans text-xs disabled:opacity-50 active-press flex items-center gap-2"
                 >
-                  Cancel
+                  {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  {isCreating ? "Create Role" : "Save Changes"}
                 </button>
-              )}
-              <button
-                type="submit"
-                disabled={saveMutation.isPending || formData.id === 'superAdmin'}
-                className="px-6 py-2 bg-[#C25627] text-white rounded-xl font-bold font-sans text-xs disabled:opacity-50 active-press flex items-center gap-2"
-              >
-                {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                {isCreating ? "Create Role" : "Save Changes"}
-              </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

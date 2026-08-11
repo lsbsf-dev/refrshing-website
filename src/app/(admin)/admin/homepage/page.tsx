@@ -10,6 +10,7 @@ import { Loader2, Save } from "lucide-react";
 import { getMinisters } from "@/lib/firebase/ministers";
 import { Minister } from "@/types/minister";
 import { Announcement } from "@/types/announcement";
+import { Toast } from "@/components/admin/Toast";
 
 export default function HomepageAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
@@ -61,6 +62,11 @@ export default function HomepageAdminPage() {
   };
 
   const [form, setForm] = useState<HomepageSettings>(defaultSettings);
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     if (settingsDocs.length > 0) {
@@ -74,7 +80,7 @@ export default function HomepageAdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "homepageSettings", selectedEventId] });
-      alert("Settings saved successfully!");
+      showToast("Settings saved successfully!", "success");
     }
   });
 
@@ -90,6 +96,7 @@ export default function HomepageAdminPage() {
 
   return (
     <div className="pb-20 max-w-4xl">
+      {toast && <Toast message={toast.message} variant={toast.variant} isVisible={true} onClose={() => setToast(null)} />}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-3xl font-bold text-foreground uppercase mb-1">

@@ -54,7 +54,7 @@ service cloud.firestore {
     // ==========================================
     
     // Global Settings (Requires Super Admin)
-    match /settings/{settingId} {
+    match /settings/{document=**} {
       allow read: if isSuperAdmin() || isSessionValid();
       allow write: if isSuperAdmin();
     }
