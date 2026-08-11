@@ -37,7 +37,7 @@ export default function AdminGalleryDashboard() {
   const createAlbumMutation = useMutation({
     mutationFn: async () => {
       const id = `album-${Date.now()}`;
-      await createAlbum({
+      await createAlbum(selectedEventId, {
         eventId: selectedEventId,
         slug: albumSlug,
         title: albumTitle,
@@ -57,7 +57,7 @@ export default function AdminGalleryDashboard() {
   });
 
   const deleteAlbumMutation = useMutation({
-    mutationFn: (id: string) => deleteAlbum(id),
+    mutationFn: (id: string) => deleteAlbum(selectedEventId, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "albums", selectedEventId] });
     }
@@ -66,7 +66,7 @@ export default function AdminGalleryDashboard() {
   const addVideoMutation = useMutation({
     mutationFn: async () => {
       const id = `vid-${Date.now()}`;
-      await addVideo({
+      await addVideo(selectedEventId, {
         eventId: selectedEventId,
         title: videoTitle,
         youtubeId: youtubeId,
@@ -83,7 +83,7 @@ export default function AdminGalleryDashboard() {
   });
 
   const deleteVideoMutation = useMutation({
-    mutationFn: (id: string) => deleteVideo(id),
+    mutationFn: (id: string) => deleteVideo(selectedEventId, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "videos", selectedEventId] });
     }

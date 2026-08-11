@@ -17,7 +17,7 @@ const availablePermissions = Object.entries(Permissions).flatMap(([module, actio
   }))
 );
 
-export function RoleBuilder() {
+export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
   const queryClient = useQueryClient();
   const [selectedRole, setSelectedRole] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -248,6 +248,45 @@ export function RoleBuilder() {
                 ))}
               </div>
             </div>
+            
+            {/* Assigned Users Section */}
+            {formData.id && (
+              <div className="space-y-4 pt-6 border-t border-border mt-6">
+                <div className="flex items-center justify-between border-b border-border pb-2">
+                  <label className="block text-xs font-sans font-bold uppercase flex items-center gap-2">
+                    Assigned Users
+                    <span className="px-2 py-0.5 bg-black/5 dark:bg-white/5 rounded-full font-mono text-[10px] text-zinc-500">
+                      View Only
+                    </span>
+                  </label>
+                  <span className="text-xs font-mono font-bold text-[#C25627]">
+                    {usersList?.filter(u => u.role === formData.id).length || 0} users
+                  </span>
+                </div>
+                <div className="bg-surface-muted rounded-xl border border-border p-2 max-h-[200px] overflow-y-auto custom-scrollbar">
+                  {usersList?.filter(u => u.role === formData.id).length ? (
+                    <ul className="space-y-1">
+                      {usersList.filter(u => u.role === formData.id).map(u => (
+                        <li key={u.id} className="text-xs font-sans flex flex-col sm:flex-row sm:items-center justify-between p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg border border-transparent hover:border-black/5">
+                          <div>
+                            <p className="font-bold">{u.name}</p>
+                            <p className="text-zinc-500">{u.email}</p>
+                          </div>
+                          <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-0 bg-emerald-500/10 px-2 py-1 rounded-md">
+                            Active
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-xs text-zinc-500 font-sans italic text-center py-6">No users currently assigned to this role.</p>
+                  )}
+                </div>
+                <p className="text-[10px] text-zinc-500 font-sans mt-2">
+                  To reassign users, go to the <strong>Users</strong> tab and edit their account profile.
+                </p>
+              </div>
+            )}
           </form>
         ) : (
           <div className="h-full bg-black/5 dark:bg-white/5 border border-border border-dashed rounded-3xl flex flex-col items-center justify-center text-center p-12 min-h-[400px]">

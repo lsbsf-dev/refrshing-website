@@ -11,6 +11,7 @@ import { CustomSelect } from "@/components/shared/CustomSelect";
 import { Modal } from "@/components/shared/Modal";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { db } from "@/lib/db";
+import { useAuth } from "@/lib/contexts/AuthContext";
 
 export default function AdminCheckInPage() {
   // Fetch system settings and events
@@ -24,7 +25,8 @@ export default function AdminCheckInPage() {
     queryFn: getEvents,
   });
 
-  const [selectedEventId, setSelectedEventId] = useState<string>("refreshing-2026");
+  const { profile, activeEvent } = useAuth();
+  const [selectedEventId, setSelectedEventId] = useState<string>(activeEvent || "refreshing-2026");
   const [searchInput, setSearchInput] = useState("");
   const PAGE_SIZE = 30;
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
@@ -37,7 +39,7 @@ export default function AdminCheckInPage() {
   }, [settings, selectedEventId]);
 
   // Offline sync hook
-  const { isOnline, isSyncing, handleCheckIn, handleUndoCheckIn } = useOfflineSync(selectedEventId);
+  const { isOnline, isSyncing, syncError, handleCheckIn, handleUndoCheckIn } = useOfflineSync(selectedEventId);
 
   // Live query from Dexie (local cache)
   const attendees = useLiveQuery(
@@ -188,6 +190,13 @@ export default function AdminCheckInPage() {
           />
         </div>
       </div>
+
+      {syncError && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl flex items-center gap-3 font-sans text-sm">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <p><strong>Sync Error:</strong> {syncError}</p>
+        </div>
+      )}
 
       {/* Results area */}
       <div className="bg-surface/60 backdrop-blur-2xl border border-border rounded-[2.5rem] overflow-hidden shadow-2xl">

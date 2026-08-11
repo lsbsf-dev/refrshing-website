@@ -6,9 +6,11 @@ import { getAttendees, Attendee, getAttendeePayment, AttendeePayment } from "@/l
 import { getAssociationsByConference, getChurchesByAssociation, getChurchesByCampus } from "@/lib/firebase/master-data";
 import { ALL_ASSOCIATIONS_BY_CONFERENCE } from "@/lib/constants";
 import { CustomSelect } from "@/components/shared/CustomSelect";
-import { Search, ChevronRight, X, FileCheck, FileX, Loader2 } from "lucide-react";
+import { Search, ChevronRight, X, FileCheck, FileX, Loader2, UserPlus } from "lucide-react";
+import { RegistrationModal } from "./RegistrationModal";
 
 export function AttendeeDirectory({ eventId }: { eventId: string }) {
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const { data: attendees = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "attendees", eventId],
     queryFn: () => getAttendees(eventId),
@@ -71,18 +73,19 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
   return (
     <div className="flex flex-col gap-6">
       
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-          <input 
-            type="text" 
-            placeholder="Search attendees..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-surface border border-border text-sm font-sans py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-[#C25627]"
-          />
-        </div>
+      {/* Filters & Actions */}
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+            <input 
+              type="text" 
+              placeholder="Search attendees..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-surface border border-border text-sm font-sans py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-[#C25627]"
+            />
+          </div>
         
         <CustomSelect
           options={[
@@ -125,6 +128,14 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
           disabled={association === "all"}
           placeholder="Church"
         />
+        </div>
+        <button 
+          onClick={() => setIsRegisterModalOpen(true)}
+          className="shrink-0 flex items-center gap-2 px-4 py-2.5 bg-[#C25627] text-white hover:bg-[#a1451f] rounded-xl font-sans font-bold text-sm transition-colors"
+        >
+          <UserPlus className="h-4 w-4" />
+          Register On-Site
+        </button>
       </div>
 
       {/* Directory Table */}
@@ -198,8 +209,17 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
 
       {/* Side Panel for Details */}
       {selectedAttendee && (
-        <AttendeeDetailPanel attendee={selectedAttendee} onClose={() => setSelectedAttendee(null)} />
+        <AttendeeDetailPanel
+          attendee={selectedAttendee}
+          onClose={() => setSelectedAttendee(null)}
+        />
       )}
+
+      <RegistrationModal 
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        eventId={eventId}
+      />
     </div>
   );
 }

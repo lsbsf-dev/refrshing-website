@@ -103,7 +103,7 @@ export const updateRole = functions.https.onCall(async (data, context) => {
 
     // 2. Sync custom claims for existing users with this role
     let pageToken;
-    const usersToUpdate = [];
+    const usersToUpdate: admin.auth.UserRecord[] = [];
     do {
       const listUsersResult = await admin.auth().listUsers(1000, pageToken);
       for (const user of listUsersResult.users) {

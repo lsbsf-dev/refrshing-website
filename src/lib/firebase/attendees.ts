@@ -136,3 +136,55 @@ export async function getAttendeePayment(eventId: string, code: string): Promise
   const snap = await getDoc(ref);
   return snap.exists() ? (snap.data() as AttendeePayment) : null;
 }
+
+/**
+ * On-the-spot registration: Creates an attendee and instantly marks them as checked in.
+ */
+export async function createAndCheckInAttendee(
+  eventId: "refreshing-2026",
+  data: Omit<Attendee, "id" | "eventId" | "createdAt" | "updatedAt" | "checkIn">,
+  adminUid: string,
+  hasPaid: boolean
+): Promise<string> {
+  // Generate random code e.g. REF26-XYZ123
+  const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const code = `REF26-${randomStr}`;
+  
+  const attendee: Attendee = {
+    ...data,
+    id: code,
+    eventId,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now()
+  };
+
+  const ref = doc(db, "events", eventId, "attendees", code).withConverter(attendeeConverter);
+  await setDoc(ref, attendee);
+
+  if (hasPaid) {
+    const paymentRef = doc(db, "events", eventId, "attendees", code, "payment", "record");
+    await setDoc(paymentRef, {
+      hasPaid: true,
+      verificationStatus: "verified",
+      verifiedAt: Timestamp.now(),
+      verifiedBy: adminUid
+    } as AttendeePayment);
+  }
+
+  // Call the markCheckedIn Cloud Function instead of direct write
+  // This preserves the audit log and security rules
+  const { getFunctions, httpsCallable } = await import("firebase/functions");
+  const { app } = await import("@/lib/firebase/app");
+  const functions = getFunctions(app);
+  const markCheckedIn = httpsCallable<{ eventId: string, attendeeId: string }, any>(functions, "markCheckedIn");
+  
+  try {
+    await markCheckedIn({ eventId, attendeeId: code });
+  } catch (err: any) {
+    if (err?.code !== 'functions/already-exists' && err?.details?.status !== 'already_checked_in') {
+      console.error("Cloud function check-in failed, but attendee was created:", err);
+    }
+  }
+
+  return code;
+}

@@ -42,6 +42,10 @@ export async function POST(req: Request) {
       let userRecord;
       try {
         userRecord = await auth.getUserByEmail(email);
+        // If they already exist in Auth, update their password if a new one was provided
+        if (password) {
+          userRecord = await auth.updateUser(userRecord.uid, { password });
+        }
       } catch (e: any) {
         if (e.code === 'auth/user-not-found') {
           userRecord = await auth.createUser({

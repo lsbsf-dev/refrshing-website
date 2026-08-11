@@ -21,9 +21,6 @@ export default function GalleryPage() {
     queryKey: ["galleryAlbums", ACTIVE_EVENT_ID],
     queryFn: () => getAlbums(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000, // 6 hours
-    initialData: () => (seedAlbums as GalleryAlbum[]).filter(
-      (a) => a.eventId === ACTIVE_EVENT_ID && a.status === "published"
-    ),
   });
 
   if (isLoading) {

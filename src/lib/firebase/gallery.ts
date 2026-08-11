@@ -84,7 +84,7 @@ import seedAlbums from "./seedAlbums.json";
 
 export async function getAlbums(eventId: string): Promise<GalleryAlbum[]> {
   try {
-    const ref = collection(db, "galleryAlbums").withConverter(galleryAlbumConverter);
+    const ref = collection(db, "events", eventId, "galleryAlbums").withConverter(galleryAlbumConverter);
     const q = query(
       ref,
       where("eventId", "==", eventId),
@@ -100,7 +100,7 @@ export async function getAlbums(eventId: string): Promise<GalleryAlbum[]> {
 }
 
 export async function getAlbumBySlug(eventId: string, slug: string): Promise<GalleryAlbum | null> {
-  const ref = collection(db, "galleryAlbums").withConverter(galleryAlbumConverter);
+  const ref = collection(db, "events", eventId, "galleryAlbums").withConverter(galleryAlbumConverter);
   const q = query(
     ref,
     where("eventId", "==", eventId),
@@ -112,7 +112,7 @@ export async function getAlbumBySlug(eventId: string, slug: string): Promise<Gal
 }
 
 export async function getPhotos(eventId: string, albumId: string): Promise<Photo[]> {
-  const ref = collection(db, "photos").withConverter(photoConverter);
+  const ref = collection(db, "events", eventId, "photos").withConverter(photoConverter);
   const q = query(
     ref,
     where("eventId", "==", eventId),
@@ -126,19 +126,19 @@ export async function getPhotos(eventId: string, albumId: string): Promise<Photo
 // ALBUM MUTATIONS
 // =======================
 
-export async function createAlbum(album: Omit<GalleryAlbum, "id">, id: string): Promise<void> {
-  const ref = doc(db, "galleryAlbums", id).withConverter(galleryAlbumConverter);
+export async function createAlbum(eventId: string, album: Omit<GalleryAlbum, "id">, id: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "galleryAlbums", id).withConverter(galleryAlbumConverter);
   await setDoc(ref, { ...album, id });
 }
 
-export async function updateAlbum(id: string, updates: Partial<GalleryAlbum>): Promise<void> {
-  const ref = doc(db, "galleryAlbums", id);
+export async function updateAlbum(eventId: string, id: string, updates: Partial<GalleryAlbum>): Promise<void> {
+  const ref = doc(db, "events", eventId, "galleryAlbums", id);
   await updateDoc(ref, updates);
 }
 
-export async function deleteAlbum(id: string): Promise<void> {
+export async function deleteAlbum(eventId: string, id: string): Promise<void> {
   // We should also delete photos, but we leave that to cloud functions or manual cleanup
-  const ref = doc(db, "galleryAlbums", id);
+  const ref = doc(db, "events", eventId, "galleryAlbums", id);
   await deleteDoc(ref);
 }
 
@@ -146,31 +146,31 @@ export async function deleteAlbum(id: string): Promise<void> {
 // PHOTO MUTATIONS
 // =======================
 
-export async function addPhoto(photo: Omit<Photo, "id">, id: string): Promise<void> {
-  const ref = doc(db, "photos", id).withConverter(photoConverter);
+export async function addPhoto(eventId: string, photo: Omit<Photo, "id">, id: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "photos", id).withConverter(photoConverter);
   await setDoc(ref, { ...photo, id });
   
   // Increment photo count on the album
   if (photo.albumId) {
-    const albumRef = doc(db, "galleryAlbums", photo.albumId);
+    const albumRef = doc(db, "events", eventId, "galleryAlbums", photo.albumId);
     await updateDoc(albumRef, { photoCount: increment(1) });
   }
 }
 
-export async function updatePhoto(id: string, updates: Partial<Photo>): Promise<void> {
-  const ref = doc(db, "photos", id);
+export async function updatePhoto(eventId: string, id: string, updates: Partial<Photo>): Promise<void> {
+  const ref = doc(db, "events", eventId, "photos", id);
   
   // If moving between albums, we should technically handle increment/decrement on albums
   // For simplicity here, we assume standard updates
   await updateDoc(ref, updates);
 }
 
-export async function deletePhoto(id: string, albumId?: string): Promise<void> {
-  const ref = doc(db, "photos", id);
+export async function deletePhoto(eventId: string, id: string, albumId?: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "photos", id);
   await deleteDoc(ref);
   
   if (albumId) {
-    const albumRef = doc(db, "galleryAlbums", albumId);
+    const albumRef = doc(db, "events", eventId, "galleryAlbums", albumId);
     await updateDoc(albumRef, { photoCount: increment(-1) });
   }
 }
@@ -179,25 +179,25 @@ export async function deletePhoto(id: string, albumId?: string): Promise<void> {
 // VIDEO OPERATIONS
 // =======================
 
-export async function getVideos(eventId: string): Promise<Video[]> {
-  const ref = collection(db, "videos").withConverter(videoConverter);
+export async function getVideos(eventId: string, albumId: string): Promise<Video[]> {
+  const ref = collection(db, "events", eventId, "videos").withConverter(videoConverter);
   const q = query(ref, where("eventId", "==", eventId));
   const snap = await getDocs(q);
   return snap.docs.map((doc) => doc.data());
 }
 
-export async function addVideo(video: Omit<Video, "id">, id: string): Promise<void> {
-  const ref = doc(db, "videos", id).withConverter(videoConverter);
+export async function addVideo(eventId: string, video: Omit<Video, "id">, id: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "videos", id).withConverter(videoConverter);
   await setDoc(ref, { ...video, id });
 }
 
-export async function updateVideo(id: string, updates: Partial<Video>): Promise<void> {
-  const ref = doc(db, "videos", id);
+export async function updateVideo(eventId: string, id: string, updates: Partial<Video>): Promise<void> {
+  const ref = doc(db, "events", eventId, "videos", id);
   await updateDoc(ref, updates);
 }
 
-export async function deleteVideo(id: string): Promise<void> {
-  const ref = doc(db, "videos", id);
+export async function deleteVideo(eventId: string, id: string): Promise<void> {
+  const ref = doc(db, "events", eventId, "videos", id);
   await deleteDoc(ref);
 }
 

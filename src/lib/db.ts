@@ -29,10 +29,59 @@ export class RefreshingDB extends Dexie {
   constructor() {
     super('RefreshingDB');
     this.version(1).stores({
-      attendees: 'id, eventId, fullName', // Primary key and indexed props
-      checkinQueue: '++id, eventId, status' // Primary key and indexed props
+      attendees: 'id, eventId, name', 
+      checkinQueue: '++id, eventId, status' 
+    });
+    this.version(2).stores({
+      attendees: 'id, eventId, fullName', // Changed name -> fullName
+      checkinQueue: '++id, eventId, status' 
     });
   }
 }
 
-export const db = new RefreshingDB();
+declare global {
+  var _dexieDb: RefreshingDB | undefined;
+}
+
+let dbReadyPromise: Promise<void> | null = null;
+
+const getDb = () => {
+  if (process.env.NODE_ENV === "production") {
+    return new RefreshingDB();
+  } else {
+    // In dev, HMR can cause stale connections that report as open but throw UnknownError on queries.
+    // So we close the old one and always create a fresh instance on module reload.
+    if (globalThis._dexieDb) {
+      try {
+        globalThis._dexieDb.close();
+      } catch (e) {
+        // ignore
+      }
+    }
+    dbReadyPromise = null; // Clear the old promise so ensureDbReady creates a new one
+    globalThis._dexieDb = new RefreshingDB();
+    return globalThis._dexieDb;
+  }
+};
+
+export const db = getDb();
+
+export const ensureDbReady = (): Promise<void> => {
+  if (db.isOpen()) return Promise.resolve();
+  
+  if (!dbReadyPromise) {
+    dbReadyPromise = db.open().catch((err) => {
+      dbReadyPromise = null; // reset so next try attempts to open again
+      throw err;
+    });
+  }
+  return dbReadyPromise;
+};
+
+if (typeof window !== "undefined") {
+  db.on("versionchange", () => {
+    db.close();
+    console.warn("A new version of the database is available. Please refresh the page.");
+    // Optionally: window.location.reload();
+  });
+}

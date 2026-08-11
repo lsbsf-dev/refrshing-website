@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAlbums, updateAlbum, getPhotos, addPhoto, deletePhoto, updatePhoto } from "@/lib/firebase/gallery";
 import { getEventScopedDocs, setEventScopedDoc, HomepageSettings } from "@/lib/firebase/cms";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
-import { Loader2, ArrowLeft, Save, Trash2, Star, MoveRight } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Trash2, Star, MoveRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { FormField } from "@/components/shared/FormField";
 import { ImageUploader } from "@/components/admin/ImageUploader";
@@ -20,6 +20,12 @@ export default function AlbumManagementPage() {
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState({ title: "", description: "", coverImageUrl: "" });
+  const [savedSuccessMessage, setSavedSuccessMessage] = useState<string | null>(null);
+
+  const triggerSuccessBanner = (msg: string) => {
+    setSavedSuccessMessage(msg);
+    setTimeout(() => setSavedSuccessMessage(null), 3000);
+  };
 
   const { data: albums = [], isLoading: isLoadingAlbums } = useQuery({
     queryKey: ["admin", "albums", selectedEventId],
@@ -52,15 +58,15 @@ export default function AlbumManagementPage() {
   }, [currentAlbum]);
 
   const updateAlbumMutation = useMutation({
-    mutationFn: () => updateAlbum(albumId, form),
+    mutationFn: () => updateAlbum(selectedEventId, albumId, form),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "albums", selectedEventId] });
-      alert("Album settings saved.");
+      triggerSuccessBanner("Album settings saved.");
     }
   });
 
   const deletePhotoMutation = useMutation({
-    mutationFn: (id: string) => deletePhoto(id, albumId),
+    mutationFn: (id: string) => deletePhoto(selectedEventId, id, albumId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "photos", selectedEventId, albumId] });
       queryClient.invalidateQueries({ queryKey: ["admin", "albums", selectedEventId] });
@@ -69,14 +75,14 @@ export default function AlbumManagementPage() {
 
   const movePhotoMutation = useMutation({
     mutationFn: async ({ photoId, targetAlbumId }: { photoId: string, targetAlbumId: string }) => {
-      await updatePhoto(photoId, { albumId: targetAlbumId });
+      await updatePhoto(selectedEventId, photoId, { albumId: targetAlbumId });
       // We manually decrement the old album and increment the new album to maintain consistency
       // In a real app, this should be a transaction or a cloud function
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "photos", selectedEventId, albumId] });
       queryClient.invalidateQueries({ queryKey: ["admin", "albums", selectedEventId] });
-      alert("Photo moved successfully.");
+      triggerSuccessBanner("Photo moved successfully.");
     }
   });
 
@@ -92,14 +98,14 @@ export default function AlbumManagementPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "homepageSettings", selectedEventId] });
-      alert("Photo set as Featured on Homepage.");
+      triggerSuccessBanner("Photo set as Featured on Homepage.");
     }
   });
 
   const handleUploadSuccess = async (urls: string[]) => {
     for (const url of urls) {
       const id = `photo-${Math.random().toString(36).substring(7)}`;
-      await addPhoto({
+      await addPhoto(selectedEventId, {
         eventId: selectedEventId,
         albumId,
         url,
@@ -119,6 +125,13 @@ export default function AlbumManagementPage() {
 
   return (
     <div className="pb-20 max-w-6xl mx-auto space-y-12">
+      {savedSuccessMessage && (
+        <div className="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] animate-fade-in flex items-center gap-3">
+          <Sparkles className="h-6 w-6" />
+          <span className="font-sans text-base font-bold">{savedSuccessMessage}</span>
+        </div>
+      )}
+      
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin/gallery" className="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 transition-colors">
           <ArrowLeft className="h-5 w-5" />

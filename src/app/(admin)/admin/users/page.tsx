@@ -197,9 +197,9 @@ export default function AdminUsersPage() {
       </div>
 
       {savedSuccess && (
-        <div className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in">
-          <Sparkles className="h-5 w-5" />
-          <span className="font-sans text-sm font-bold">Operation completed successfully!</span>
+        <div className="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] animate-fade-in flex items-center gap-3">
+          <Sparkles className="h-6 w-6" />
+          <span className="font-sans text-base font-bold">Operation completed successfully!</span>
         </div>
       )}
 
@@ -350,7 +350,7 @@ export default function AdminUsersPage() {
       )}
 
       {/* Role Builder Tab Content */}
-      {activeTab === "roles" && <RoleBuilder />}
+      {activeTab === "roles" && <RoleBuilder usersList={usersList} />}
 
       {/* ── Provision Modal ── */}
       {isProvisionModalOpen && (
