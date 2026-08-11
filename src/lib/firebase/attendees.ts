@@ -154,6 +154,11 @@ export async function createAndCheckInAttendee(
     ...data,
     id: code,
     eventId,
+    checkIn: {
+      checkedIn: true,
+      checkedInAt: Timestamp.now(),
+      checkedInBy: adminUid
+    },
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now()
   };

@@ -22,6 +22,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
   const [selectedRole, setSelectedRole] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [errorToast, setErrorToast] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     id: "",

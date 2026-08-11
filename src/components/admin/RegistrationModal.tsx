@@ -39,6 +39,8 @@ export function RegistrationModal({ isOpen, onClose, eventId }: RegistrationModa
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successCode, setSuccessCode] = useState<string | null>(null);
+  const [duplicateWarning, setDuplicateWarning] = useState<any[] | null>(null);
+  const [pendingData, setPendingData] = useState<RegistrationFormData | null>(null);
 
   const {
     control,

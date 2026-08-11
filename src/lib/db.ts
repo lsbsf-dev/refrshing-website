@@ -70,12 +70,12 @@ export const ensureDbReady = (): Promise<void> => {
   if (db.isOpen()) return Promise.resolve();
   
   if (!dbReadyPromise) {
-    dbReadyPromise = db.open().catch((err) => {
+    dbReadyPromise = db.open().then(() => {}).catch((err) => {
       dbReadyPromise = null; // reset so next try attempts to open again
       throw err;
     });
   }
-  return dbReadyPromise;
+  return dbReadyPromise as Promise<void>;
 };
 
 if (typeof window !== "undefined") {
