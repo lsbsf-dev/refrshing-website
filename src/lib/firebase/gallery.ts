@@ -179,7 +179,7 @@ export async function deletePhoto(eventId: string, id: string, albumId?: string)
 // VIDEO OPERATIONS
 // =======================
 
-export async function getVideos(eventId: string, albumId: string): Promise<Video[]> {
+export async function getVideos(eventId: string): Promise<Video[]> {
   const ref = collection(db, "events", eventId, "videos").withConverter(videoConverter);
   const q = query(ref, where("eventId", "==", eventId));
   const snap = await getDocs(q);
