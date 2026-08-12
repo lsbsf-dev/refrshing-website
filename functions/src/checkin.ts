@@ -17,10 +17,16 @@ async function performCheckIn(
   const canCheckIn = permissions.includes("registrations.checkin");
   const isAllowedEvent = allowedEvents.includes(eventId) || isSuperAdmin; // SuperAdmin usually has all events or bypasses
 
-  if (!canCheckIn || !isAllowedEvent) {
+  if (!canCheckIn) {
     throw new functions.https.HttpsError(
       "permission-denied",
-      "User is not authorized to perform check-ins for this event."
+      `User is missing the 'registrations.checkin' permission. Current permissions: [${permissions.join(", ") || "none"}]`
+    );
+  }
+  if (!isAllowedEvent) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      `User is not scoped to event '${eventId}'. Allowed events: [${allowedEvents.join(", ") || "none"}]`
     );
   }
 
@@ -102,7 +108,7 @@ export const markCheckedIn = functions.https.onCall(async (data, context) => {
     );
   } catch (error: any) {
     console.error("Check-in transaction failed:", error);
-    if (error.code === "already-exists") {
+    if (error instanceof functions.https.HttpsError) {
       throw error;
     }
     throw new functions.https.HttpsError("internal", error.message || "Failed to check in attendee.");
