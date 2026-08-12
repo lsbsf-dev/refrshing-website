@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Upload, Users, Search, Download, CheckCircle, AlertCircle, FileSpreadsheet, Loader2, Sparkles, AlertTriangle, Edit2, X, Info } from "lucide-react";
+import { Upload, Users, Search, Download, CheckCircle, AlertCircle, FileSpreadsheet, Loader2, Sparkles, AlertTriangle, Edit2, X, Info, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSystemSettings } from "@/lib/firebase/settings";
 import { getEvents } from "@/lib/firebase/events";
@@ -13,6 +13,8 @@ import { ProcessedRow, AttendeeData } from "@/types/import";
 
 import { AttendeeDirectory } from "@/components/admin/AttendeeDirectory";
 import { CustomSelect } from "@/components/shared/CustomSelect";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
+import { Toast } from "@/components/admin/Toast";
 
 export default function AdminAttendeesPage() {
   const [activeTab, setActiveTab] = useState<"directory" | "import">("directory");
@@ -47,6 +49,36 @@ export default function AdminAttendeesPage() {
   const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Clear attendees state
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+  const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
+  const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
+    setToast({ message, variant });
+    setTimeout(() => setToast(null), 5000);
+  };
+
+  const handleClearAttendees = async () => {
+    setShowClearConfirm(false);
+    setIsClearing(true);
+    try {
+      const response = await fetch(`/api/import/attendees?eventId=${selectedEventId}`, {
+        method: 'DELETE',
+      });
+      const result = await response.json();
+      if (result.success) {
+        showToast(`${result.deleted} attendee records cleared successfully. You can now import fresh data.`, "success");
+        queryClient.invalidateQueries({ queryKey: ["admin", "attendees"] });
+      } else {
+        showToast(`Error: ${result.error}`, "error");
+      }
+    } catch (err: any) {
+      showToast(`Failed to clear attendees: ${err.message}`, "error");
+    } finally {
+      setIsClearing(false);
+    }
+  };
 
   React.useEffect(() => {
     if (settings && selectedEventId === "") {
@@ -243,15 +275,39 @@ export default function AdminAttendeesPage() {
 
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto pb-20">
+      {/* Toast */}
+      {toast && <Toast message={toast.message} variant={toast.variant} isVisible={true} onClose={() => setToast(null)} />}
+
+      {/* Clear Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showClearConfirm}
+        title="Clear All Attendees"
+        message={`This will permanently delete ALL attendee records and check-in data for the selected event.\n\nThis cannot be undone. Make sure you have a backup if needed.\n\nAre you absolutely sure?`}
+        confirmLabel="Delete All Records"
+        variant="danger"
+        onConfirm={handleClearAttendees}
+        onCancel={() => setShowClearConfirm(false)}
+      />
+
       {/* Header */}
-      <div>
-        <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
-          <Users className="h-8 w-8 text-[#C25627]" />
-          Attendee Management
-        </h1>
-        <p className="font-sans text-sm text-foreground-muted">
-          Import and manage registered attendees for conference editions.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 uppercase flex items-center gap-3">
+            <Users className="h-8 w-8 text-[#C25627]" />
+            Attendee Management
+          </h1>
+          <p className="font-sans text-sm text-foreground-muted">
+            Import and manage registered attendees for conference editions.
+          </p>
+        </div>
+        <button
+          onClick={() => setShowClearConfirm(true)}
+          disabled={isClearing}
+          className="px-5 py-2.5 border border-red-500/30 text-red-500 rounded-xl font-bold font-sans text-xs hover:bg-red-500/10 active-press flex items-center gap-2 disabled:opacity-50 shrink-0"
+        >
+          {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+          Clear All Attendees
+        </button>
       </div>
 
       {(isSettingsError || isEventsError || isAssocError) && (

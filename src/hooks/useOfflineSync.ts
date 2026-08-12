@@ -12,6 +12,10 @@ export function useOfflineSync(eventId: string) {
   const [syncError, setSyncError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
+  // Keep refs so callbacks always see the latest value without being dependencies
+  const isOnlineRef = useRef(isOnline);
+  isOnlineRef.current = isOnline;
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsOnline(navigator.onLine);
@@ -31,12 +35,11 @@ export function useOfflineSync(eventId: string) {
   const syncDownInProgressRef = useRef(false);
 
   const syncDown = useCallback(async () => {
-    if (!eventId || !isOnline || syncDownInProgressRef.current) return;
+    if (!eventId || !isOnlineRef.current || syncDownInProgressRef.current) return;
     
     syncDownInProgressRef.current = true;
     try {
       setSyncError(null);
-      // Defensive reopening if closed
       await ensureDbReady();
 
       const ref = collection(firestoreDb, "events", eventId, "checkinView");
@@ -58,10 +61,8 @@ export function useOfflineSync(eventId: string) {
         };
       });
 
-      // Bulk put updates Dexie records
       await db.attendees.bulkPut(localAttendees);
       
-      // Invalidate queries so components know to refresh
       queryClient.invalidateQueries({ queryKey: ["admin", "offline-attendees", eventId] });
     } catch (err: any) {
       console.error("Failed to sync down attendees:", err);
@@ -69,18 +70,18 @@ export function useOfflineSync(eventId: string) {
     } finally {
       syncDownInProgressRef.current = false;
     }
-  }, [eventId, queryClient, isOnline]);
+  // Only re-create when eventId changes — isOnline is read from ref
+  }, [eventId, queryClient]);
 
   const syncInProgressRef = useRef(false);
 
   const syncUp = useCallback(async () => {
-    if (!eventId || !isOnline || syncInProgressRef.current) return;
+    if (!eventId || !isOnlineRef.current || syncInProgressRef.current) return;
     
     syncInProgressRef.current = true;
     setIsSyncing(true);
     try {
       setSyncError(null);
-      // Defensive reopening if closed
       await ensureDbReady();
 
       const pendingQueue = await db.checkinQueue
@@ -130,31 +131,38 @@ export function useOfflineSync(eventId: string) {
       setIsSyncing(false);
       syncInProgressRef.current = false;
     }
-  }, [eventId, isOnline, isSyncing, syncDown, queryClient]);
+  // Only re-create when eventId changes — isSyncing/isOnline read from refs
+  }, [eventId, syncDown, queryClient]);
 
-  // Initial sync & Listen to online status for syncUp
+  // Keep stable refs for the effect so it doesn't re-trigger on every render
+  const syncUpRef = useRef(syncUp);
+  syncUpRef.current = syncUp;
+  const syncDownRef = useRef(syncDown);
+  syncDownRef.current = syncDown;
+
+  // Initial sync & re-sync when coming back online or switching event
   useEffect(() => {
     let mounted = true;
     if (isOnline && eventId) {
-      syncUp()
+      syncUpRef.current()
         .then(() => {
-          if (mounted) return syncDown();
+          if (mounted) return syncDownRef.current();
         })
         .catch(err => {
           console.error("Dexie sync error caught:", err);
-          // Don't crash the app if IndexedDB fails
         });
     }
     return () => {
       mounted = false;
     };
-  }, [isOnline, eventId, syncUp, syncDown]);
+  // Deliberately only depend on isOnline and eventId — the actual sync functions
+  // are read from stable refs to avoid re-trigger loops.
+  }, [isOnline, eventId]);
 
   // Trigger check-in offline or online
   const handleCheckIn = async (attendeeId: string) => {
     try {
       setSyncError(null);
-      // Defensive reopening if closed
       await ensureDbReady();
 
       const timestamp = new Date().toISOString();
@@ -170,14 +178,14 @@ export function useOfflineSync(eventId: string) {
         eventId,
         timestamp,
         status: 'pending',
-        idempotencyKey: `${attendeeId}-${Date.now()}` // Basic idempotency
+        idempotencyKey: `${attendeeId}-${Date.now()}`
       });
 
       // Invalidate local queries to trigger UI update
       queryClient.invalidateQueries({ queryKey: ["admin", "offline-attendees", eventId] });
 
-      if (isOnline) {
-        syncUp();
+      if (isOnlineRef.current) {
+        syncUpRef.current();
       }
       
       return true;
@@ -192,7 +200,6 @@ export function useOfflineSync(eventId: string) {
   const handleUndoCheckIn = async (attendeeId: string) => {
     try {
       setSyncError(null);
-      // Defensive reopening if closed
       await ensureDbReady();
 
       const timestamp = new Date().toISOString();
@@ -214,8 +221,8 @@ export function useOfflineSync(eventId: string) {
       // Invalidate local queries to trigger UI update
       queryClient.invalidateQueries({ queryKey: ["admin", "offline-attendees", eventId] });
 
-      if (isOnline) {
-        syncUp();
+      if (isOnlineRef.current) {
+        syncUpRef.current();
       }
       
       return true;
@@ -236,3 +243,5 @@ export function useOfflineSync(eventId: string) {
     syncUp
   };
 }
+
+

@@ -367,3 +367,48 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: e.message });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const eventId = searchParams.get('eventId') || 'refreshing-2026';
+
+    const attendeesRef = adminDb.collection('events').doc(eventId).collection('attendees');
+    const checkinViewRef = adminDb.collection('events').doc(eventId).collection('checkinView');
+
+    let totalDeleted = 0;
+
+    // Delete attendees in batches of 400 (Firestore limit is 500 per batch)
+    const deleteCollection = async (collRef: FirebaseFirestore.CollectionReference) => {
+      let deleted = 0;
+      let snapshot = await collRef.limit(400).get();
+      while (!snapshot.empty) {
+        const batch = adminDb.batch();
+        for (const doc of snapshot.docs) {
+          // Also delete any subcollections (e.g. payment)
+          const paymentSnap = await doc.ref.collection('payment').get();
+          for (const payDoc of paymentSnap.docs) {
+            batch.delete(payDoc.ref);
+          }
+          batch.delete(doc.ref);
+        }
+        await batch.commit();
+        deleted += snapshot.size;
+        snapshot = await collRef.limit(400).get();
+      }
+      return deleted;
+    };
+
+    totalDeleted += await deleteCollection(attendeesRef);
+    await deleteCollection(checkinViewRef);
+
+    return NextResponse.json({ 
+      success: true, 
+      deleted: totalDeleted,
+      message: `Successfully deleted ${totalDeleted} attendee records and their check-in views.`
+    });
+  } catch (error: any) {
+    console.error('Delete attendees error:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+  }
+}
