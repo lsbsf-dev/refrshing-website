@@ -232,8 +232,7 @@ export default function HomePage() {
               ))
             ) : (
               <>
-                <span className="text-gradient-gold block font-serif">THE GREATER</span>
-                <span className="text-gradient-gold block font-serif">GLORY</span>
+                <span className="text-gradient-gold block font-serif">GREATER GLORY</span>
               </>
             )}
           </h1>
