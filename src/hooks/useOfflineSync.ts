@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { db, ensureDbReady } from '@/lib/db';
 import { collection, getDocs } from 'firebase/firestore';
-import { db as firestoreDb } from '@/lib/firebase/app';
+import { db as firestoreDb, auth } from '@/lib/firebase/app';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/lib/firebase/app';
 import { useQueryClient } from '@tanstack/react-query';
@@ -93,6 +93,16 @@ export function useOfflineSync(eventId: string) {
         setIsSyncing(false);
         syncInProgressRef.current = false;
         return;
+      }
+
+      // Force a fresh ID token before syncing. Custom claims (role/permissions/
+      // allowedEvents) only land in the client's cached token on next sign-in or
+      // refresh — a superAdmin granting a permission mid-session won't reach a
+      // staff member's already-issued token otherwise, causing markCheckedIn to
+      // reject them with a stale-looking "not authorized" even though their
+      // claims were updated correctly server-side.
+      if (auth.currentUser) {
+        await auth.currentUser.getIdToken(true);
       }
 
       const functions = getFunctions(app);
@@ -243,5 +253,3 @@ export function useOfflineSync(eventId: string) {
     syncUp
   };
 }
-
-
