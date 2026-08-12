@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Permissions, Permission } from "@/lib/permissions";
 import { Loader2, Shield, Sparkles, Plus, Save, Trash2, ShieldAlert } from "lucide-react";
@@ -58,14 +58,18 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const ref = doc(db, "settings", "global", "roles", data.id);
-      await setDoc(ref, {
-        id: data.id,
+      // Must go through the updateRole callable (not a direct Firestore write) —
+      // it also re-syncs custom claims for every user already assigned this role.
+      // A plain setDoc only updates the role document, leaving existing users'
+      // ID tokens with stale/missing permissions until they're individually re-saved.
+      const functions = getFunctions(app);
+      const updateRole = httpsCallable<any, any>(functions, "updateRole");
+      await updateRole({
+        roleId: data.id,
         name: data.name,
         description: data.description,
         permissions: data.permissions,
-        isSystemRole: selectedRole?.isSystemRole || false,
-      }, { merge: true });
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });

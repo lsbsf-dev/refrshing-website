@@ -93,8 +93,8 @@ export default function AdminCheckInPage() {
       await handleCheckIn(attendeeId);
     } finally {
       setProcessingId(null);
-      // Clear search to move quickly to next attendee
-      setSearchInput("");
+      // Keep the search term active so the volunteer can check in the
+      // next person from the same church/association without retyping.
     }
   };
 
