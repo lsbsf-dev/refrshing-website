@@ -37,8 +37,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [activeEvent, setActiveEventState] = useState("refreshing-2026");
   const [isLoading, setIsLoading] = useState(true);
 
+  const isLoginPage = pathname === "/admin/login";
+
   useEffect(() => {
-    const isLoginPage = pathname === "/admin/login";
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const stored = localStorage.getItem("lsbsf_admin_session");
       if (!user && !stored) {
