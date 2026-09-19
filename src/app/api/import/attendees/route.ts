@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase/admin';
 import { ProcessedRow, FieldError, AttendeeData } from '@/types/import';
+import { verifyApiRequest } from '@/lib/api-auth';
+import { Permissions } from '@/lib/permissions';
+import { logAudit } from '@/lib/audit';
 
 export async function POST(request: Request) {
   try {
+    await verifyApiRequest(request, Permissions.Registrations.Write);
     const { attendees, eventId, mode = 'commit' } = await request.json();
 
     if (!eventId || !Array.isArray(attendees)) {
@@ -359,19 +363,35 @@ export async function POST(request: Request) {
 }
 export async function GET(request: Request) {
   try {
+    await verifyApiRequest(request, Permissions.Registrations.Read);
     const { searchParams } = new URL(request.url);
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
     const snapshot = await adminDb.collection('events').doc(eventId).collection('attendees').get();
     return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map((d: any) => d.data()) });
   } catch(e: any) {
-    return NextResponse.json({ error: e.message });
+    return NextResponse.json({ error: e.message }, { status: e.message?.includes("permission") ? 403 : 401 });
   }
 }
 
 export async function DELETE(request: Request) {
   try {
+    const callerProfile = await verifyApiRequest(request, Permissions.Registrations.Write);
+
+    // Require superAdmin role explicitly for bulk wipe
+    if (callerProfile.role !== 'superAdmin') {
+      return NextResponse.json({ error: 'Bulk deletion requires Super Administrator authorization.' }, { status: 403 });
+    }
+
     const { searchParams } = new URL(request.url);
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
+    const confirmationText = searchParams.get('confirmationText') || '';
+
+    // Require explicit confirmation string matching eventId
+    if (confirmationText !== eventId) {
+      return NextResponse.json({ 
+        error: `Confirmation text mismatch. You must type "${eventId}" to confirm bulk deletion.` 
+      }, { status: 400 });
+    }
 
     const attendeesRef = adminDb.collection('events').doc(eventId).collection('attendees');
     const checkinViewRef = adminDb.collection('events').doc(eventId).collection('checkinView');
@@ -402,6 +422,18 @@ export async function DELETE(request: Request) {
     totalDeleted += await deleteCollection(attendeesRef);
     await deleteCollection(checkinViewRef);
 
+    // Write audit log entry for bulk deletion
+    await logAudit({
+      userId: callerProfile.id,
+      userEmail: callerProfile.email,
+      action: 'BULK_DELETE_ATTENDEES',
+      collection: 'attendees',
+      documentId: eventId,
+      before: { totalDeleted },
+      after: { totalDeleted: 0 },
+      eventContext: eventId,
+    });
+
     return NextResponse.json({ 
       success: true, 
       deleted: totalDeleted,
@@ -409,6 +441,6 @@ export async function DELETE(request: Request) {
     });
   } catch (error: any) {
     console.error('Delete attendees error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: error.message?.includes('permission') ? 403 : 500 });
   }
 }

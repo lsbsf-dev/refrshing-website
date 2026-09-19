@@ -10,6 +10,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import * as XLSX from "xlsx";
 import { ProcessedRow, AttendeeData } from "@/types/import";
+import { getAuthHeaders } from "@/lib/firebase/users";
 
 import { AttendeeDirectory } from "@/components/admin/AttendeeDirectory";
 import { CustomSelect } from "@/components/shared/CustomSelect";
@@ -52,6 +53,7 @@ export default function AdminAttendeesPage() {
 
   // Clear attendees state
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearConfirmText, setClearConfirmText] = useState("");
   const [isClearing, setIsClearing] = useState(false);
   const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
   const showToast = (message: string, variant: "success" | "error" | "warning" | "info" = "info") => {
@@ -60,15 +62,22 @@ export default function AdminAttendeesPage() {
   };
 
   const handleClearAttendees = async () => {
+    if (clearConfirmText !== selectedEventId) {
+      showToast(`Confirmation mismatch. You must type "${selectedEventId}" to confirm deletion.`, "error");
+      return;
+    }
     setShowClearConfirm(false);
     setIsClearing(true);
     try {
-      const response = await fetch(`/api/import/attendees?eventId=${selectedEventId}`, {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/import/attendees?eventId=${selectedEventId}&confirmationText=${encodeURIComponent(clearConfirmText)}`, {
         method: 'DELETE',
+        headers
       });
       const result = await response.json();
       if (result.success) {
         showToast(`${result.deleted} attendee records cleared successfully. You can now import fresh data.`, "success");
+        setClearConfirmText("");
         queryClient.invalidateQueries({ queryKey: ["admin", "attendees"] });
       } else {
         showToast(`Error: ${result.error}`, "error");
@@ -170,9 +179,10 @@ export default function AdminAttendeesPage() {
   const validateBatch = async (payload: any[]) => {
     try {
       setImporting(true);
+      const authHeaders = await getAuthHeaders();
       const response = await fetch('/api/import/attendees', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ attendees: payload, eventId: selectedEventId, mode: 'dryRun' })
       });
 
@@ -225,12 +235,13 @@ export default function AdminAttendeesPage() {
       const chunkSize = 500;
       let totalImported = 0;
       let allErrors: string[] = [];
+      const authHeaders = await getAuthHeaders();
 
       for (let i = 0; i < importSession.length; i += chunkSize) {
         const chunk = importSession.slice(i, i + chunkSize);
         const response = await fetch('/api/import/attendees', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
           body: JSON.stringify({ attendees: chunk, eventId: selectedEventId, mode: 'commit' })
         });
         const result = await response.json();
@@ -282,12 +293,20 @@ export default function AdminAttendeesPage() {
       <ConfirmModal
         isOpen={showClearConfirm}
         title="Clear All Attendees"
-        message={`This will permanently delete ALL attendee records and check-in data for the selected event.\n\nThis cannot be undone. Make sure you have a backup if needed.\n\nAre you absolutely sure?`}
+        message={`This will permanently delete ALL attendee records and check-in data for event "${selectedEventId}".\n\nThis cannot be undone. Type "${selectedEventId}" below to enable deletion:`}
         confirmLabel="Delete All Records"
         variant="danger"
         onConfirm={handleClearAttendees}
-        onCancel={() => setShowClearConfirm(false)}
-      />
+        onCancel={() => { setShowClearConfirm(false); setClearConfirmText(""); }}
+      >
+        <input
+          type="text"
+          value={clearConfirmText}
+          onChange={(e) => setClearConfirmText(e.target.value)}
+          placeholder={`Type ${selectedEventId} to confirm`}
+          className="w-full px-4 py-2 bg-black/40 border border-white/20 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-red-500 text-center"
+        />
+      </ConfirmModal>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
