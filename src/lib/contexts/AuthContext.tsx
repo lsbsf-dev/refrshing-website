@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase/app";
 
 interface UserProfile {
   uid: string;
@@ -37,28 +39,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isLoginPage = pathname === "/admin/login";
 
-  useEffect(() => {
-    if (isLoginPage) {
-      setIsLoading(false);
-      return;
-    }
-
-    const loadSession = async () => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const stored = localStorage.getItem("lsbsf_admin_session");
-      if (!stored) {
-        router.push("/admin/login");
+      if (!user && !stored) {
+        if (!isLoginPage) router.push("/admin/login");
+        setIsLoading(false);
         return;
       }
 
       try {
-        const sessionData = JSON.parse(stored);
-        
-        // Fetch the fresh profile from the server using the uid
-        // This ensures permissions are always up to date even if changed by another admin
+        let headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (user) {
+          const token = await user.getIdToken();
+          headers["Authorization"] = `Bearer ${token}`;
+        } else if (stored) {
+          // If Firebase client auth has not loaded user yet, wait or handle gracefully
+          const sessionData = JSON.parse(stored);
+          if (sessionData.uid) {
+            // Note: If no token available, /api/admin/auth/me will return 401 and redirect to login
+          }
+        }
+
         const res = await fetch("/api/admin/auth/me", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ uid: sessionData.uid }),
+          headers,
         });
 
         if (!res.ok) {
@@ -82,13 +86,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error("Session load error:", error);
         localStorage.removeItem("lsbsf_admin_session");
         document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-        router.push("/admin/login");
+        if (!isLoginPage) router.push("/admin/login");
       } finally {
         setIsLoading(false);
       }
-    };
+    });
 
-    loadSession();
+    return () => unsubscribe();
   }, [pathname, isLoginPage, router]);
 
   const setActiveEvent = (event: string) => {

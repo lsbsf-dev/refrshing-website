@@ -426,7 +426,7 @@ export async function DELETE(request: Request) {
     await logAudit({
       userId: callerProfile.id,
       userEmail: callerProfile.email,
-      action: 'BULK_DELETE_ATTENDEES',
+      action: 'DELETE',
       collection: 'attendees',
       documentId: eventId,
       before: { totalDeleted },

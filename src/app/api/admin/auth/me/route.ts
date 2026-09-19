@@ -7,32 +7,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
 
-  // Ensure the body exists
-  const contentLength = (req.headers.get("content-length") ?? "").trim();
-  if (!contentLength || Number(contentLength) === 0) {
-    console.error("Empty request body");
-    return NextResponse.json({ error: "Request body is required" }, { status: 400 });
-  }
-
-  // Parse JSON safely
-  let payload: any;
-  try {
-    payload = await req.json();
-  } catch (e) {
-    console.error("Failed to parse request JSON:", e);
-    return NextResponse.json({ error: "Invalid request payload" }, { status: 400 });
-  }
-
-  const { uid } = payload;
-  if (!uid) {
-    return NextResponse.json({ error: "Missing uid" }, { status: 400 });
-  }
-
   // Verify Firebase services are initialized
   if (!firestore || !auth) {
     console.error("Firebase admin not initialized", { firestore: !!firestore, auth: !!auth });
     return NextResponse.json({ error: "Server configuration error: Firebase not initialized" }, { status: 500 });
   }
+
+  // Extract and verify Bearer token from Authorization header
+  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json({ error: "Missing or invalid Authorization header" }, { status: 401 });
+  }
+
+  const token = authHeader.substring(7).trim();
+  let decodedToken;
+  try {
+    decodedToken = await auth.verifyIdToken(token);
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid or expired authorization token" }, { status: 401 });
+  }
+
+  const uid = decodedToken.uid;
 
   // Fetch user document from Firestore
   let userDoc;

@@ -31,11 +31,15 @@ export default function AdminLoginPage() {
       const currentUser = auth.currentUser;
       if (!currentUser) throw new Error("Authentication failed");
 
+      const token = await currentUser.getIdToken();
+
       // Fetch authentic role from server
       const res = await fetch("/api/admin/auth/me", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid: currentUser.uid })
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
       });
 
       if (!res.ok) {
