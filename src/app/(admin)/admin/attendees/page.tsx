@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Upload, Users, Search, Download, CheckCircle, AlertCircle, FileSpreadsheet, Loader2, Sparkles, AlertTriangle, Edit2, X, Info, Trash2 } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Users, Search, Download, AlertCircle, FileSpreadsheet, Loader2, Sparkles, AlertTriangle, X, Info, Trash2 } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSystemSettings } from "@/lib/firebase/settings";
 import { getEvents } from "@/lib/firebase/events";
 import { ALL_ASSOCIATIONS_BY_CONFERENCE } from "@/lib/constants";
@@ -26,12 +26,12 @@ export default function AdminAttendeesPage() {
     queryFn: getSystemSettings,
   });
 
-  const { data: eventsList = [], isError: isEventsError, error: eventsError } = useQuery({
+  const { isError: isEventsError, error: eventsError } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
   });
 
-  const { data: allAssociations = [], isError: isAssocError, error: assocError } = useQuery({
+  const { isError: isAssocError, error: assocError } = useQuery({
     queryKey: ["admin", "all_associations"],
     queryFn: async () => {
        const res = await getDocs(collection(db, "associations"));
@@ -82,8 +82,9 @@ export default function AdminAttendeesPage() {
       } else {
         showToast(`Error: ${result.error}`, "error");
       }
-    } catch (err: any) {
-      showToast(`Failed to clear attendees: ${err.message}`, "error");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      showToast(`Failed to clear attendees: ${message}`, "error");
     } finally {
       setIsClearing(false);
     }
@@ -123,10 +124,11 @@ export default function AdminAttendeesPage() {
         throw new Error("The uploaded file is empty or formatted incorrectly.");
       }
 
-      const attendees = jsonData.map((row: any) => {
+      const attendees = jsonData.map((row: unknown) => {
+        const r = row as Record<string, unknown>;
         const getVal = (possibleKeys: string[]) => {
-          const key = Object.keys(row).find(k => possibleKeys.includes(k.toLowerCase().trim()));
-          return key ? row[key]?.toString().trim() : "";
+          const key = Object.keys(r).find(k => possibleKeys.includes(k.toLowerCase().trim()));
+          return key ? r[key]?.toString().trim() : "";
         };
 
         const id = getVal(['id', 'registration id', 'registration code', 'code']) || Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -138,7 +140,7 @@ export default function AdminAttendeesPage() {
         
         // Custom fields from form
         const memberStatusRaw = getVal(['member or executive', 'status', 'membership']);
-        const memberStatus = memberStatusRaw.toLowerCase().includes('exec') ? 'Executive' : 'Member';
+        const memberStatus = (memberStatusRaw || "").toLowerCase().includes('exec') ? 'Executive' : 'Member';
         
         const conferenceRaw = getVal(['conference']);
         const associationRaw = getVal(['association']);
@@ -167,16 +169,17 @@ export default function AdminAttendeesPage() {
 
       await validateBatch(attendees);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setFileError(err.message || "An error occurred during file parsing.");
+      const message = err instanceof Error ? err.message : String(err);
+      setFileError(message || "An error occurred during file parsing.");
     } finally {
       setImporting(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
-  const validateBatch = async (payload: any[]) => {
+  const validateBatch = async (payload: AttendeeData[]) => {
     try {
       setImporting(true);
       const authHeaders = await getAuthHeaders();
@@ -196,9 +199,10 @@ export default function AdminAttendeesPage() {
         skipped: result.skipped,
         rejected: result.rejected
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
        console.error(err);
-       setFileError(err.message || "Validation failed.");
+       const message = err instanceof Error ? err.message : String(err);
+       setFileError(message || "Validation failed.");
     } finally {
        setImporting(false);
     }
@@ -222,7 +226,7 @@ export default function AdminAttendeesPage() {
 
   const handleRevalidate = async () => {
     if (!importSession) return;
-    await validateBatch(importSession);
+    await validateBatch(importSession.map(r => r.data));
   };
 
   const handleConfirmImport = async () => {
@@ -255,9 +259,10 @@ export default function AdminAttendeesPage() {
       setImportSession(null); 
       queryClient.invalidateQueries({ queryKey: ["admin", "attendees", selectedEventId] });
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setFileError(err.message || "An error occurred during import.");
+      const message = err instanceof Error ? err.message : String(err);
+      setFileError(message || "An error occurred during import.");
     } finally {
       setImporting(false);
     }
