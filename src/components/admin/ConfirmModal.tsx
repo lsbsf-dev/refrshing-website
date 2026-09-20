@@ -10,6 +10,7 @@ interface ConfirmModalProps {
   confirmLabel?: string;
   cancelLabel?: string;
   variant?: "danger" | "warning" | "default";
+  children?: React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -21,6 +22,7 @@ export function ConfirmModal({
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
   variant = "default",
+  children,
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
@@ -73,6 +75,7 @@ export function ConfirmModal({
           <p className="font-sans text-sm text-white/70 leading-relaxed whitespace-pre-line">
             {message}
           </p>
+          {children}
         </div>
 
         <div className="flex gap-3 w-full">

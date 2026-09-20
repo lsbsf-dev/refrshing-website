@@ -13,7 +13,7 @@ export interface UserMetadata {
   tokensValidAfter?: number;
 }
 
-async function getAuthHeaders(): Promise<Record<string, string>> {
+export async function getAuthHeaders(): Promise<Record<string, string>> {
   const user = auth.currentUser;
   if (!user) return {};
   const token = await user.getIdToken();
@@ -26,7 +26,7 @@ export async function provisionAdminAccount(data: {
   displayName: string;
   role: string;
   allowedEvents?: string[];
-}): Promise<{ data: { success: boolean; uid: string } }> {
+}): Promise<{ data: { success: boolean; uid: string; passwordResetLink?: string | null } }> {
   const headers = await getAuthHeaders();
   const res = await fetch("/api/admin/users", {
     method: "POST",

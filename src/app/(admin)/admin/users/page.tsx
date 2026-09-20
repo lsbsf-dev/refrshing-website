@@ -77,20 +77,26 @@ export default function AdminUsersPage() {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
+  const [createdResetLink, setCreatedResetLink] = useState<{ email: string; link: string } | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const provisionMutation = useMutation({
     mutationFn: async (data: typeof newUser) => {
       const result = await provisionAdminAccount({
         displayName: data.name,
         email: data.email,
-        password: data.password,
+        password: data.password || undefined,
         role: data.role,
         allowedEvents: data.allowedEvents,
       });
       return result.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       setIsProvisionModalOpen(false);
+      if (data?.passwordResetLink) {
+        setCreatedResetLink({ email: newUser.email, link: data.passwordResetLink });
+      }
       setNewUser({
         name: "",
         email: "",
@@ -419,15 +425,14 @@ export default function AdminUsersPage() {
               </div>
               <div>
                 <label className="block text-xs font-sans font-bold uppercase mb-1 flex items-center gap-2">
-                  <Key className="h-3 w-3" /> Temporary Password <span className="text-[#C25627]">*</span>
+                  <Key className="h-3 w-3" /> Password <span className="text-zinc-400 font-normal">(Optional)</span>
                 </label>
                 <input
                   type="text"
-                  required
                   value={newUser.password}
                   onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                   className="w-full bg-surface-muted border border-border text-xs font-sans py-3 px-4 rounded-xl outline-none font-mono"
-                  placeholder="e.g. TempPass123!"
+                  placeholder="Leave blank to generate reset link"
                 />
               </div>
             </div>
@@ -480,6 +485,55 @@ export default function AdminUsersPage() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* ── Created Reset Link Modal ── */}
+      {createdResetLink && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-surface text-foreground border border-border-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-5 shadow-2xl animate-fade-in">
+            <div className="flex items-center justify-between border-b border-border pb-4">
+              <h3 className="font-serif text-xl font-bold uppercase text-emerald-500 flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Account Provisioned
+              </h3>
+              <button
+                onClick={() => setCreatedResetLink(null)}
+                className="p-2 text-zinc-400 hover:text-foreground"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <p className="text-xs text-foreground-muted leading-relaxed">
+              An account for <strong className="text-foreground">{createdResetLink.email}</strong> was created. Share the reset/activation link below with the user so they can set their password and log in.
+            </p>
+            <div className="flex items-center gap-2 bg-surface-muted p-3 border border-border rounded-xl">
+              <input
+                type="text"
+                readOnly
+                value={createdResetLink.link}
+                className="w-full bg-transparent text-xs font-mono outline-none text-foreground select-all"
+              />
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(createdResetLink.link);
+                  setCopiedLink(true);
+                  setTimeout(() => setCopiedLink(false), 3000);
+                }}
+                className="px-4 py-2 bg-[#C25627] hover:bg-[#E05320] text-white text-xs font-bold uppercase rounded-lg transition-colors whitespace-nowrap"
+              >
+                {copiedLink ? "Copied!" : "Copy Link"}
+              </button>
+            </div>
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setCreatedResetLink(null)}
+                className="px-6 py-2.5 bg-zinc-100 dark:bg-white/5 font-sans font-bold text-xs uppercase rounded-full"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       )}
       {/* ── Edit Modal ── */}

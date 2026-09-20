@@ -10,18 +10,28 @@ import ministers from "@/lib/firebase/seedMinisters.json";
 import sessions from "@/lib/firebase/seedSessions.json";
 import resources from "@/lib/firebase/seedResources.json";
 
+import crypto from "crypto";
+
 export async function verifySeedSecret(secret: string): Promise<boolean> {
   const adminSecret = process.env.ADMIN_SEED_SECRET;
-  if (!adminSecret) {
-    console.error("ADMIN_SEED_SECRET environment variable is not configured.");
+  if (!adminSecret || !secret) {
     return false;
   }
-  return secret === adminSecret;
+  const a = crypto.createHash("sha256").update(secret).digest();
+  const b = crypto.createHash("sha256").update(adminSecret).digest();
+  return crypto.timingSafeEqual(a, b);
 }
 
 export async function seedDatabase(
   secret: string
 ): Promise<{ success: boolean; message: string }> {
+  if (process.env.ADMIN_SEED_ENABLED !== "true") {
+    return {
+      success: false,
+      message: "Database seeding is disabled on this environment.",
+    };
+  }
+
   const isValid = await verifySeedSecret(secret);
   if (!isValid) {
     return {
