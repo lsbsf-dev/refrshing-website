@@ -1,6 +1,4 @@
-import { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { db, app, auth } from "./app";
+import { auth } from "./app";
 
 export interface UserMetadata {
   id: string;
@@ -45,7 +43,7 @@ export async function getUsers(): Promise<UserMetadata[]> {
   });
   if (!res.ok) return [];
   const data = await res.json();
-  return data.users.map((u: any) => ({
+  return data.users.map((u: UserMetadata) => ({
     id: u.id,
     name: u.name || "",
     email: u.email || "",
