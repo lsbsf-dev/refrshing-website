@@ -38,13 +38,13 @@ Full requirements live in the project SRS document (*Refreshing Digital Conferen
 
 ### Admin Dashboard & Management System
 - **Authentication & Security:** Firebase email/password authentication with strict custom claims role verification (`superAdmin`, `eventAdmin`, `registrationStaff`, `checkinStaff`, `editor`, `viewer`).
-- **User Account Management:** Provisioning admin accounts, password resets, role assignment, and access control.
-- **Role Builder & Permissions:** Granular permission system for mapping actions across modules to user roles with server-side claim synchronization.
-- **Attendee Directory & Batch Import:** High-throughput attendee management supporting `.xlsx` and `.csv` batch imports, full multi-stage dry-run validation, fuzzy duplicate detection, and manual conflict resolution.
-- **Check-In Desk:** Fast check-in interface with barcode/QR scanning, online/offline synchronization via Dexie, and restricted PII access (`checkinView`).
-- **Content Management Systems (CMS):** Content editors for Ministers, Programme schedule, Gallery albums & photos, FAQs, Announcements, and Contact info.
+- **User Account Management:** Provisioning admin accounts (`/admin/users`), password resets, role assignment, and access control.
+- **Role Builder & Permissions:** Granular permission system (`/admin/users` -> Role Builder) for mapping actions across modules to user roles with server-side claim synchronization.
+- **Attendee Directory & Batch Import:** High-throughput attendee management (`/admin/attendees`) supporting `.xlsx` and `.csv` batch imports, full multi-stage dry-run validation, fuzzy duplicate detection, and manual conflict resolution.
+- **Check-In Desk:** Fast check-in interface (`/admin/checkin`) with barcode/QR scanning, online/offline synchronization via Dexie, and restricted PII access (`checkinView`).
+- **Content Management Systems (CMS):** Content editors for Ministers (`/admin/ministers`), Programme schedule (`/admin/programme`), Gallery albums & photos (`/admin/gallery`), FAQs (`/admin/faq`), Announcements (`/admin/announcements`), and Contact info (`/admin/settings/contact`).
 - **Audit Logging:** System-wide audit logs tracking administrative actions, user creation, and bulk operations.
-- **System Settings & Edition Management:** Global default event selection, event metadata creation, and global configuration options.
+- **System Settings & Edition Management:** Global default event selection (`/admin/settings`), event metadata creation (`/admin/events`), and global configuration options.
 
 ---
 
@@ -137,6 +137,14 @@ Firestore data is hierarchically organized under edition scopes to support multi
 /settings/global          <- Global configuration and default active edition
 /audit_logs               <- System-wide administrative action logs
 ```
+
+---
+
+## Known Issues & Technical Debt
+
+1. **React Hook Effect Warnings (`react-hooks/set-state-in-effect`)**: Synchronous state updates inside `useEffect` exist in `AuthContext.tsx`, `admin/attendees/page.tsx`, `admin/login/page.tsx`, and `admin/checkin/page.tsx`. These require careful refactoring in a dedicated session to prevent cascading renders without altering auth timing.
+2. **Legacy Script CommonJS Imports (`@typescript-eslint/no-require-imports`)**: CLI scripts under `scripts/` use Node `require()` syntax.
+3. **Strict Type Annotations (`@typescript-eslint/no-explicit-any`)**: Remaining `any` type definitions exist in complex CMS/query hooks (`lib/firebase/cms.ts`, `hooks/useOfflineSync.ts`, `components/admin/AttendeeDirectory.tsx`).
 
 ---
 
