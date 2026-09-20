@@ -25,6 +25,13 @@ export async function verifySeedSecret(secret: string): Promise<boolean> {
 export async function seedDatabase(
   secret: string
 ): Promise<{ success: boolean; message: string }> {
+  if (process.env.ADMIN_SEED_ENABLED !== "true") {
+    return {
+      success: false,
+      message: "Database seeding is disabled on this environment.",
+    };
+  }
+
   const isValid = await verifySeedSecret(secret);
   if (!isValid) {
     return {

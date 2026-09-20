@@ -358,7 +358,9 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('Batch import error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    const isPermission = error.message?.includes('permission') || error.message?.includes('Forbidden');
+    const isAuth = error.message?.includes('token') || error.message?.includes('Authorization');
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: isPermission ? 403 : (isAuth ? 401 : 500) });
   }
 }
 export async function GET(request: Request) {
