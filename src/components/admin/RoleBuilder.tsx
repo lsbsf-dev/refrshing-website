@@ -4,12 +4,34 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
-import { Permissions, Permission } from "@/lib/permissions";
-import { Loader2, Shield, Sparkles, Plus, Save, Trash2, ShieldAlert } from "lucide-react";
+import { Permissions } from "@/lib/permissions";
+import { Loader2, Shield, Plus, Save, Trash2, ShieldAlert } from "lucide-react";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "@/lib/firebase/app";
 import { ConfirmModal } from "./ConfirmModal";
 import { Toast } from "./Toast";
+
+interface RoleItem {
+  id: string;
+  name?: string;
+  description?: string;
+  permissions?: string[];
+  isSystemRole?: boolean;
+}
+
+interface UserItem {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface UpdateRolePayload {
+  roleId: string;
+  name: string;
+  description: string;
+  permissions: string[];
+}
 
 // Flatten Permissions object for the UI
 const availablePermissions = Object.entries(Permissions).flatMap(([module, actions]) => 
@@ -19,9 +41,9 @@ const availablePermissions = Object.entries(Permissions).flatMap(([module, actio
   }))
 );
 
-export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
+export function RoleBuilder({ usersList = [] }: { usersList?: UserItem[] }) {
   const queryClient = useQueryClient();
-  const [selectedRole, setSelectedRole] = useState<any>(null);
+  const [selectedRole, setSelectedRole] = useState<RoleItem | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   
   // Toast state
@@ -43,11 +65,11 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
     permissions: [] as string[]
   });
 
-  const { data: roles = [], isLoading, isError, error } = useQuery({
+  const { data: roles = [], isLoading, isError, error } = useQuery<RoleItem[]>({
     queryKey: ["admin", "roles"],
     queryFn: async () => {
       const snap = await getDocs(collection(db, "settings", "global", "roles"));
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() } as RoleItem));
     }
   });
 
@@ -63,7 +85,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
       // A plain setDoc only updates the role document, leaving existing users'
       // ID tokens with stale/missing permissions until they're individually re-saved.
       const functions = getFunctions(app);
-      const updateRole = httpsCallable<any, any>(functions, "updateRole");
+      const updateRole = httpsCallable<UpdateRolePayload, { success: boolean }>(functions, "updateRole");
       await updateRole({
         roleId: data.id,
         name: data.name,
@@ -78,8 +100,9 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
       setIsCreating(false);
       setSelectedRole(null);
     },
-    onError: (err: any) => {
-      showToast(`Error saving role: ${err.message}`, "error");
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : String(err);
+      showToast(`Error saving role: ${message}`, "error");
     }
   });
 
@@ -94,12 +117,13 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
       setSelectedRole(null);
       setFormData({ id: "", name: "", description: "", permissions: [] });
     },
-    onError: (err: any) => {
-      showToast(`Error deleting role: ${err.message}`, "error");
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : String(err);
+      showToast(`Error deleting role: ${message}`, "error");
     }
   });
 
-  const handleSelectRole = (role: any) => {
+  const handleSelectRole = (role: RoleItem) => {
     setSelectedRole(role);
     setIsCreating(false);
     setFormData({
@@ -136,7 +160,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
 
     if (isCreating) {
       const isDuplicate = roles.some(
-        (r: any) => r.id.toLowerCase() === formData.id.toLowerCase() || r.name.toLowerCase() === formData.name.toLowerCase()
+        (r: RoleItem) => r.id.toLowerCase() === formData.id.toLowerCase() || (r.name && r.name.toLowerCase() === formData.name.toLowerCase())
       );
       if (isDuplicate) {
         showToast("A role with this ID or Display Name already exists.", "error");
@@ -243,7 +267,7 @@ export function RoleBuilder({ usersList = [] }: { usersList?: any[] }) {
         </div>
         
         <div className="flex flex-col gap-2">
-          {roles.map((r: any) => (
+          {roles.map((r: RoleItem) => (
             <button
               key={r.id}
               onClick={() => handleSelectRole(r)}
