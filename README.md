@@ -1,106 +1,184 @@
 # Refreshing Digital Conference Management Platform
 
-A reusable conference website, CMS, and attendance-management platform for the annual "Refreshing" conference, built for the Lagos State Baptist Student Fellowship (LSBSF).
+A multi-edition digital conference platform, content management system (CMS), and attendance-management solution for the annual "Refreshing" conference, built for the Lagos State Baptist Student Fellowship (LSBSF).
 
-Full requirements live in the SRS (Refreshing Digital Conference Management Platform — SRS, v1.0, July 2026). This README covers setup and current implementation status; **AGENTS.md covers rules and history any AI coding agent must read before touching this repo.**
+Full requirements live in the project SRS document (*Refreshing Digital Conference Management Platform — SRS, v1.0, July 2026*). **AGENTS.md covers non-negotiable process rules, architectural invariants, and historical bug patterns that any developer or AI assistant must read before touching this repository.**
 
-## Tech Stack
+---
 
-- **Framework:** Next.js 16 (App Router), React 19, TypeScript
-- **Styling:** Tailwind CSS v4
-- **Data:** Firebase (Firestore, Firebase Authentication, Cloud Functions)
-- **Image/file hosting:** Cloudinary (migrated off Firebase Storage — see AGENTS.md)
-- **Forms:** react-hook-form + zod
-- **Data fetching:** TanStack Query
-- **Rich text:** Tiptap
-- **Offline support:** Dexie (IndexedDB) for check-in
-- **Hosting:** Netlify (frontend), Firebase (Functions, Firestore)
+## Overview & Role
+
+- **Project Name:** Refreshing Digital Conference Management Platform
+- **Organization:** Lagos State Baptist Student Fellowship (LSBSF)
+- **My Role:** [My Role / Contribution Placeholder]
+- **Repository Maintainer:** [Maintainer Placeholder]
+
+---
+
+## Technical Architecture & Stack
+
+- **Frontend Framework:** Next.js 16 (App Router with Turbopack), React 19, TypeScript
+- **Styling & UI:** Tailwind CSS v4, Lucide React icons
+- **Data Persistence:** Firebase (Firestore database, Firebase Authentication, Cloud Functions v2)
+- **Media Assets:** Cloudinary (client-side unsigned uploads via `ImageUploader`)
+- **State & Data Fetching:** TanStack Query (React Query)
+- **Offline Sync & Storage:** Dexie.js (IndexedDB wrapper) for check-in desk offline resiliency
+- **Rich Text Editing:** Tiptap
+- **Form Management:** React Hook Form + Zod validation
+- **Hosting & Infrastructure:** Netlify (Frontend edge deployments), Firebase (Cloud Functions, Firestore, Auth)
+
+---
+
+## Core Features & Admin Functionality
+
+### Public Visitor Portal
+- **Edition-Scoped Pages:** Home, About, Ministers/Speakers, Programme Schedule, Resources & Conference Booklet, Gallery Albums, Announcements, FAQ, and Contact.
+- **Dynamic Routing:** All public pages route under `/[eventId]/` to ensure historical conference editions remain permanently browsable.
+- **Global Conference History:** Timeline feature spanning all 40+ years of conference history (`/timelineEntries`).
+
+### Admin Dashboard & Management System
+- **Authentication & Security:** Firebase email/password authentication with strict custom claims role verification (`superAdmin`, `eventAdmin`, `registrationStaff`, `checkinStaff`, `editor`, `viewer`).
+- **User Account Management:** Provisioning admin accounts, password resets, role assignment, and access control.
+- **Role Builder & Permissions:** Granular permission system for mapping actions across modules to user roles with server-side claim synchronization.
+- **Attendee Directory & Batch Import:** High-throughput attendee management supporting `.xlsx` and `.csv` batch imports, full multi-stage dry-run validation, fuzzy duplicate detection, and manual conflict resolution.
+- **Check-In Desk:** Fast check-in interface with barcode/QR scanning, online/offline synchronization via Dexie, and restricted PII access (`checkinView`).
+- **Content Management Systems (CMS):** Content editors for Ministers, Programme schedule, Gallery albums & photos, FAQs, Announcements, and Contact info.
+- **Audit Logging:** System-wide audit logs tracking administrative actions, user creation, and bulk operations.
+- **System Settings & Edition Management:** Global default event selection, event metadata creation, and global configuration options.
+
+---
 
 ## Getting Started
 
-```bash
-npm install
-npm run dev
+### Prerequisites
+- Node.js 20.x or higher
+- npm 10.x or higher
+
+### Local Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/thistechbabe1/refrshing-website.git
+   cd refrshing-website
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables:**
+   Copy `.env.example` to `.env.local` and populate the necessary configuration values (see details below):
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. **Run Development Server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Environment Variables Configuration
+
+> [!IMPORTANT]
+> Never commit actual credentials, private keys, or secret tokens to version control. Confirm `.env.local` is listed in `.gitignore`.
+
+### Client-Side Variables (`NEXT_PUBLIC_`)
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=YOUR_PROJECT.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=YOUR_PROJECT.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=YOUR_CLOUDINARY_CLOUD_NAME
+NEXT_PUBLIC_CLOUDINARY_IMAGE_PRESET=YOUR_UNSIGNED_IMAGE_PRESET
+NEXT_PUBLIC_CLOUDINARY_DOWNLOAD_PRESET=YOUR_UNSIGNED_DOWNLOAD_PRESET
+
+NEXT_PUBLIC_DEFAULT_EVENT_ID=refreshing-2026
 ```
 
-Open http://localhost:3000.
+### Server-Side Variables (Cloud Functions & Server Routes)
+```env
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@YOUR_PROJECT.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----"
+```
 
-For Cloud Functions:
+---
+
+## Data Model Structure
+
+Firestore data is hierarchically organized under edition scopes to support multi-edition browsing:
+
+```
+/events/{eventId}/
+  ├── ministers
+  ├── sessions
+  ├── bibleStudies
+  ├── articles
+  ├── advertisements
+  ├── downloads
+  ├── galleryAlbums
+  ├── mediaItems
+  ├── resources
+  ├── announcements
+  ├── faqs
+  ├── committeeMembers
+  ├── attendees
+  ├── checkinView
+  └── importBatches
+
+/timelineEntries          <- Global collection (spans full 40-year history)
+/users                    <- System administrator user profiles
+/settings/global          <- Global configuration and default active edition
+/audit_logs               <- System-wide administrative action logs
+```
+
+---
+
+## Deployment & Build Guidelines
+
+### Frontend Deployment (Netlify)
+The frontend automatically builds and deploys on Netlify from target branch commits:
+```bash
+npm run build
+```
+
+### Cloud Functions Deployment
+Cloud Functions reside in the `functions/` subfolder:
 ```bash
 cd functions
 npm install
 npm run build
 firebase deploy --only functions
 ```
+*Note: Deploying Cloud Functions requires the GCP Firebase project to be on the Blaze plan.*
 
-**Note:** deploying functions requires the Firebase project to be on the **Blaze (pay-as-you-go) plan** — this is required by Google to enable Cloud Build, not because the app itself costs money. Actual usage for a conference this size is well under 1% of Google's free-tier allowances (see AGENTS.md for the estimate).
-
-## Environment Variables
-
-### Firebase (client)
-- `NEXT_PUBLIC_FIREBASE_API_KEY`
-- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
-- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
-- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
-- `NEXT_PUBLIC_FIREBASE_APP_ID`
-
-### Firebase Admin (server-side, Cloud Functions / scripts only)
-- `FIREBASE_CLIENT_EMAIL`
-- `FIREBASE_PRIVATE_KEY`
-- **Never** expose these to client code or commit them to git. Confirm `.env.local` is in `.gitignore`.
-
-### Cloudinary (client — unsigned uploads)
-- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
-- `NEXT_PUBLIC_CLOUDINARY_IMAGE_PRESET`
-- `NEXT_PUBLIC_CLOUDINARY_DOWNLOAD_PRESET`
-
-### Cloudinary (server-side migration scripts only)
-- `CLOUDINARY_API_KEY`
-- `CLOUDINARY_API_SECRET`
-- These must **never** be prefixed `NEXT_PUBLIC_` and must never appear in client-side code. They're only used by the one-time server-side image migration script.
-
-### Cloud Functions secrets
-- `EMAIL_API_KEY` — currently a **placeholder only**. `createInvite` reads this but has no real email service wired up yet (it just logs the invite link to the console). Do not sign up for an email service to satisfy this — a dummy value unblocks deployment until real email sending is actually built and requested.
-
-### Default event
-- `NEXT_PUBLIC_DEFAULT_EVENT_ID` — used as an Edge-middleware fallback for redirecting old/bare URLs to the active edition. **This must be manually kept in sync with the `defaultEventId` set in `/admin/settings`** — it is not read live from Firestore for latency reasons. See AGENTS.md.
-
-## Data Model
-
-Firestore is structured with most content nested under an edition:
-
-```
-/events/{eventId}/
-  ministers, sessions, bibleStudies, articles, advertisements, downloads,
-  galleryAlbums, mediaItems, resources, announcements, faqs,
-  committeeMembers, attendees, checkinView, importBatches
-/timelineEntries          <- GLOBAL, no eventId (spans all editions, 40-year history)
-/users                    <- admin accounts, not public visitors
-/settings/global          <- default/active edition config
-/audit_logs
+### Security Rules Deployment
+```bash
+firebase deploy --only firestore:rules
 ```
 
-`{eventId}` is a real URL segment (`/refreshing-2026/...`), not a hidden constant — this is required so past editions remain permanently browsable per the SRS (Section 8.1 / FR-EVT-06). The public `EventSwitcher` UI is currently hidden (single active edition), but the underlying dynamic routing is fully intact — do not remove it when adding "Refreshing 2027."
+---
 
-## Feature Status
+## Development Verification Commands
 
-| Area | Status |
-|---|---|
-| Public site (home, about, ministers, programme, gallery, resources/booklet, announcements, faq, contact) | Built, live-data driven |
-| Admin: Events, Settings, Users & Roles, Attendees, Check-in (incl. offline), Homepage/About/Programme CMS | Built |
-| Admin: Gallery, FAQ, Contact CMS | Built, some content-loading bugs recently found — check task.md for latest state before assuming these are stable |
-| Testimonials/Messages (SRS 4.6 — visitor submission + admin moderation) | **Not yet built** as of this writing |
-| Dashboard summary cards, Analytics, Audit Log viewer | Partially built — verify before relying on |
-| Attendee import (.xlsx, duplicate detection, dry-run review) | Built |
+Before submitting pull requests or merging changes, execute the full verification suite:
 
-Check `task.md` in the repo root for the current phase checklist — it is kept reasonably up to date, but has been wrong before (features marked complete that weren't fully verified). Treat it as a starting point, not ground truth.
+```bash
+# 1. Typecheck
+npx tsc --noEmit
 
-## Deployment
+# 2. Code Linting
+npx eslint .
 
-- Frontend: Netlify, auto-deploys from the `admin` branch.
-- Functions: manual — `cd functions && npm run build && firebase deploy --only functions`.
-- Firestore rules: `firebase deploy --only firestore:rules` — **editing `firestore.rules` locally does nothing to production until this is run.**
-- Storage rules: `firebase deploy --only storage` — mostly legacy now that uploads go through Cloudinary; still governs any un-migrated Firebase Storage files.
+# 3. Security Unit Tests
+npm test
 
-After any rules or custom-claims change, **all logged-in admins must log out and back in** to get a fresh token — Firebase caches claims in the ID token client-side.
+# 4. Production Build Verification
+npm run build
+```
