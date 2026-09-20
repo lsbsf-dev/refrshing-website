@@ -1,4 +1,4 @@
-import { db, storage } from "./app";
+import { db } from "./app";
 import { 
   collection, 
   doc, 
@@ -9,7 +9,6 @@ import {
   orderBy, 
   serverTimestamp 
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Can be removed once fully migrated, but keeping for now if used elsewhere
 
 // ==========================================
 // TYPES
@@ -85,8 +84,8 @@ export type PublishStatus = 'draft' | 'published';
 export interface BaseEventScopedDoc {
   id: string;
   status: PublishStatus;
-  createdAt?: any;
-  updatedAt?: any;
+  createdAt?: unknown;
+  updatedAt?: unknown;
 }
 
 // 1. Committee Members
@@ -107,8 +106,8 @@ export interface TimelineEntry {
   photoUrl: string;
   order: number; // Chronological sorting
   status: PublishStatus;
-  createdAt?: any;
-  updatedAt?: any;
+  createdAt?: unknown;
+  updatedAt?: unknown;
 }
 
 // 3. Bible Studies
@@ -164,20 +163,21 @@ export interface Download extends BaseEventScopedDoc {
 // GENERIC CRUD HELPERS
 // ==========================================
 
-export async function getEventScopedDocs<T>(eventId: string, collectionName: string, orderField: string = 'order'): Promise<T[]> {
-  const q = query(collection(db, "events", eventId, collectionName), orderBy(orderField, 'asc'));
+export async function getEventScopedDocs<T>(eventId: string, collectionName: string, orderField?: string): Promise<T[]> {
+  const colRef = collection(db, "events", eventId, collectionName);
+  const q = orderField ? query(colRef, orderBy(orderField, 'asc')) : colRef;
   const snap = await getDocs(q);
   return snap.docs.map(d => ({ id: d.id, ...d.data() } as T));
 }
 
 export async function setEventScopedDoc<T extends { id: string }>(eventId: string, collectionName: string, data: T): Promise<void> {
-  const isNew = !(data as any).createdAt;
-  const payload = {
+  const isNew = !(data as Record<string, unknown>).createdAt;
+  const payload: Record<string, unknown> = {
     ...data,
     updatedAt: serverTimestamp(),
   };
   if (isNew) {
-    (payload as any).createdAt = serverTimestamp();
+    payload.createdAt = serverTimestamp();
   }
   await setDoc(doc(db, "events", eventId, collectionName, data.id), payload, { merge: true });
 }
@@ -198,12 +198,12 @@ export async function getTimelineEntries(): Promise<TimelineEntry[]> {
 
 export async function setTimelineEntry(data: TimelineEntry): Promise<void> {
   const isNew = !data.createdAt;
-  const payload = {
+  const payload: Record<string, unknown> = {
     ...data,
     updatedAt: serverTimestamp(),
   };
   if (isNew) {
-    (payload as any).createdAt = serverTimestamp();
+    payload.createdAt = serverTimestamp();
   }
   await setDoc(doc(db, "timelineEntries", data.id), payload, { merge: true });
 }

@@ -204,11 +204,11 @@ service cloud.firestore {
     // ==========================================
     
     match /enquiries/{enquiryId} {
-      allow create: if request.resource.data.name.size() >= 2
-                    && isValidEmail(request.resource.data.email)
-                    && request.resource.data.message.size() >= 10;
-      allow read: if isSuperAdmin();
-      allow write: if isSuperAdmin();
+      allow create: if request.resource.data.message.size() >= 10
+                    && (request.resource.data.name == "" || request.resource.data.name.size() >= 2)
+                    && (request.resource.data.email == "" || isValidEmail(request.resource.data.email));
+      allow read: if isSuperAdmin() || (resource != null && hasPermission('enquiries.read', resource.data.eventId));
+      allow write: if isSuperAdmin() || (resource != null && hasPermission('enquiries.write', resource.data.eventId));
     }
 
     match /newsletter/{subscriberId} {
