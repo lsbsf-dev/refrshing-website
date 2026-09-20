@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [activeEvent, setActiveEventState] = useState("refreshing-2026");
   const [isLoading, setIsLoading] = useState(true);
+  const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
     if (isLoginPage) {
