@@ -3,7 +3,7 @@
  * Provides Zod schema validation and Firestore persistence functions for user contact forms.
  */
 
-import { collection, addDoc, query, where, getDocs, FirestoreDataConverter } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, doc, deleteDoc, FirestoreDataConverter } from "firebase/firestore";
 import { z } from "zod";
 import { db } from "./app";
 
@@ -67,4 +67,9 @@ export async function getEnquiries(eventId: string): Promise<EnquiryDoc[]> {
   const snap = await getDocs(q);
   const results = snap.docs.map(doc => doc.data());
   return results.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+}
+
+export async function deleteEnquiry(id: string): Promise<void> {
+  const ref = doc(db, "enquiries", id);
+  await deleteDoc(ref);
 }

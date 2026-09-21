@@ -1,18 +1,36 @@
 "use client";
 
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getEnquiries } from "@/lib/firebase/enquiries";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getEnquiries, deleteEnquiry, EnquiryDoc } from "@/lib/firebase/enquiries";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
-import { Loader2, Mailbox } from "lucide-react";
+import { Loader2, Mailbox, Trash2 } from "lucide-react";
+
+type FilterTab = "All" | "Enquiry" | "Testimony" | "Prayer Request";
 
 export default function EnquiriesAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState<FilterTab>("All");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { data: enquiries = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "enquiries", selectedEventId],
     queryFn: () => getEnquiries(selectedEventId),
     enabled: !!selectedEventId,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      setDeletingId(id);
+      await deleteEnquiry(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "enquiries", selectedEventId] });
+    },
+    onSettled: () => {
+      setDeletingId(null);
+    },
   });
 
   if (!selectedEventId) return null;
@@ -36,6 +54,18 @@ export default function EnquiriesAdminPage() {
     );
   }
 
+  const filteredEnquiries = enquiries.filter((item: EnquiryDoc) => {
+    if (activeTab === "All") return true;
+    return item.type === activeTab;
+  });
+
+  const countForTab = (tab: FilterTab) => {
+    if (tab === "All") return enquiries.length;
+    return enquiries.filter((item: EnquiryDoc) => item.type === tab).length;
+  };
+
+  const tabs: FilterTab[] = ["All", "Enquiry", "Testimony", "Prayer Request"];
+
   return (
     <div className="pb-20 max-w-5xl">
       <div className="flex items-center justify-between mb-8">
@@ -50,13 +80,38 @@ export default function EnquiriesAdminPage() {
         </div>
       </div>
 
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-border pb-4">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
+              activeTab === tab
+                ? "bg-[#C25627] text-white"
+                : "bg-surface border border-border text-foreground hover:bg-surface-muted"
+            }`}
+          >
+            {tab === "All" ? "All Messages" : tab === "Enquiry" ? "General Enquiries" : tab === "Testimony" ? "Testimonies" : "Prayer Requests"}
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                activeTab === tab
+                  ? "bg-white/20 text-white"
+                  : "bg-black/5 dark:bg-white/10 text-foreground-muted"
+              }`}
+            >
+              {countForTab(tab)}
+            </span>
+          </button>
+        ))}
+      </div>
+
       <div className="space-y-6">
-        {enquiries.length === 0 ? (
+        {filteredEnquiries.length === 0 ? (
           <div className="p-12 text-center bg-surface border border-border rounded-2xl">
-            <p className="text-zinc-500 text-sm">No messages found for this event.</p>
+            <p className="text-zinc-500 text-sm">No {activeTab === "All" ? "messages" : activeTab.toLowerCase() + "s"} found for this event.</p>
           </div>
         ) : (
-          enquiries.map((enquiry) => (
+          filteredEnquiries.map((enquiry: EnquiryDoc) => (
             <div key={enquiry.id} className="p-6 bg-surface border border-border rounded-2xl shadow-sm">
               <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-4 mb-4">
                 <div className="flex items-center gap-4">
@@ -76,10 +131,26 @@ export default function EnquiriesAdminPage() {
                     )}
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="flex items-center gap-4">
                   <span className="text-xs text-zinc-400 font-mono">
                     {new Date(enquiry.submittedAt).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
                   </span>
+                  <button
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to delete this message?")) {
+                        deleteMutation.mutate(enquiry.id);
+                      }
+                    }}
+                    disabled={deletingId === enquiry.id}
+                    className="text-zinc-400 hover:text-red-500 transition-colors p-1"
+                    title="Delete message"
+                  >
+                    {deletingId === enquiry.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </button>
                 </div>
               </div>
               <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap">

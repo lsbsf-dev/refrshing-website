@@ -11,8 +11,6 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbums } from "@/lib/firebase/gallery";
 import { useParams } from "next/navigation";
-import seedAlbums from "@/lib/firebase/seedAlbums.json";
-import { GalleryAlbum } from "@/types/gallery";
 
 export default function GalleryPage() {
   const params = useParams();
@@ -45,7 +43,7 @@ export default function GalleryPage() {
       <section className="relative w-full h-[45dvh] min-h-[460px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-52 lg:pt-64 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
-            src="/pictures/Image 3.jpg"
+            src="/pictures/Image%203.jpg"
             alt="Sanctuary details background"
             fill
             className="object-cover object-center filter grayscale"
@@ -80,7 +78,7 @@ export default function GalleryPage() {
               {albums.map((album) => (
                 <Link
                   key={album.id}
-                  href={`/gallery/${album.slug}`}
+                  href={`/${ACTIVE_EVENT_ID}/gallery/${album.slug}`}
                   className="group w-full flex flex-col text-left border border-black/10 rounded-2xl overflow-hidden bg-white transition-all duration-500 hover:border-[#C25627]/40 relative shadow-md hover:scale-[1.01] active-press cursor-pointer block"
                 >
                   <div className="relative w-full aspect-video overflow-hidden">

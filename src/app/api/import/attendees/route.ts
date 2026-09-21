@@ -5,6 +5,21 @@ import { verifyApiRequest } from '@/lib/api-auth';
 import { Permissions } from '@/lib/permissions';
 import { logAudit } from '@/lib/audit';
 
+interface AssociationMaster {
+  id: string;
+  name?: string;
+  conferenceId?: string;
+  [key: string]: unknown;
+}
+
+interface ChurchMaster {
+  id: string;
+  canonicalName?: string;
+  associationId?: string;
+  aliases?: string[];
+  [key: string]: unknown;
+}
+
 export async function POST(request: Request) {
   try {
     await verifyApiRequest(request, Permissions.Registrations.Write);
@@ -28,9 +43,9 @@ export async function POST(request: Request) {
       adminDb.collection('churches').where('active', '==', true).get()
     ]);
 
-    const existingAttendees = existingAttendeesSnap.docs.map((d: any) => d.data());
-    const associationsMaster = associationsSnap.docs.map((d: any) => ({ id: d.id, ...d.data() } as any));
-    const churchesMaster = churchesSnap.docs.map((d: any) => ({ id: d.id, ...d.data() } as any));
+    const existingAttendees = existingAttendeesSnap.docs.map((d: FirebaseFirestore.QueryDocumentSnapshot) => d.data() as AttendeeData);
+    const associationsMaster = associationsSnap.docs.map((d: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: d.id, ...d.data() } as AssociationMaster));
+    const churchesMaster = churchesSnap.docs.map((d: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: d.id, ...d.data() } as ChurchMaster));
 
     const result = {
       processed: attendees.length,
@@ -41,7 +56,7 @@ export async function POST(request: Request) {
     };
 
     const batch = adminDb.batch();
-    const processedAttendees: any[] = [];
+    const processedAttendees: AttendeeData[] = [];
 
     const cleanStr = (s?: string) => s ? s.trim().toLowerCase() : '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -58,14 +73,14 @@ export async function POST(request: Request) {
       return null;
     };
 
-    attendees.forEach((clientRow: any, index: number) => {
+    attendees.forEach((clientRow: Partial<ProcessedRow> & Record<string, unknown>, index: number) => {
       const isProcessedRow = !!clientRow.originalData;
       
-      const originalData: AttendeeData = isProcessedRow ? clientRow.originalData : clientRow;
-      const data: AttendeeData = isProcessedRow ? clientRow.data : clientRow;
-      const originalIndex = isProcessedRow ? clientRow.originalIndex : index;
-      const importDecision = isProcessedRow ? clientRow.importDecision : undefined;
-      const edited = isProcessedRow ? clientRow.edited : false;
+      const originalData: AttendeeData = isProcessedRow ? (clientRow.originalData as AttendeeData) : (clientRow as unknown as AttendeeData);
+      const data: AttendeeData = isProcessedRow ? (clientRow.data as AttendeeData) : (clientRow as unknown as AttendeeData);
+      const originalIndex = isProcessedRow ? (clientRow.originalIndex as number) : index;
+      const importDecision = isProcessedRow ? (clientRow.importDecision as ProcessedRow["importDecision"]) : undefined;
+      const edited = isProcessedRow ? Boolean(clientRow.edited) : false;
 
       const errors: FieldError[] = [];
       let status: ProcessedRow["status"] = "valid";
@@ -121,18 +136,18 @@ export async function POST(request: Request) {
             errors.push({ field: fieldName as keyof AttendeeData, code: 'missing', message: 'Association / Campus is required for this conference.' });
           } else if (!resolvedAssocId) {
              const searchTarget = cleanStr(rawAssoc);
-             const possibleAssocs = associationsMaster.filter((a: any) => a.conferenceId === resolvedConfId);
+             const possibleAssocs = associationsMaster.filter((a: AssociationMaster) => a.conferenceId === resolvedConfId);
              
-             const exactMatch = possibleAssocs.find((a: any) => cleanStr(a.name) === searchTarget);
+             const exactMatch = possibleAssocs.find((a: AssociationMaster) => cleanStr(a.name as string | undefined) === searchTarget);
              
              if (exactMatch) {
                 resolvedAssocId = exactMatch.id;
                 data.associationId = exactMatch.id;
                 if (data.conferenceId === 'campus_fellowship') {
                    data.campusFellowshipId = exactMatch.id;
-                   data.campusFellowshipName = exactMatch.name;
+                   data.campusFellowshipName = exactMatch.name as string;
                 } else {
-                   data.associationName = exactMatch.name;
+                   data.associationName = exactMatch.name as string;
                 }
              } else {
                 // Do not force strict resolution, accept the string
@@ -156,10 +171,10 @@ export async function POST(request: Request) {
              errors.push({ field: 'churchRaw', code: 'missing', message: 'Church is required for Lagos East/West/Central conferences.' });
            } else if (!resolvedChurchId) {
               const searchTarget = cleanStr(rawChurch);
-              const possibleChurches = resolvedAssocId ? churchesMaster.filter((c: any) => c.associationId === resolvedAssocId) : churchesMaster;
+              const possibleChurches = resolvedAssocId ? churchesMaster.filter((c: ChurchMaster) => c.associationId === resolvedAssocId) : churchesMaster;
               
-              const exactMatch = possibleChurches.find((c: any) => {
-                 if (cleanStr(c.canonicalName) === searchTarget) return true;
+              const exactMatch = possibleChurches.find((c: ChurchMaster) => {
+                 if (cleanStr(c.canonicalName as string | undefined) === searchTarget) return true;
                  if (c.aliases && Array.isArray(c.aliases)) {
                     return c.aliases.some((alias: string) => cleanStr(alias) === searchTarget);
                  }
@@ -169,7 +184,7 @@ export async function POST(request: Request) {
               if (exactMatch) {
                  resolvedChurchId = exactMatch.id;
                  data.churchId = exactMatch.id;
-                 data.churchName = exactMatch.canonicalName;
+                 data.churchName = exactMatch.canonicalName as string;
               } else {
                  // Do not force strict resolution, accept the string
                  data.churchName = rawChurch.trim();
@@ -193,7 +208,7 @@ export async function POST(request: Request) {
           status = "error";
         } else {
           // --- Duplicate Detection Logic ---
-          const checkDuplicateAgainst = (existing: any) => {
+          const checkDuplicateAgainst = (existing: Partial<AttendeeData>) => {
             const sameEmail = !!existing.email && !!data.email && existing.email.toLowerCase() === data.email.toLowerCase();
             if (sameEmail) {
               return { isMatch: true, exact: !!existing.id && existing.id === data.id, existingId: existing.id || 'unknown' };
@@ -334,11 +349,12 @@ export async function POST(request: Request) {
           }
         }
 
-      } catch (err: any) {
+      } catch (err: unknown) {
         result.rejected++;
+        const errorMessage = err instanceof Error ? err.message : String(err);
         const errorRow: ProcessedRow = {
           originalIndex, originalData, data, status: "error",
-          errors: [{ field: "id", code: "exception", message: err.message }],
+          errors: [{ field: "id", code: "exception", message: errorMessage }],
           edited, importDecision
         };
         result.sessionRows.push(errorRow);
@@ -356,11 +372,12 @@ export async function POST(request: Request) {
       ...result 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Batch import error:', error);
-    const isPermission = error.message?.includes('permission') || error.message?.includes('Forbidden');
-    const isAuth = error.message?.includes('token') || error.message?.includes('Authorization');
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: isPermission ? 403 : (isAuth ? 401 : 500) });
+    const errMessage = error instanceof Error ? error.message : String(error);
+    const isPermission = errMessage.includes('permission') || errMessage.includes('Forbidden');
+    const isAuth = errMessage.includes('token') || errMessage.includes('Authorization');
+    return NextResponse.json({ error: errMessage || 'Internal server error' }, { status: isPermission ? 403 : (isAuth ? 401 : 500) });
   }
 }
 export async function GET(request: Request) {
@@ -369,9 +386,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
     const snapshot = await adminDb.collection('events').doc(eventId).collection('attendees').get();
-    return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map((d: any) => d.data()) });
-  } catch(e: any) {
-    return NextResponse.json({ error: e.message }, { status: e.message?.includes("permission") ? 403 : 401 });
+    return NextResponse.json({ count: snapshot.size, attendees: snapshot.docs.map((d: FirebaseFirestore.QueryDocumentSnapshot) => d.data()) });
+  } catch(e: unknown) {
+    const errMessage = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: errMessage }, { status: errMessage.includes("permission") ? 403 : 401 });
   }
 }
 
@@ -441,8 +459,9 @@ export async function DELETE(request: Request) {
       deleted: totalDeleted,
       message: `Successfully deleted ${totalDeleted} attendee records and their check-in views.`
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Delete attendees error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: error.message?.includes('permission') ? 403 : 500 });
+    const errMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: errMessage || 'Internal server error' }, { status: errMessage.includes('permission') ? 403 : 500 });
   }
 }

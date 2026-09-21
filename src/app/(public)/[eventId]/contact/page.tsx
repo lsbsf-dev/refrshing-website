@@ -69,9 +69,9 @@ export default function ContactPage() {
       await submitEnquiry({ type, name, email, message }, ACTIVE_EVENT_ID);
       localStorage.setItem("last_enquiry_time", new Date().toISOString());
       setFormSubmitted(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      let errorMsg = err.message || "Failed to submit. Please try again.";
+      let errorMsg = (err as { message?: string })?.message || "Failed to submit. Please try again.";
       if (err instanceof Error && err.name === "ZodError") {
         errorMsg = "Please check your inputs and try again.";
       }
@@ -90,7 +90,7 @@ export default function ContactPage() {
       <section className="relative w-full h-[45dvh] min-h-[460px] hero-landscape flex flex-col justify-end bg-[#0B0907] text-white overflow-hidden pt-52 lg:pt-64 pb-16 px-4 sm:px-6 md:px-16 border-b border-white/5">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
-            src="/pictures/Image 3.jpg"
+            src="/pictures/Image%203.jpg"
             alt="Sanctuary details background"
             fill
             className="object-cover object-center filter grayscale"
@@ -184,7 +184,7 @@ export default function ContactPage() {
                     <label className="font-sans text-sm font-bold text-[#0B0907] tracking-wider uppercase">SUBMISSION TYPE</label>
                     <CustomSelect
                       value={type}
-                      onChange={(val) => setType(val as any)}
+                      onChange={(val) => setType(val as "Enquiry" | "Testimony" | "Prayer Request")}
                       options={[
                         { value: "Enquiry", label: "General Enquiry" },
                         { value: "Testimony", label: "Share a Testimony" },

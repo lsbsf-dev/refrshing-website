@@ -16,7 +16,7 @@ import { useParams } from "next/navigation";
 import { logAnalyticsEvent } from "@/lib/analytics";
 
 export default function GallerySlugPage({ params }: { params: Promise<{ slug: string }> }) {
-  const __params = require("next/navigation").useParams();
+  const __params = useParams();
   const ACTIVE_EVENT_ID = __params?.eventId as string;
   const resolvedParams = use(params);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
@@ -83,7 +83,7 @@ export default function GallerySlugPage({ params }: { params: Promise<{ slug: st
 
         <div className="relative z-10 max-w-7xl mx-auto w-full text-left flex flex-col items-start gap-4">
           <Link 
-            href="/gallery"
+            href={`/${ACTIVE_EVENT_ID}/gallery`}
             className="flex items-center gap-1 font-sans text-[10px] font-extrabold tracking-[0.2em] text-[#DDB94E] uppercase hover:text-white transition-colors mb-2"
           >
             <ChevronLeft className="h-3.5 w-3.5" /> Back to Gallery
