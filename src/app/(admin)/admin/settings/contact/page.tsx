@@ -9,13 +9,13 @@ import { Loader2, Save, Plus, Trash2, Phone } from "lucide-react";
 import { Toast } from "@/components/admin/Toast";
 
 export default function ContactSettingsAdminPage() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: settingsDocs = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "aboutSettings", selectedEventId, "contact"],
     queryFn: () => getEventScopedDocs<ContactSettings>(selectedEventId, "aboutSettings"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const defaultSettings: ContactSettings = {

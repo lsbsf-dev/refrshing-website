@@ -8,23 +8,19 @@
 import React, { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, Clock, MapPin, BookOpen } from "lucide-react";
 import { getMinisterBySlug } from "@/lib/firebase/ministers";
 import { getSessions } from "@/lib/firebase/programme";
 import { getResources } from "@/lib/firebase/resources";
-import { Minister } from "@/types/minister";
-import { Session } from "@/types/programme";
-import { Resource } from "@/types/resource";
 
 export default function MinisterDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const __params = require("next/navigation").useParams();
-  const ACTIVE_EVENT_ID = __params?.eventId as string;
+  const { eventId: ACTIVE_EVENT_ID } = useParams<{ eventId: string }>();
   const { slug } = use(params);
 
   // Minister details query
@@ -32,6 +28,7 @@ export default function MinisterDetailPage({
     queryKey: ["minister", ACTIVE_EVENT_ID, slug],
     queryFn: () => getMinisterBySlug(ACTIVE_EVENT_ID, slug),
     staleTime: 6 * 60 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID && !!slug,
   });
 
   // Assigned sessions query
@@ -39,6 +36,7 @@ export default function MinisterDetailPage({
     queryKey: ["sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
     staleTime: 30 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   // Authored resources query
@@ -53,6 +51,7 @@ export default function MinisterDetailPage({
       return [...articles, ...bibleStudies, ...resourcesData];
     },
     staleTime: 30 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const sessions = minister

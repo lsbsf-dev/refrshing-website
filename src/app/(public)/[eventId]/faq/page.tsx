@@ -12,7 +12,6 @@ import { ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getFAQs } from "@/lib/firebase/faq";
 import { useParams } from "next/navigation";
-import { FAQ } from "@/types/faq";
 
 export default function FAQPage() {
   const params = useParams();
@@ -23,6 +22,7 @@ export default function FAQPage() {
     queryKey: ["faqs", ACTIVE_EVENT_ID],
     queryFn: () => getFAQs(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000, // 6 hours
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const toggleFAQ = (id: string) => {

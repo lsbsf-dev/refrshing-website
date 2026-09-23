@@ -13,7 +13,7 @@ import { Toast } from "@/components/admin/Toast";
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();
 
-  const { data: usersList = [], isLoading: isLoadingUsers } = useQuery({
+  const { data: usersList = [], isLoading: isLoadingUsers, isError, error } = useQuery({
     queryKey: ["admin", "users"],
     queryFn: getUsers,
   });
@@ -266,6 +266,14 @@ export default function AdminUsersPage() {
                   <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
                     <span className="font-sans text-sm">Loading users...</span>
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-red-500">
+                    <ShieldAlert className="h-8 w-8 mx-auto mb-3 opacity-60" />
+                    <span className="font-sans text-sm font-semibold block">Failed to load users</span>
+                    <span className="font-sans text-xs opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</span>
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (

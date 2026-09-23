@@ -7,37 +7,36 @@ import { FormField } from "@/components/shared/FormField";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Loader2, Save } from "lucide-react";
-import { getMinisters } from "@/lib/firebase/ministers";
 import { Minister } from "@/types/minister";
 import { Announcement } from "@/types/announcement";
 import { Toast } from "@/components/admin/Toast";
 
 export default function HomepageAdminPage() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: settingsDocs = [], isLoading: isLoadingSettings } = useQuery({
+  const { data: settingsDocs = [], isLoading: isLoadingSettings, isError, error } = useQuery({
     queryKey: ["admin", "homepageSettings", selectedEventId],
     queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const { data: ministers = [] } = useQuery({
     queryKey: ["admin", "ministers", selectedEventId],
     queryFn: () => getEventScopedDocs<Minister>(selectedEventId, "ministers"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const { data: announcements = [] } = useQuery({
     queryKey: ["admin", "announcements", selectedEventId],
     queryFn: () => getEventScopedDocs<Announcement>(selectedEventId, "announcements"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const { data: articles = [] } = useQuery({
     queryKey: ["admin", "articles", selectedEventId],
     queryFn: () => getEventScopedDocs<Article>(selectedEventId, "articles"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const defaultSettings: HomepageSettings = {
@@ -90,6 +89,17 @@ export default function HomepageAdminPage() {
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+          <p className="font-sans font-semibold text-sm">Failed to load homepage settings</p>
+          <p className="font-sans text-xs mt-1 opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</p>
+        </div>
       </div>
     );
   }

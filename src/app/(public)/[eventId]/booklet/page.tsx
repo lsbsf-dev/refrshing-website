@@ -55,6 +55,7 @@ export default function BookletPage() {
       return [...articles, ...bibleStudies, ...resourcesData];
     },
     staleTime: 6 * 60 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const resources = rawResources;

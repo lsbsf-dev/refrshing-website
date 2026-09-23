@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Megaphone, Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Bell, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Search, Save, X, Sparkles, AlertCircle, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAnnouncements, updateAnnouncement, createAnnouncement, deleteAnnouncement } from "@/lib/firebase/announcements";
@@ -14,12 +14,13 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Announcement } from "@/types/announcement";
 import { CustomSelect } from "@/components/shared/CustomSelect";
 export default function AdminAnnouncementsPage() {
-  const { eventId: ACTIVE_EVENT_ID } = useAdminEvent();
+  const { eventId: ACTIVE_EVENT_ID, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: announcementsList = [], isLoading } = useQuery({
+  const { data: announcementsList = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "announcements", ACTIVE_EVENT_ID],
     queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
+    enabled: !isEventLoading && !!ACTIVE_EVENT_ID,
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
@@ -173,6 +174,14 @@ export default function AdminAnnouncementsPage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-[#C25627]" />
+        </div>
+      ) : isError ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+            <AlertCircle className="h-8 w-8 mx-auto mb-3" />
+            <p className="font-sans font-semibold text-sm">Failed to load announcements</p>
+            <p className="font-sans text-xs mt-1 opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</p>
+          </div>
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 bg-surface-alt border border-border rounded-3xl">

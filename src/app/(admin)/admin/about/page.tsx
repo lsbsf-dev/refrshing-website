@@ -11,13 +11,13 @@ import { TipTapEditor } from "@/components/admin/TipTapEditor";
 import { Toast } from "@/components/admin/Toast";
 
 export default function AboutAdminPage() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const { data: settingsDocs = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "aboutSettings", selectedEventId],
     queryFn: () => getEventScopedDocs<AboutSettings>(selectedEventId, "aboutSettings"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const defaultSettings: AboutSettings = {

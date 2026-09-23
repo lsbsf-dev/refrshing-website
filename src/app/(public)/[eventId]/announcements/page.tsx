@@ -11,7 +11,6 @@ import { ChevronDown, Calendar, AlertCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAnnouncements } from "@/lib/firebase/announcements";
 import { useParams } from "next/navigation";
-import { Announcement } from "@/types/announcement";
 
 export default function AnnouncementsPage() {
   const params = useParams();
@@ -22,6 +21,7 @@ export default function AnnouncementsPage() {
     queryKey: ["announcements", ACTIVE_EVENT_ID],
     queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const toggleAnnouncement = (id: string) => {

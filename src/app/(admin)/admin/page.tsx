@@ -7,7 +7,6 @@ import {
   Users,
   Calendar,
   BookOpen,
-  UserCheck,
   Megaphone,
   ArrowUpRight,
   Flame,
@@ -26,7 +25,7 @@ import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 
 export default function AdminDashboardHome() {
   const { profile } = useAuth();
-  const { eventId } = useAdminEvent();
+  const { eventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const role = profile?.role || "viewer";
@@ -37,22 +36,21 @@ export default function AdminDashboardHome() {
   const canReadProgramme = hasPermission(permissions, Permissions.Programme.Read);
   const canReadAnnouncements = hasPermission(permissions, Permissions.Announcements.Read);
   const canReadResources = hasPermission(permissions, Permissions.Resources.Read);
-  const canReadRegistrations = hasPermission(permissions, Permissions.Registrations.Read);
   const canReadHomepage = hasPermission(permissions, Permissions.Homepage.Read);
   const canReadUsers = hasPermission(permissions, Permissions.Users.Read);
 
   // Queries (fetch-on-load, no realtime listeners)
-  const { data: ministers = [], isFetching: isFetchingMinisters } = useQuery({
+  const { data: ministers = [], isFetching: isFetchingMinisters, isError: isMinistersError } = useQuery({
     queryKey: ["dashboard", "ministers", eventId],
     queryFn: () => getMinisters(eventId),
-    enabled: !!eventId && canReadMinisters,
+    enabled: !isEventLoading && !!eventId && canReadMinisters,
     staleTime: Infinity // Only refetch manually
   });
 
-  const { data: announcements = [], isFetching: isFetchingAnnouncements } = useQuery({
+  const { data: announcements = [], isFetching: isFetchingAnnouncements, isError: isAnnouncementsError } = useQuery({
     queryKey: ["dashboard", "announcements", eventId],
     queryFn: () => getEventScopedDocs(eventId, "announcements"),
-    enabled: !!eventId && canReadAnnouncements,
+    enabled: !isEventLoading && !!eventId && canReadAnnouncements,
     staleTime: Infinity
   });
 
@@ -122,7 +120,7 @@ export default function AdminDashboardHome() {
               </div>
             </div>
             <div className="flex items-end justify-between">
-              <span className="font-serif text-5xl font-light text-zinc-900">{ministers.length}</span>
+              <span className="font-serif text-5xl font-light text-zinc-900">{isMinistersError ? "—" : ministers.length}</span>
               <Link href="/admin/ministers" className="text-xs font-bold text-[#C25627] hover:text-[#9c431d] uppercase tracking-wider flex items-center gap-1">
                 Manage <ArrowUpRight className="h-3 w-3" />
               </Link>
@@ -144,7 +142,7 @@ export default function AdminDashboardHome() {
               </div>
             </div>
             <div className="flex items-end justify-between">
-              <span className="font-serif text-5xl font-light text-zinc-900">{announcements.length}</span>
+              <span className="font-serif text-5xl font-light text-zinc-900">{isAnnouncementsError ? "—" : announcements.length}</span>
               <Link href="/admin/announcements" className="text-xs font-bold text-[#C25627] hover:text-[#9c431d] uppercase tracking-wider flex items-center gap-1">
                 Manage <ArrowUpRight className="h-3 w-3" />
               </Link>

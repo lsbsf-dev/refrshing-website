@@ -10,7 +10,7 @@ import { Modal } from "@/components/shared/Modal";
 import { FormField } from "@/components/shared/FormField";
 
 export default function AdminGalleryDashboard() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false);
@@ -22,16 +22,16 @@ export default function AdminGalleryDashboard() {
   const [videoTitle, setVideoTitle] = useState("");
   const [youtubeId, setYoutubeId] = useState("");
 
-  const { data: albums = [], isLoading: isLoadingAlbums } = useQuery({
+  const { data: albums = [], isLoading: isLoadingAlbums, isError: isAlbumsError, error: albumsError } = useQuery({
     queryKey: ["admin", "albums", selectedEventId],
     queryFn: () => getAlbums(selectedEventId),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
-  const { data: videos = [], isLoading: isLoadingVideos } = useQuery({
+  const { data: videos = [], isLoading: isLoadingVideos, isError: isVideosError, error: videosError } = useQuery({
     queryKey: ["admin", "videos", selectedEventId],
     queryFn: () => getVideos(selectedEventId),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const createAlbumMutation = useMutation({
@@ -120,6 +120,10 @@ export default function AdminGalleryDashboard() {
 
         {isLoadingAlbums ? (
           <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-zinc-400" /></div>
+        ) : isAlbumsError ? (
+          <div className="border border-red-500/20 bg-red-500/10 text-red-500 rounded-2xl p-8 text-center text-sm">
+            Failed to load albums — {(albumsError as Error)?.message || "Permission denied or unknown error"}
+          </div>
         ) : albums.length === 0 ? (
           <div className="border border-dashed border-black/20 dark:border-white/20 rounded-2xl p-12 text-center text-zinc-500 text-sm">
             No albums found for this event.
@@ -179,6 +183,10 @@ export default function AdminGalleryDashboard() {
 
         {isLoadingVideos ? (
           <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-zinc-400" /></div>
+        ) : isVideosError ? (
+          <div className="border border-red-500/20 bg-red-500/10 text-red-500 rounded-2xl p-8 text-center text-sm">
+            Failed to load videos — {(videosError as Error)?.message || "Permission denied or unknown error"}
+          </div>
         ) : videos.length === 0 ? (
           <div className="border border-dashed border-black/20 dark:border-white/20 rounded-2xl p-12 text-center text-zinc-500 text-sm">
             No videos embedded for this event.
