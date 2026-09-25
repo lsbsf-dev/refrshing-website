@@ -44,11 +44,4 @@ Read this before making any change. This project has been through extensive debu
 
 11. **Deploying Cloud Functions requires the Blaze plan** (Google requirement for Cloud Build, not because the app has real costs — actual usage is a small fraction of free-tier limits). If a deploy fails with a billing-related error, that's the cause.
 
-12. **A deploy hanging with "Cannot determine backend specification. Timeout after 10000"** means something in `functions/src` blocks at module-load time (not function-call time) — commonly caused by mixing Firebase Functions v1 (`functions.https.onCall`) and v2 (`defineSecret` from `firebase-functions/params`) syntax in the same codebase. Use `firebase deploy --only functions --debug` to find the actual hang location — don't guess.
-
-## Open items as of last handoff
-
-- Testimonials/prayer-request submission + moderation flow (SRS Section 4.6) is specified but not built.
-- Gallery album cover images reported broken — investigate against the Cloudinary migration and `next.config.ts` `remotePatterns` before assuming a new cause.
-- Contact page info reported outdated — check for the hardcoded-fallback pattern (#6 above) before assuming it's an admin-save bug.
-- Full manual verification pass (see any `testing-checklist` artifact from prior sessions) has not been completed end-to-end in one sitting — most fixes have been verified individually but not as a full regression pass.
+12. **A deploy hanging with "Cannot determine backend specification. Timeout after 10000"** means something in `functions/src` blocks at module-load time (not function-call time) — commonly caused by mixing Firebase Functions v1 (`functions.https.onCall`) and v2 (`defineSecret` from `firebase-functions/params`) syntax in the same codebase. Use `firebase deploy --only functions --debug` to find the actual hang location — don't guess.
