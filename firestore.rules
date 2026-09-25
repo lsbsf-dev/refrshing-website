@@ -216,5 +216,11 @@ service cloud.firestore {
       allow read: if isSuperAdmin();
       allow write: if isSuperAdmin();
     }
+
+    match /audit_logs/{logId} {
+      allow create: if isSessionValid();
+      allow read: if isSuperAdmin();
+      allow write: if false;
+    }
   }
 }
