@@ -67,6 +67,7 @@ service cloud.firestore {
 
     // Audit logs
     match /audit_logs/{logId} {
+      allow create: if isSessionValid() && request.resource.data.userId == request.auth.uid;
       allow read: if isSuperAdmin();
       allow write: if false;
     }
@@ -215,12 +216,6 @@ service cloud.firestore {
       allow create: if isValidEmail(request.resource.data.email);
       allow read: if isSuperAdmin();
       allow write: if isSuperAdmin();
-    }
-
-    match /audit_logs/{logId} {
-      allow create: if isSessionValid() && request.resource.data.userId == request.auth.uid;
-      allow read: if isSuperAdmin();
-      allow write: if false;
     }
   }
 }
