@@ -14,7 +14,7 @@ export default function ContactSettingsAdminPage() {
 
   const { data: settingsDocs = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "aboutSettings", selectedEventId, "contact"],
-    queryFn: () => getEventScopedDocs<ContactSettings>(selectedEventId, "aboutSettings"),
+    queryFn: () => getEventScopedDocs<ContactSettings>(selectedEventId, "aboutSettings", null),
     enabled: !!selectedEventId,
   });
 
