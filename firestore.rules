@@ -218,7 +218,7 @@ service cloud.firestore {
     }
 
     match /audit_logs/{logId} {
-      allow create: if isSessionValid();
+      allow create: if isSessionValid() && request.resource.data.userId == request.auth.uid;
       allow read: if isSuperAdmin();
       allow write: if false;
     }
