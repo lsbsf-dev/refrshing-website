@@ -41,7 +41,7 @@ export default function AlbumManagementPage() {
 
   const { data: settingsDocs = [] } = useQuery({
     queryKey: ["admin", "homepageSettings", selectedEventId],
-    queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings"),
+    queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings", null),
     enabled: !!selectedEventId,
   });
 

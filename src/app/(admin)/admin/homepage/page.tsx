@@ -18,7 +18,7 @@ export default function HomepageAdminPage() {
 
   const { data: settingsDocs = [], isLoading: isLoadingSettings } = useQuery({
     queryKey: ["admin", "homepageSettings", selectedEventId],
-    queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings"),
+    queryFn: () => getEventScopedDocs<HomepageSettings>(selectedEventId, "homepageSettings", null),
     enabled: !!selectedEventId,
   });
 
