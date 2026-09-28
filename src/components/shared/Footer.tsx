@@ -3,12 +3,18 @@
  *  * Global site footer with links and information.
  */
 
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const params = useParams();
+  const eventId = (params?.eventId as string) || "";
+  const basePath = eventId ? `/${eventId}` : "";
 
   return (
     <footer className="w-full bg-[#15130F] text-[#FCFAF6] border-t border-white/10 pt-20 pb-10">
@@ -32,24 +38,24 @@ export function Footer() {
             Celebrating forty years of spiritual renewal, academic excellence, and student fellowship.
           </p>
           <div className="flex items-center gap-4 mt-2 text-zinc-400">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Facebook">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
               </svg>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Twitter">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Instagram">
               <svg className="h-4 w-4 stroke-current fill-none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
               </svg>
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press">
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors active-press p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="YouTube">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.5 12 3.5 12 3.5s-7.518 0-9.388.553a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.553 9.388.553 9.388.553s7.518 0 9.388-.553a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
@@ -60,21 +66,21 @@ export function Footer() {
         {/* Column 2: Explore links */}
         <div className="flex flex-col gap-4">
           <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">EXPLORE</span>
-          <div className="flex flex-col gap-2.5 font-sans text-xs">
-            <Link href="/about" className="hover:text-primary text-zinc-300 transition-colors active-press">About Refreshing</Link>
-            <Link href="/programme" className="hover:text-primary text-zinc-300 transition-colors active-press">Daily Programme</Link>
-            <Link href="/ministers" className="hover:text-primary text-zinc-300 transition-colors active-press">Featured Ministers</Link>
-            <Link href="/gallery" className="hover:text-primary text-zinc-300 transition-colors active-press">Photo Gallery</Link>
-            <Link href="/booklet" className="hover:text-primary text-zinc-300 transition-colors active-press">Resources</Link>
-            <Link href="/announcements" className="hover:text-primary text-zinc-300 transition-colors active-press">General Announcements</Link>
+          <div className="flex flex-col gap-1 font-sans text-xs">
+            <Link href={`${basePath}/about`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">About Refreshing</Link>
+            <Link href={`${basePath}/programme`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">Daily Programme</Link>
+            <Link href={`${basePath}/ministers`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">Featured Ministers</Link>
+            <Link href={`${basePath}/gallery`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">Photo Gallery</Link>
+            <Link href={`${basePath}/booklet`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">Resources</Link>
+            <Link href={`${basePath}/announcements`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">General Announcements</Link>
           </div>
         </div>
 
         {/* Column 3: Information Links */}
         <div className="flex flex-col gap-4">
           <span className="font-sans text-sm font-bold tracking-widest text-[#DDB94E] uppercase">INFORMATION</span>
-          <div className="flex flex-col gap-2.5 font-sans text-xs">
-            <Link href="/contact" className="hover:text-primary text-zinc-300 transition-colors active-press">Venue & Directions</Link>
+          <div className="flex flex-col gap-1 font-sans text-xs">
+            <Link href={`${basePath}/contact`} className="hover:text-primary text-zinc-300 transition-colors active-press py-2.5 min-h-[44px] flex items-center">Venue & Directions</Link>
           </div>
         </div>
 

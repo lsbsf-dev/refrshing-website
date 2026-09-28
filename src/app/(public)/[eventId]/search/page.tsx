@@ -128,7 +128,7 @@ export default function SearchPage() {
             <ScrollableTabBar className="gap-8">
               <button
                 onClick={() => setActiveTab("ministers")}
-                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 min-h-[44px] flex items-center relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
                   activeTab === "ministers" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
                 }`}
               >
@@ -137,7 +137,7 @@ export default function SearchPage() {
               </button>
               <button
                 onClick={() => setActiveTab("sessions")}
-                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 min-h-[44px] flex items-center relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
                   activeTab === "sessions" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
                 }`}
               >
@@ -146,7 +146,7 @@ export default function SearchPage() {
               </button>
               <button
                 onClick={() => setActiveTab("resources")}
-                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 min-h-[44px] flex items-center relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
                   activeTab === "resources" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
                 }`}
               >
@@ -155,7 +155,7 @@ export default function SearchPage() {
               </button>
               <button
                 onClick={() => setActiveTab("announcements")}
-                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                className={`flex-shrink-0 whitespace-nowrap font-serif text-lg py-3 min-h-[44px] flex items-center relative uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
                   activeTab === "announcements" ? "text-[#C25627] font-semibold" : "text-zinc-400 hover:text-zinc-700"
                 }`}
               >
