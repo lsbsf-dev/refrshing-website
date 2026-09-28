@@ -69,7 +69,36 @@ export async function getEnquiries(eventId: string): Promise<EnquiryDoc[]> {
   return results.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
 }
 
-export async function deleteEnquiry(id: string): Promise<void> {
+export async function deleteEnquiry(
+  id: string,
+  meta?: {
+    type?: string;
+    name?: string;
+    email?: string;
+    submittedAt?: string;
+    eventId?: string;
+  },
+  userContext?: {
+    uid: string;
+    email: string;
+  }
+): Promise<void> {
   const ref = doc(db, "enquiries", id);
   await deleteDoc(ref);
+
+  if (userContext) {
+    try {
+      await addDoc(collection(db, "audit_logs"), {
+        userId: userContext.uid,
+        userEmail: userContext.email,
+        action: "DELETE",
+        collection: "enquiries",
+        documentId: id,
+        before: meta || null,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Failed to write audit log for enquiry deletion:", err);
+    }
+  }
 }
