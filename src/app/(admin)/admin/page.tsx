@@ -86,7 +86,7 @@ export default function AdminDashboardHome() {
           {hasPermission(permissions, Permissions.Registrations.CheckIn) && (
             <Link
               href="/admin/checkin"
-              className="px-4 py-2 bg-[#C25627] hover:bg-[#a1451f] text-white font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-colors shadow-sm flex items-center gap-2"
+              className="px-4 py-2.5 min-h-[44px] bg-[#C25627] hover:bg-[#a1451f] text-white font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-colors shadow-sm flex items-center gap-2"
             >
               <QrCode className="h-4 w-4" />
               Check-In
@@ -95,7 +95,7 @@ export default function AdminDashboardHome() {
           <button 
             onClick={handleRefresh}
             disabled={isFetching}
-            className="px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-sans font-bold text-xs tracking-wider uppercase rounded-xl transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer"
           >
             {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Refresh Data
