@@ -1,6 +1,6 @@
 /**
- * Admin Programme Page Component
- *  * Manages event schedules and sessions.
+ * @file page.tsx
+ * @description Admin timetable manager for setting up conference sessions and schedules.
  */
 
 "use client";
@@ -67,7 +67,6 @@ export default function AdminProgrammePage() {
     });
   };
 
-  // Mutations
   const updateMutation = useMutation({
     mutationFn: (data: Session) => updateSession(ACTIVE_EVENT_ID, data.id || data.slug, data),
     onSuccess: () => {

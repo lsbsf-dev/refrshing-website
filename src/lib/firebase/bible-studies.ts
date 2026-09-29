@@ -1,3 +1,8 @@
+/**
+ * @file bible-studies.ts
+ * @description Firestore queries for session bible studies.
+ */
+
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./app";
 import { Resource } from "@/types/resource";

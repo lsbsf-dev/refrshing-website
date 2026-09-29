@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin error view displayed when a logged-in user lacks required role permissions.
+ */
+
 import React from "react";
 import Link from "next/link";
 import { ShieldAlert, ArrowLeft } from "lucide-react";

@@ -1,6 +1,6 @@
 /**
- * Minister Detail Page Component
- * Displays bio, category, assigned sessions, and articles for a minister.
+ * @file page.tsx
+ * @description Public detail view displaying full bio and sessions for a speaker.
  */
 
 "use client";
@@ -23,7 +23,6 @@ export default function MinisterDetailPage({
   const { eventId: ACTIVE_EVENT_ID } = useParams<{ eventId: string }>();
   const { slug } = use(params);
 
-  // Minister details query
   const { data: minister, isLoading, error } = useQuery({
     queryKey: ["minister", ACTIVE_EVENT_ID, slug],
     queryFn: () => getMinisterBySlug(ACTIVE_EVENT_ID, slug),
@@ -31,7 +30,6 @@ export default function MinisterDetailPage({
     enabled: !!ACTIVE_EVENT_ID && !!slug,
   });
 
-  // Assigned sessions query
   const { data: allSessions = [] } = useQuery({
     queryKey: ["sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
@@ -39,7 +37,6 @@ export default function MinisterDetailPage({
     enabled: !!ACTIVE_EVENT_ID,
   });
 
-  // Authored resources query
   const { data: allResources = [] } = useQuery({
     queryKey: ["resources", "all", ACTIVE_EVENT_ID],
     queryFn: async () => {

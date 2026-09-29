@@ -1,6 +1,6 @@
 /**
- * Announcements Page Component
- * Displays general notices queried from Firestore via TanStack Query.
+ * @file page.tsx
+ * @description Public page listing official conference announcements and news updates.
  */
 
 "use client";

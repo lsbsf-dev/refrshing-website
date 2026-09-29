@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for configuring hero content and featured sections on the home page.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEventScopedDocs, setEventScopedDoc, HomepageSettings, Article } from "@/lib/firebase/cms";

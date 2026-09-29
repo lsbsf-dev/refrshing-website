@@ -1,6 +1,6 @@
 /**
- * Image Uploader Component
- *  * Handles image uploads and preview in the admin portal.
+ * @file ImageUploader.tsx
+ * @description Client component for uploading images directly to Cloudinary with preview.
  */
 
 "use client";
@@ -35,7 +35,6 @@ export function ImageUploader({
     setUploadProgress(0);
 
     try {
-      // 1. Compress Image (Max 1MB, Max width 1200px)
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1200,
@@ -43,7 +42,6 @@ export function ImageUploader({
       };
       const compressedFile = await imageCompression(file, options);
 
-      // 2. Upload directly to Cloudinary using Unsigned Upload
       const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
       const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_PRESET;
       
@@ -95,9 +93,6 @@ export function ImageUploader({
   };
 
   const handleDelete = async () => {
-    // If it's a firebase storage URL, we should ideally delete the object from storage
-    // But for safety and simplicity right now, we just clear the field.
-    // The backend sync or a cron job can clean up orphaned images later.
     onChange("");
   };
 

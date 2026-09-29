@@ -1,6 +1,6 @@
 /**
- * Footer Component
- *  * Global site footer with links and information.
+ * @file Footer.tsx
+ * @description Global website footer component containing navigation links and copyright details.
  */
 
 "use client";

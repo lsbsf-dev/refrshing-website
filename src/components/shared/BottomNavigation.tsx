@@ -1,6 +1,6 @@
 /**
- * BottomNavigation Component
- * Persistent mobile bottom tab bar for quick navigation on small screens.
+ * @file BottomNavigation.tsx
+ * @description Mobile bottom navigation bar component for quick tab switching.
  */
 
 "use client";
@@ -17,7 +17,6 @@ export default function BottomNavigation() {
   const basePath = eventId ? `/${eventId}` : "";
   const [showMore, setShowMore] = React.useState(false);
 
-  // Close more menu on route change
   React.useEffect(() => {
     setShowMore(false);
   }, [pathname]);

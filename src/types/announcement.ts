@@ -1,6 +1,6 @@
 /**
- * Announcement Type Model
- * Schema mapping for urgent news notices.
+ * @file announcement.ts
+ * @description TypeScript type definitions for announcements.
  */
 
 export interface Announcement {

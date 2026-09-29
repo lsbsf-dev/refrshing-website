@@ -1,6 +1,6 @@
 /**
- * Event Type Model
- * Defines the schema structure for a conference edition.
+ * @file event.ts
+ * @description TypeScript type definitions for conference event editions.
  */
 
 export interface AppEvent {

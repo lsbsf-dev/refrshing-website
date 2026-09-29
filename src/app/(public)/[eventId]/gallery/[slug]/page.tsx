@@ -1,6 +1,6 @@
 /**
- * Gallery Album Page Component
- * Renders photos of a specific album loaded from Firestore.
+ * @file page.tsx
+ * @description Public detail view for viewing photos inside a specific event album.
  */
 
 "use client";

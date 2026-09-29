@@ -1,7 +1,6 @@
 /**
- * Session Detail Page Component
- * Loads session metadata, assigned speaker profiles, and cross-linked
- * hymns & devotionals from the Camp Guide booklet.
+ * @file page.tsx
+ * @description Public detail view displaying complete details for a conference session.
  */
 
 "use client";
@@ -92,13 +91,11 @@ export default function SessionSlugPage({
     session.ministerIds.includes(m.id)
   );
 
-  // Cross-linked hymns: resources whose id is in session.hymnIds
   const sessionAny = session as any;
   const hymns = allResources.filter(
     (r) => r.category === "Worship Lyrics" && (sessionAny.hymnIds?.includes(r.id))
   );
 
-  // Cross-linked readings: resources whose id is in session.readingIds
   const readings = allResources.filter(
     (r) =>
       (r.category === "Devotionals" || r.category === "Bible Studies") &&

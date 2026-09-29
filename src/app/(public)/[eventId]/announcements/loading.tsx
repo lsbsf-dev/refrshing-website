@@ -1,6 +1,6 @@
 /**
- * Announcements Loading Component
- * Skeleton loader page.
+ * @file loading.tsx
+ * @description Public page listing official conference announcements and news updates.
  */
 
 import React from "react";

@@ -1,6 +1,6 @@
 /**
- * FAQ Query Module
- * Handlers for retrieving ordered FAQ questions.
+ * @file faq.ts
+ * @description Firestore queries for conference FAQs.
  */
 
 import { collection, doc, getDoc, getDocs, query, where, orderBy, FirestoreDataConverter } from "firebase/firestore";

@@ -1,6 +1,6 @@
 /**
- * FAQ Loading Component
- * Premium skeleton animation for page transition.
+ * @file loading.tsx
+ * @description Public page rendering categorized frequently asked questions.
  */
 
 import React from "react";

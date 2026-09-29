@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing sponsor banners and event advertisements.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminDataTable, Column } from "@/components/admin/AdminDataTable";
@@ -23,7 +28,6 @@ export default function AdvertisementsAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Advertisement | null>(null);
   
-  // Form State
   const [title, setTitle] = useState("");
   const [sponsor, setSponsor] = useState("");
   const [description, setDescription] = useState("");

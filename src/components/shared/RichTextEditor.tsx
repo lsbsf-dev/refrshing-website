@@ -1,10 +1,14 @@
 "use client";
 
+/**
+ * @file RichTextEditor.tsx
+ * @description Simple rich text editor component for inline HTML formatting.
+ */
+
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
-// Dynamically import ReactQuill to prevent "document is not defined" SSR errors
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 interface RichTextEditorProps {
@@ -15,7 +19,6 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange, placeholder, className = "" }: RichTextEditorProps) {
-  // Memoize toolbar config to prevent Quill from constantly re-rendering on typing
   const modules = useMemo(() => ({
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],

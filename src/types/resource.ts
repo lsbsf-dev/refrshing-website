@@ -1,6 +1,6 @@
 /**
- * Resource Type Model
- * Schema mapping for downloadable publications and long-form study devotionals.
+ * @file resource.ts
+ * @description TypeScript type definitions for resource library items.
  */
 
 export interface Resource {

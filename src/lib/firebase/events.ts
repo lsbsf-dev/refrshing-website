@@ -1,6 +1,6 @@
 /**
- * Events Query Module
- * Handlers for retrieving event metadata collections from Firestore with type-safe converters.
+ * @file events.ts
+ * @description Firestore data access functions for conference edition configurations.
  */
 
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, orderBy, FirestoreDataConverter } from "firebase/firestore";

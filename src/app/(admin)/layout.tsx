@@ -1,6 +1,6 @@
 /**
- * Admin Root Layout Component
- *  * Top-level layout wrapper for admin routes.
+ * @file layout.tsx
+ * @description Admin layout provider wrapping all admin pages with authentication context.
  */
 
 import type { Metadata } from "next";

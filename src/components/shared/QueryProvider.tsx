@@ -1,6 +1,6 @@
 /**
- * Query Provider Component
- * Configures the TanStack React Query client with custom caching rules.
+ * @file QueryProvider.tsx
+ * @description TanStack React Query client provider component with default cache settings.
  */
 
 "use client";

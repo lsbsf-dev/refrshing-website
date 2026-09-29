@@ -1,7 +1,6 @@
 /**
-/**
- * Contact Page Component
- *  * Public contact form and general information.
+ * @file page.tsx
+ * @description Public contact page featuring address info, helpline contacts, and enquiry submission form.
  */
 
 "use client";
@@ -48,7 +47,6 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check rate limit
     const lastSubmitStr = localStorage.getItem("last_enquiry_time");
     if (lastSubmitStr) {
       const lastSubmit = new Date(lastSubmitStr).getTime();

@@ -1,6 +1,6 @@
 /**
- * Admin Ministers Page Component
- * Manages the directory of speakers and music ministers.
+ * @file page.tsx
+ * @description Admin page for managing speaker bios and minister profiles.
  */
 
 "use client";
@@ -40,7 +40,6 @@ export default function AdminMinistersPage() {
     photoUrl: "",
   });
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (editingMinister || isNewModalOpen) {
       document.body.style.overflow = "hidden";
@@ -63,7 +62,6 @@ export default function AdminMinistersPage() {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
-  // Mutations
   const updateMutation = useMutation({
     mutationFn: (data: Minister) => updateMinister(data.id, data),
     onSuccess: () => {
@@ -177,7 +175,6 @@ export default function AdminMinistersPage() {
               { value: "all", label: "All" },
               ...Array.from(new Set(ministersList.map((m) => m.category || "unknown"))).map((cat) => ({ value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) })),
             ]}
-            // ARIA handled within CustomSelect component
           />
       </div>
 

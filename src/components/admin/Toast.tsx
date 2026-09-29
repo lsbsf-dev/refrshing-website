@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file Toast.tsx
+ * @description Toast notification banner component for displaying feedback alerts.
+ */
+
 import React from "react";
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
 

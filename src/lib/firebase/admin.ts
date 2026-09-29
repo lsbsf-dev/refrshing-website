@@ -1,6 +1,10 @@
+/**
+ * @file admin.ts
+ * @description Firebase Admin SDK server initialization.
+ */
+
 import * as admin from 'firebase-admin';
 
-// Protect against multiple initializations and handle missing/invalid credentials gracefully.
 let initialized = false;
 if (!admin.apps.length) {
   try {
@@ -35,7 +39,6 @@ if (!admin.apps.length) {
     console.log('✅ Firebase Admin initialized successfully');
   } catch (e) {
     console.error('⚡️ Firebase Admin init failed', e);
-    // initialized remains false
   }
 } else {
   initialized = true; // Set to true if already initialized (e.g., during Next.js Hot Module Replacement)

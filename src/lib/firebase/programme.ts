@@ -1,6 +1,6 @@
 /**
- * Programme Schedule Query Module
- * Handlers for retrieving session times and daily itineraries.
+ * @file programme.ts
+ * @description Firestore queries for conference timetable sessions.
  */
 
 import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";

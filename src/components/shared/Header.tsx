@@ -1,6 +1,6 @@
 /**
- * Header Component
- *  * Global site header and primary navigation.
+ * @file Header.tsx
+ * @description Global website header navigation component with mobile drawer and theme controls.
  */
 
 "use client";

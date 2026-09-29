@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler for batch importing attendee CSV/JSON records with audit logging.
+ */
+
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase/admin';
 import { ProcessedRow, FieldError, AttendeeData } from '@/types/import';
@@ -36,7 +41,6 @@ export async function POST(request: Request) {
     const eventRef = adminDb.collection('events').doc(eventId);
     const attendeesRef = eventRef.collection('attendees');
 
-    // 1. Fetch Master Data
     const [existingAttendeesSnap, associationsSnap, churchesSnap] = await Promise.all([
       attendeesRef.get(),
       adminDb.collection('associations').where('active', '==', true).get(),
@@ -61,7 +65,6 @@ export async function POST(request: Request) {
     const cleanStr = (s?: string) => s ? s.trim().toLowerCase() : '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Helper to map conference names to IDs
     const resolveConference = (raw: string): string | null => {
       const normalized = cleanStr(raw);
       if (!normalized) return null;
@@ -91,7 +94,6 @@ export async function POST(request: Request) {
           errors.push({ field: 'id', code: 'missing', message: 'Registration ID is missing.' });
         }
 
-        // --- Core Identity Validation ---
         if (!data.fullName || data.fullName.trim() === '') {
           errors.push({ field: 'fullName', code: 'missing', message: 'Full Name is required.' });
         }
@@ -113,7 +115,6 @@ export async function POST(request: Request) {
           data.memberStatus = rawMemberStatus === 'executive' ? 'Executive' : 'Member';
         }
 
-        // --- Master Data Resolution ---
         let resolvedConfId = data.conferenceId;
         
         if (!resolvedConfId) {
@@ -150,7 +151,6 @@ export async function POST(request: Request) {
                    data.associationName = exactMatch.name as string;
                 }
              } else {
-                // Do not force strict resolution, accept the string
                 if (data.conferenceId === 'campus_fellowship') {
                    data.campusFellowshipName = rawAssoc.trim();
                    data.campusFellowshipId = undefined;
@@ -186,14 +186,12 @@ export async function POST(request: Request) {
                  data.churchId = exactMatch.id;
                  data.churchName = exactMatch.canonicalName as string;
               } else {
-                 // Do not force strict resolution, accept the string
                  data.churchName = rawChurch.trim();
                  data.churchId = undefined;
               }
            }
         }
 
-        // --- Payment Status ---
         const rawTransfer = cleanStr(data.hasPaidRaw || '');
         if (rawTransfer === 'yes' || rawTransfer === 'true') {
            data.transferCompleted = true;
@@ -207,7 +205,6 @@ export async function POST(request: Request) {
         if (errors.length > 0) {
           status = "error";
         } else {
-          // --- Duplicate Detection Logic ---
           const checkDuplicateAgainst = (existing: Partial<AttendeeData>) => {
             const sameEmail = !!existing.email && !!data.email && existing.email.toLowerCase() === data.email.toLowerCase();
             if (sameEmail) {
@@ -301,7 +298,6 @@ export async function POST(request: Request) {
 
           if (mode === 'commit') {
             const docRef = attendeesRef.doc(data.id);
-            // Construct the clean final attendee shape based on resolved fields
             const finalAttendee = {
                id: data.id,
                eventId: data.eventId,
@@ -324,7 +320,6 @@ export async function POST(request: Request) {
                updatedAt: new Date().toISOString(),
                checkIn: { checkedIn: false },
                
-               // Store the raw transfer boolean but set verification status to pending
                transferCompleted: data.transferCompleted,
                
                importAudit: {
@@ -336,7 +331,6 @@ export async function POST(request: Request) {
 
             batch.set(docRef, finalAttendee);
             
-            // Explicitly set the subcollection for payment verification
             const paymentRef = docRef.collection("payment").doc("details");
             batch.set(paymentRef, {
                hasPaid: data.transferCompleted,
@@ -397,7 +391,6 @@ export async function DELETE(request: Request) {
   try {
     const callerProfile = await verifyApiRequest(request, Permissions.Registrations.Write);
 
-    // Require superAdmin role explicitly for bulk wipe
     if (callerProfile.role !== 'superAdmin') {
       return NextResponse.json({ error: 'Bulk deletion requires Super Administrator authorization.' }, { status: 403 });
     }
@@ -406,7 +399,6 @@ export async function DELETE(request: Request) {
     const eventId = searchParams.get('eventId') || 'refreshing-2026';
     const confirmationText = searchParams.get('confirmationText') || '';
 
-    // Require explicit confirmation string matching eventId
     if (confirmationText !== eventId) {
       return NextResponse.json({ 
         error: `Confirmation text mismatch. You must type "${eventId}" to confirm bulk deletion.` 
@@ -418,14 +410,12 @@ export async function DELETE(request: Request) {
 
     let totalDeleted = 0;
 
-    // Delete attendees in batches of 400 (Firestore limit is 500 per batch)
     const deleteCollection = async (collRef: FirebaseFirestore.CollectionReference) => {
       let deleted = 0;
       let snapshot = await collRef.limit(400).get();
       while (!snapshot.empty) {
         const batch = adminDb.batch();
         for (const doc of snapshot.docs) {
-          // Also delete any subcollections (e.g. payment)
           const paymentSnap = await doc.ref.collection('payment').get();
           for (const payDoc of paymentSnap.docs) {
             batch.delete(payDoc.ref);
@@ -442,7 +432,6 @@ export async function DELETE(request: Request) {
     totalDeleted += await deleteCollection(attendeesRef);
     await deleteCollection(checkinViewRef);
 
-    // Write audit log entry for bulk deletion
     await logAudit({
       userId: callerProfile.id,
       userEmail: callerProfile.email,

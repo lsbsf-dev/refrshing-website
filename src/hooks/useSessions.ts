@@ -1,10 +1,6 @@
 /**
- * useSessions Hook
- *
- * Custom React Query hook for fetching published program sessions/events data.
- * Falls back to offline JSON seed data when Firebase is unavailable or offline.
- *
- * Key exports: useSessions
+ * @file useSessions.ts
+ * @description React Query hook for retrieving conference timetable sessions.
  */
 
 import { useQuery } from "@tanstack/react-query";

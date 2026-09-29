@@ -1,3 +1,8 @@
+/**
+ * @file import.ts
+ * @description TypeScript type definitions for bulk attendee import datasets.
+ */
+
 export interface AttendeeData {
   id: string; // The row ID or generated ID
   eventId: string;
@@ -6,7 +11,6 @@ export interface AttendeeData {
   phoneNumber: string;
   memberStatus: "Member" | "Executive";
   
-  // These will be raw strings from Excel
   conferenceRaw: string;
   associationRaw: string;
   churchRaw: string;
@@ -16,7 +20,6 @@ export interface AttendeeData {
   
   hasPaidRaw: string;
   
-  // Resolved IDs
   conferenceId?: string;
   associationId?: string;
   churchId?: string;

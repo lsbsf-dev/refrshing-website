@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing downloadable conference assets and media.
+ */
+
 import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminDataTable, Column } from "@/components/admin/AdminDataTable";
@@ -22,7 +27,6 @@ export default function DownloadsAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Download | null>(null);
   
-  // Form State
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -110,10 +114,8 @@ export default function DownloadsAdminPage() {
       formData.append("file", file);
       formData.append("upload_preset", uploadPreset);
 
-      // We use XMLHttpRequest here to allow Cloudinary to accept non-image files via 'auto' or 'raw'
       const xhr = new XMLHttpRequest();
       
-      // Cloudinary recommends using 'auto' for resource type so it can handle pdf/docs
       xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
       
       await new Promise<void>((resolve, reject) => {

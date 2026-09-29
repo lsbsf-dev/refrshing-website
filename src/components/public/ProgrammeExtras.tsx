@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file ProgrammeExtras.tsx
+ * @description Public component displaying extra session details and downloads.
+ */
+
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getEventScopedDocs, Article, BibleStudy, Devotional, Advertisement, Download } from "@/lib/firebase/cms";

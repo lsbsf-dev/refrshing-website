@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file Preloader.tsx
+ * @description Initial loading preloader overlay displayed while bootstrapping session data.
+ */
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -8,12 +13,9 @@ export function Preloader() {
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
-    // Determine if we should wait for images or just run a timeout
     const loadImages = async () => {
-      // Minimum loading time for aesthetic purposes
       const minTime = new Promise((resolve) => setTimeout(resolve, 1500));
       
-      // Wait for all images on the page to load
       const imagePromises = Array.from(document.images).map((img) => {
         if (img.complete) return Promise.resolve();
         return new Promise((resolve) => {
@@ -24,16 +26,13 @@ export function Preloader() {
 
       await Promise.all([minTime, ...imagePromises]);
       
-      // Trigger fade out
       setFade(true);
       
-      // Remove from DOM after fade out completes
       setTimeout(() => {
         setLoading(false);
       }, 500); // 500ms matches transition duration
     };
 
-    // Use requestAnimationFrame to ensure the DOM is painted first before we query document.images
     requestAnimationFrame(() => {
       loadImages();
     });

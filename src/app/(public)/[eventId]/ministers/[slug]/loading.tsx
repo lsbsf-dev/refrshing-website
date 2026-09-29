@@ -1,6 +1,6 @@
 /**
- * Minister Details Loading Component
- * Premium shimmer skeleton loader for minister details page.
+ * @file loading.tsx
+ * @description Public detail view displaying full bio and sessions for a speaker.
  */
 
 import React from "react";

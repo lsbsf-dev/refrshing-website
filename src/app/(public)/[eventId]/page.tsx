@@ -1,6 +1,6 @@
 /**
- * Public Landing Page Component — Refreshing 2026
- * 11 Editorial Scenes showcasing theme, ministers, programme roadmap, and registration.
+ * @file page.tsx
+ * @description Public event homepage displaying hero banner, countdown, and featured highlights.
  */
 
 "use client";

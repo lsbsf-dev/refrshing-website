@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file RegistrationModal.tsx
+ * @description Admin modal component for creating or editing attendee registrations.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -68,12 +73,10 @@ export function RegistrationModal({ isOpen, onClose, eventId }: RegistrationModa
   const conferenceId = watch("conferenceId");
   const associationId = watch("associationId");
 
-  // Fetch associations based on conference
   const associations = conferenceId !== "other" && conferenceId !== "campus_fellowship" 
     ? ALL_ASSOCIATIONS_BY_CONFERENCE[conferenceId] || []
     : [];
 
-  // Fetch churches based on association or campus
   const { data: churches = [] } = useQuery({
     queryKey: ["admin", "churches", conferenceId, associationId],
     queryFn: () => {
@@ -98,12 +101,10 @@ export function RegistrationModal({ isOpen, onClose, eventId }: RegistrationModa
   }, [associationId, setValue]);
 
   const onSubmit = async (data: RegistrationFormData) => {
-    // Defensive reopening if closed
     if (!db.isOpen()) {
       try { await db.open(); } catch(e) { console.error(e); }
     }
 
-    // Check for duplicates locally
     const possibleDuplicates = await db.attendees
       .where("eventId").equals(eventId)
       .and(a => {
@@ -156,9 +157,7 @@ export function RegistrationModal({ isOpen, onClose, eventId }: RegistrationModa
 
       setSuccessCode(code);
       
-      // Invalidate queries so the directory updates instantly
       queryClient.invalidateQueries({ queryKey: ["admin", "attendees", eventId] });
-      // Trigger offline sync update if needed by invalidating the offline view
       queryClient.invalidateQueries({ queryKey: ["admin", "offline-attendees", eventId] });
 
     } catch (error) {

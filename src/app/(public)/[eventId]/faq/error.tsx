@@ -1,6 +1,6 @@
 /**
- * FAQ Error Component
- * Fallback page UI displaying firestore or routing error details in an elegant container.
+ * @file error.tsx
+ * @description Public page rendering categorized frequently asked questions.
  */
 
 "use client";

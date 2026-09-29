@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin CMS page for managing conference About page content and settings.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEventScopedDocs, setEventScopedDoc, AboutSettings, ThemeArchiveEntry } from "@/lib/firebase/cms";

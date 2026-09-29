@@ -1,6 +1,6 @@
 /**
- * Admin Login Page Component
- *  * Authentication gateway for the admin portal.
+ * @file page.tsx
+ * @description Admin authentication page supporting email/password sign-in.
  */
 
 "use client";
@@ -33,7 +33,6 @@ export default function AdminLoginPage() {
 
       const token = await currentUser.getIdToken();
 
-      // Fetch authentic role from server
       const res = await fetch("/api/admin/auth/me", {
         method: "POST",
         headers: { 
@@ -55,7 +54,6 @@ export default function AdminLoginPage() {
         throw new Error(errMessage);
       }
 
-      // Ensure the response is JSON before parsing
       const responseContentType = res.headers.get('content-type') || '';
       if (!responseContentType.includes('application/json')) {
         const text = await res.text();
@@ -64,9 +62,6 @@ export default function AdminLoginPage() {
 
       const profile = await res.json();
 
-      // Store ONLY the basic identity in localStorage to bootstrap the session
-      // We do NOT store permissions here. The app will rely on this identity
-      // to re-fetch the profile on load if needed, or we just trust the identity payload.
       localStorage.setItem("lsbsf_admin_session", JSON.stringify({
         uid: profile.uid,
         email: profile.email,
@@ -77,7 +72,6 @@ export default function AdminLoginPage() {
         authTime: new Date().toISOString(),
       }));
       
-      // Set a generic session cookie so Next.js middleware allows routing
       document.cookie = "session=authenticated_admin; path=/; max-age=86400";
       
       router.push("/admin");

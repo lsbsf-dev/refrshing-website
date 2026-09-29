@@ -1,6 +1,6 @@
 /**
- * Announcements Error Component
- * Fallback page UI.
+ * @file error.tsx
+ * @description Public page listing official conference announcements and news updates.
  */
 
 "use client";

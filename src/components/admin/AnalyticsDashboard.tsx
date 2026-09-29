@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file AnalyticsDashboard.tsx
+ * @description Admin analytics component rendering visual attendance graphs and breakdown charts.
+ */
+
 import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAnalyticsSummary, getAssociationAnalytics, AnalyticsSummary, AssociationAnalytics } from "@/lib/firebase/analytics";

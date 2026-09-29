@@ -1,6 +1,6 @@
 /**
- * Newsletter Subscription & Validation Module
- * Provides Zod schema validation and Firestore persistence functions for newsletter signups.
+ * @file newsletter.ts
+ * @description Firestore mutations for capturing newsletter subscriptions.
  */
 
 import { collection, addDoc } from "firebase/firestore";

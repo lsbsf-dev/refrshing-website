@@ -1,6 +1,6 @@
 /**
- * Robots Configuration Module
- * Instructs search crawlers on allowed indexing boundaries.
+ * @file robots.ts
+ * @description Dynamic robots.txt configuration generator.
  */
 
 import { MetadataRoute } from "next";

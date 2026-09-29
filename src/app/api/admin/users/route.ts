@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler for provisioning admin user accounts and custom claims.
+ */
+
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { auth, firestore } from "@/lib/firebase/admin";
@@ -44,13 +49,11 @@ export async function POST(req: Request) {
       let passwordResetLink: string | null = null;
       try {
         userRecord = await auth.getUserByEmail(email);
-        // If they already exist in Auth, update their password if a new one was provided
         if (password) {
           userRecord = await auth.updateUser(userRecord.uid, { password });
         }
       } catch (e: any) {
         if (e.code === 'auth/user-not-found') {
-          // Generate a cryptographically random 16-character password if non-provided
           const initialPassword = password || crypto.randomBytes(12).toString("base64url");
           userRecord = await auth.createUser({
             email,
@@ -62,7 +65,6 @@ export async function POST(req: Request) {
         }
       }
 
-      // Generate a password reset link for the provisioned user
       try {
         passwordResetLink = await auth.generatePasswordResetLink(email);
       } catch (linkErr) {

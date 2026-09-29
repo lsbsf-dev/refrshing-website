@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin settings page for global site configuration and default event selection.
+ */
+
 import React, { useState, useEffect } from "react";
 import { Save, Sparkles, Loader2, Settings } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file TipTapEditor.tsx
+ * @description Rich text WYSIWYG editor component powered by TipTap.
+ */
+
 import React, { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -143,7 +148,6 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
     },
   });
 
-  // Keep content synced if it changes from outside (e.g., initial load)
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content);

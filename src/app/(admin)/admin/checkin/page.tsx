@@ -1,4 +1,8 @@
-// "use client" directive ensures client-side rendering
+/**
+ * @file page.tsx
+ * @description Admin desk view for processing offline/online attendee check-ins.
+ */
+
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -14,7 +18,6 @@ import { db } from "@/lib/db";
 import { useAuth } from "@/lib/contexts/AuthContext";
 
 export default function AdminCheckInPage() {
-  // Fetch system settings and events
   const { data: settings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "settings"],
     queryFn: getSystemSettings,
@@ -31,24 +34,20 @@ export default function AdminCheckInPage() {
   const PAGE_SIZE = 30;
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 
-  // Initialise selected event from settings when available
   useEffect(() => {
     if (settings && !selectedEventId) {
       setSelectedEventId(settings.defaultEventId);
     }
   }, [settings, selectedEventId]);
 
-  // Offline sync hook
   const { isOnline, isSyncing, syncError, handleCheckIn, handleUndoCheckIn } = useOfflineSync(selectedEventId);
 
-  // Live query from Dexie (local cache)
   const attendees = useLiveQuery(
     () => db.attendees.where('eventId').equals(selectedEventId).toArray(),
     [selectedEventId],
     []
   );
 
-  // Client‑side filtering based on search input
   const filteredAttendees = useMemo(() => {
     return attendees.filter((a) => {
       if (!searchInput.trim()) return true;
@@ -64,15 +63,12 @@ export default function AdminCheckInPage() {
     });
   }, [attendees, searchInput]);
 
-  // Reset displayed count whenever the search input changes (new search)
   useEffect(() => {
     setDisplayCount(PAGE_SIZE);
   }, [searchInput]);
 
-  // Infinite‑scroll sentinel reference
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Load more when sentinel enters viewport
   useEffect(() => {
     if (!loadMoreRef.current) return;
     const observer = new IntersectionObserver((entries) => {
@@ -93,8 +89,6 @@ export default function AdminCheckInPage() {
       await handleCheckIn(attendeeId);
     } finally {
       setProcessingId(null);
-      // Keep the search term active so the volunteer can check in the
-      // next person from the same church/association without retyping.
     }
   };
 

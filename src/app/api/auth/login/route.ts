@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler for processing admin authentication and issuing session cookies.
+ */
+
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/firebase/admin';
 import { cookies } from 'next/headers';
@@ -10,10 +15,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing ID token' }, { status: 400 });
     }
 
-    // Verify the ID token first
     const decodedToken = await auth.verifyIdToken(idToken);
     
-    // Create session cookie (expires in 5 days)
     const expiresIn = 60 * 60 * 24 * 5 * 1000;
     
     const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });

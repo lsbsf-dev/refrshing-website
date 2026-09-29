@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file RoleBuilder.tsx
+ * @description Admin permissions editor component for configuring granular role capabilities.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
@@ -33,7 +38,6 @@ interface UpdateRolePayload {
   permissions: string[];
 }
 
-// Flatten Permissions object for the UI
 const availablePermissions = Object.entries(Permissions).flatMap(([module, actions]) => 
   Object.entries(actions).map(([actionName, permValue]) => ({
     id: permValue as string,
@@ -46,10 +50,8 @@ export function RoleBuilder({ usersList = [] }: { usersList?: UserItem[] }) {
   const [selectedRole, setSelectedRole] = useState<RoleItem | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   
-  // Toast state
   const [toast, setToast] = useState<{ message: string; variant: "success" | "error" | "warning" | "info" } | null>(null);
   
-  // Confirm modal state
   const [confirmModal, setConfirmModal] = useState<{
     title: string;
     message: string;
@@ -80,10 +82,6 @@ export function RoleBuilder({ usersList = [] }: { usersList?: UserItem[] }) {
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      // Must go through the updateRole callable (not a direct Firestore write) —
-      // it also re-syncs custom claims for every user already assigned this role.
-      // A plain setDoc only updates the role document, leaving existing users'
-      // ID tokens with stale/missing permissions until they're individually re-saved.
       const functions = getFunctions(app);
       const updateRole = httpsCallable<UpdateRolePayload, { success: boolean }>(functions, "updateRole");
       await updateRole({

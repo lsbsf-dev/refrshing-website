@@ -1,7 +1,8 @@
 /**
- * Admin Layout Component
- *  * Shell and navigation layout for the admin portal.
+ * @file layout.tsx
+ * @description Admin shell layout featuring top navigation bar, sidebar, and theme switcher.
  */
+
 "use client";
 
 import React, { useState, useEffect } from "react";

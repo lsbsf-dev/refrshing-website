@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing photos inside a specific gallery album.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -76,8 +81,6 @@ export default function AlbumManagementPage() {
   const movePhotoMutation = useMutation({
     mutationFn: async ({ photoId, targetAlbumId }: { photoId: string, targetAlbumId: string }) => {
       await updatePhoto(selectedEventId, photoId, { albumId: targetAlbumId });
-      // We manually decrement the old album and increment the new album to maintain consistency
-      // In a real app, this should be a transaction or a cloud function
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "photos", selectedEventId, albumId] });

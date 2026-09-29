@@ -1,6 +1,6 @@
 /**
- * Admin Seed Client Page Component
- * Database seeding utilities for admin.
+ * @file AdminSeedClientPage.tsx
+ * @description Client component for triggering admin database seed scripts.
  */
 
 "use client";

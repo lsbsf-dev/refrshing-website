@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler providing a lightweight health check endpoint.
+ */
+
 import { NextResponse } from "next/server";
 
 export async function GET() {

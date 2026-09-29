@@ -1,6 +1,6 @@
 /**
- * Search Error Component
- * Fallback display error state.
+ * @file error.tsx
+ * @description Public search page offering unified search across ministers, sessions, and resources.
  */
 
 "use client";

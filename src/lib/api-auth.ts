@@ -1,3 +1,8 @@
+/**
+ * @file api-auth.ts
+ * @description Server API authentication verification utility.
+ */
+
 import { auth, firestore } from "./firebase/admin";
 import { hasPermission, Permission } from "./permissions";
 
@@ -23,7 +28,6 @@ export async function verifyApiRequest(req: Request, requiredPermission?: Permis
   }
 
   const profile = { id: userDoc.id, ...userDoc.data() } as any;
-  // Use custom claims as the source of truth for permissions, not the user doc
   const tokenRole = decodedToken.role || "viewer";
   const tokenPermissions = decodedToken.permissions || [];
 
@@ -35,7 +39,6 @@ export async function verifyApiRequest(req: Request, requiredPermission?: Permis
     throw new Error(`Insufficient permissions. Requires: ${requiredPermission}`);
   }
 
-  // Also include the token's allowedEvents, role, and permissions in the returned profile
   profile.role = tokenRole;
   profile.permissions = tokenPermissions;
   profile.allowedEvents = decodedToken.allowedEvents || [];

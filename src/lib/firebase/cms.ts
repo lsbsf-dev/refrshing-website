@@ -1,3 +1,8 @@
+/**
+ * @file cms.ts
+ * @description Core Firestore CMS engine for reading and writing event-scoped collections.
+ */
+
 import { db } from "./app";
 import { 
   collection, 
@@ -10,23 +15,16 @@ import {
   serverTimestamp 
 } from "firebase/firestore";
 
-// ==========================================
-// TYPES
-// ==========================================
 
-// 0. Homepage Settings
 export interface HomepageSettings extends BaseEventScopedDoc {
-  // FR-HOME-01: Hero Content
   heroTitle: string;
   heroSubtitle: string;
   heroBackgroundImageUrl: string;
 
-  // FR-HOME-02: Toggles & Actions
   showRegistrationButton: boolean;
   registrationLink: string;
   showCountdown: boolean;
   
-  // FR-HOME-04 & FR-HOME-05
   anniversaryBannerEnabled: boolean;
   anniversary: {
     title: string;
@@ -42,7 +40,6 @@ export interface HomepageSettings extends BaseEventScopedDoc {
     imageUrl: string;
   };
   
-  // FR-HOME-06: Featured Content Slots
   featuredMinisters: string[];
   featuredAnnouncement: string;
   featuredGalleryImages: string[];
@@ -88,7 +85,6 @@ export interface BaseEventScopedDoc {
   updatedAt?: unknown;
 }
 
-// 1. Committee Members
 export interface CommitteeMember extends BaseEventScopedDoc {
   name: string;
   role: string;
@@ -97,7 +93,6 @@ export interface CommitteeMember extends BaseEventScopedDoc {
   order: number;
 }
 
-// 2. Timeline Entries (Global)
 export interface TimelineEntry {
   id: string;
   year: string;
@@ -110,7 +105,6 @@ export interface TimelineEntry {
   updatedAt?: unknown;
 }
 
-// 3. Bible Studies
 export interface BibleStudy extends BaseEventScopedDoc {
   title: string;
   theme: string;
@@ -119,7 +113,6 @@ export interface BibleStudy extends BaseEventScopedDoc {
   order: number;
 }
 
-// 4. Articles
 export interface Article extends BaseEventScopedDoc {
   title: string;
   slug: string;
@@ -130,7 +123,6 @@ export interface Article extends BaseEventScopedDoc {
   publishedDate: string;
 }
 
-// 5. Devotionals
 export interface Devotional extends BaseEventScopedDoc {
   title: string;
   day: string; // e.g., 'Day 1', 'Day 2'
@@ -140,7 +132,6 @@ export interface Devotional extends BaseEventScopedDoc {
   order: number;
 }
 
-// 6. Advertisements
 export interface Advertisement extends BaseEventScopedDoc {
   title: string;
   sponsor: string;
@@ -150,7 +141,6 @@ export interface Advertisement extends BaseEventScopedDoc {
   order: number;
 }
 
-// 7. Downloads
 export interface Download extends BaseEventScopedDoc {
   title: string;
   description: string;
@@ -159,9 +149,6 @@ export interface Download extends BaseEventScopedDoc {
   order: number;
 }
 
-// ==========================================
-// GENERIC CRUD HELPERS
-// ==========================================
 
 export async function getEventScopedDocs<T>(eventId: string, collectionName: string, orderField: string | null = 'order'): Promise<T[]> {
   const colRef = collection(db, "events", eventId, collectionName);
@@ -186,9 +173,6 @@ export async function deleteEventScopedDoc(eventId: string, collectionName: stri
   await deleteDoc(doc(db, "events", eventId, collectionName, id));
 }
 
-// ==========================================
-// GLOBAL TIMELINE CRUD
-// ==========================================
 
 export async function getTimelineEntries(): Promise<TimelineEntry[]> {
   const q = query(collection(db, "timelineEntries"), orderBy('order', 'asc'));
@@ -212,4 +196,3 @@ export async function deleteTimelineEntry(id: string): Promise<void> {
   await deleteDoc(doc(db, "timelineEntries", id));
 }
 
-// uploadCMSMedia removed: migrated to Cloudinary unsigned uploads

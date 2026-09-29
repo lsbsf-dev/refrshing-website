@@ -1,6 +1,6 @@
 /**
- * Ministers Query Module
- * Handlers for retrieving speaker profiles and biography data.
+ * @file ministers.ts
+ * @description Firestore data access functions for minister speaker profiles.
  */
 
 import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";
@@ -48,11 +48,9 @@ export async function getMinisters(eventId: string): Promise<Minister[]> {
     const ref = collection(db, "events", eventId, "ministers").withConverter(ministerConverter);
     const q = query(ref, where("status", "==", "published"));
     const snap = await getDocs(q);
-    // Include Firestore document ID as `id` to match the Minister interface
     return snap.docs.map((doc) => doc.data());
   } catch (error) {
     console.error("Failed to load ministers for", eventId, error);
-    // Gracefully degrade: return empty array so UI can handle missing data
     return [] as Minister[];
   }
 }
@@ -79,7 +77,6 @@ export async function updateMinister(ministerId: string, data: Partial<Minister>
   const res = await fetch("/api/admin/ministers", {
     method: "POST",
     headers: { "Content-Type": "application/json", ...headers },
-    // eventId is passed top‑level; remove it from payload to avoid duplicate
     body: JSON.stringify({
       action: "update",
       ministerId,
@@ -95,7 +92,6 @@ export async function createMinister(minister: Omit<Minister, "id" | "slug"> & {
   const res = await fetch("/api/admin/ministers", {
     method: "POST",
     headers: { "Content-Type": "application/json", ...headers },
-    // eventId is top‑level; strip it from payload
     body: JSON.stringify({
       action: "create",
       eventId: minister.eventId,

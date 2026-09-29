@@ -1,6 +1,6 @@
 /**
- * Booklet Loading Component
- *  * Loading state fallback for booklet detail pages.
+ * @file loading.tsx
+ * @description Public detail view displaying an individual booklet chapter or article.
  */
 
 export default function BookletSlugLoading() {

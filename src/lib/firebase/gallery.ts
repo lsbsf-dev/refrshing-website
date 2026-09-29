@@ -1,6 +1,6 @@
 /**
- * Gallery Query Module
- * Handlers for retrieving photo albums and individual photos.
+ * @file gallery.ts
+ * @description Firestore data access functions for photo gallery albums.
  */
 
 import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, query, where, FirestoreDataConverter, increment } from "firebase/firestore";
@@ -122,9 +122,6 @@ export async function getPhotos(eventId: string, albumId: string): Promise<Photo
   return snap.docs.map((doc) => doc.data());
 }
 
-// =======================
-// ALBUM MUTATIONS
-// =======================
 
 export async function createAlbum(eventId: string, album: Omit<GalleryAlbum, "id">, id: string): Promise<void> {
   const ref = doc(db, "events", eventId, "galleryAlbums", id).withConverter(galleryAlbumConverter);
@@ -137,20 +134,15 @@ export async function updateAlbum(eventId: string, id: string, updates: Partial<
 }
 
 export async function deleteAlbum(eventId: string, id: string): Promise<void> {
-  // We should also delete photos, but we leave that to cloud functions or manual cleanup
   const ref = doc(db, "events", eventId, "galleryAlbums", id);
   await deleteDoc(ref);
 }
 
-// =======================
-// PHOTO MUTATIONS
-// =======================
 
 export async function addPhoto(eventId: string, photo: Omit<Photo, "id">, id: string): Promise<void> {
   const ref = doc(db, "events", eventId, "photos", id).withConverter(photoConverter);
   await setDoc(ref, { ...photo, id });
   
-  // Increment photo count on the album
   if (photo.albumId) {
     const albumRef = doc(db, "events", eventId, "galleryAlbums", photo.albumId);
     await updateDoc(albumRef, { photoCount: increment(1) });
@@ -160,8 +152,6 @@ export async function addPhoto(eventId: string, photo: Omit<Photo, "id">, id: st
 export async function updatePhoto(eventId: string, id: string, updates: Partial<Photo>): Promise<void> {
   const ref = doc(db, "events", eventId, "photos", id);
   
-  // If moving between albums, we should technically handle increment/decrement on albums
-  // For simplicity here, we assume standard updates
   await updateDoc(ref, updates);
 }
 
@@ -175,9 +165,6 @@ export async function deletePhoto(eventId: string, id: string, albumId?: string)
   }
 }
 
-// =======================
-// VIDEO OPERATIONS
-// =======================
 
 export async function getVideos(eventId: string): Promise<Video[]> {
   const ref = collection(db, "events", eventId, "videos").withConverter(videoConverter);

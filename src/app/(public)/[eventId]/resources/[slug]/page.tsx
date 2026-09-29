@@ -1,6 +1,6 @@
 /**
- * Resource Editorial Reader Page Component
- * Loads long-form editorial content from Firestore.
+ * @file page.tsx
+ * @description Public detail page for previewing and downloading a specific resource.
  */
 
 "use client";

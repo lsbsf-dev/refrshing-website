@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin inbox view for viewing, filtering, and managing user contact form submissions.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEnquiries, deleteEnquiry, EnquiryDoc } from "@/lib/firebase/enquiries";
@@ -17,7 +22,6 @@ export default function EnquiriesAdminPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>("All");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   
-  // Deletion modal state
   const [pendingDeleteEnquiry, setPendingDeleteEnquiry] = useState<EnquiryDoc | null>(null);
   const [confirmInput, setConfirmInput] = useState("");
 

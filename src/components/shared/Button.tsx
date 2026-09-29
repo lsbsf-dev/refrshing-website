@@ -1,6 +1,6 @@
 /**
- * Button Component
- *  * Reusable UI button element with variants and states.
+ * @file Button.tsx
+ * @description Reusable UI button component supporting multiple variants and loading states.
  */
 
 import React from "react";

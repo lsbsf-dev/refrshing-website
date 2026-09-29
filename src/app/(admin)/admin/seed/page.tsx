@@ -1,6 +1,6 @@
 /**
- * Admin Seed Page Component
- * Database seeding utilities for admin.
+ * @file page.tsx
+ * @description Admin control page for seeding Firestore collections with initial data.
  */
 
 import { notFound } from "next/navigation";

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing contact information and helpline numbers.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEventScopedDocs, setEventScopedDoc, ContactSettings, ContactPerson } from "@/lib/firebase/cms";
@@ -39,7 +44,6 @@ export default function ContactSettingsAdminPage() {
   };
 
   useEffect(() => {
-    // Filter to find the contact settings doc specifically, since getEventScopedDocs returns all docs in aboutSettings
     const contactDoc = settingsDocs.find(doc => doc.id === "contact");
     if (contactDoc) {
       setForm({ ...defaultSettings, ...contactDoc });

@@ -1,6 +1,6 @@
 /**
- * Dynamic Sitemap Generator
- * Defines static and dynamic URL routing paths for web indexing crawls.
+ * @file sitemap.ts
+ * @description Dynamic sitemap.xml generator for search indexing.
  */
 
 import { MetadataRoute } from "next";

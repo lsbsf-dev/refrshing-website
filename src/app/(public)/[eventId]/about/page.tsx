@@ -1,7 +1,6 @@
-
 /**
- * About Page Component
- * Showcases NBC Philosophy, 5 Core Pillars, and History of LSBSF.
+ * @file page.tsx
+ * @description Public page displaying conference history, vision, mission, and committee members.
  */
 
 import React from "react";
@@ -47,7 +46,6 @@ const pillars = [
 
 import { TimelineSection } from "@/components/public/TimelineSection";
 import { CommitteeSection } from "@/components/public/CommitteeSection";
-// Static content for About page, no fetching required
 const staticSettings = {
   aboutLsbsfHtml: `
     <p>The Nigerian Baptist Convention's Christian witness and ministry in institutions of higher learning are in response to the Lord's command to make the gospel known to all persons.</p>
@@ -57,13 +55,11 @@ const staticSettings = {
     <p>Through our annual Refreshing gathering, generations of students across the Lagos East, Lagos West, and Lagos Central associations have been discipled, equipped, and sent forth. As we reach this historic 40th anniversary, we celebrate the lives transformed, the ministries birthed, and the enduring global legacy built by those who came before us.</p>`,
   visionHtml: `<p>Refreshing 2026 is a threshold. For forty years, the Lord has gathered students across campuses and churches in revival, faith, and fellowship. But the narrative is not ending. We are being commissioned into a greater weight of His presence and a fuller display of His glory across our churches and campuses.</p>`,
   missionHtml: `<p>Whether you are a student or youth eager to encounter God, an alumnus looking to reconnect and support the vision, or a guest seeking a spiritual awakening, there is a place for you at Refreshing 2026.</p>`,
-  // Explicitly type the archive as ThemeArchiveEntry[] to avoid never[] inference
   themeArchive: [] as ThemeArchiveEntry[]
 };
 export default function AboutPage({ params }: { params: { eventId: string } }) {
   const settings = staticSettings;
   const eventId = params.eventId;
-  // const settings = staticSettings; // duplicate removed
 
 
   return (
