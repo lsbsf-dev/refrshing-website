@@ -10,12 +10,12 @@ import { CustomSelect } from "@/components/shared/CustomSelect";
 export default function AdminSettingsPage() {
   const queryClient = useQueryClient();
 
-  const { data: settings, isLoading: isLoadingSettings } = useQuery({
+  const { data: settings, isLoading: isLoadingSettings, isError: isSettingsError, error: settingsError } = useQuery({
     queryKey: ["admin", "settings"],
     queryFn: getSystemSettings,
   });
 
-  const { data: eventsList = [], isLoading: isLoadingEvents } = useQuery({
+  const { data: eventsList = [], isLoading: isLoadingEvents, isError: isEventsError, error: eventsError } = useQuery({
     queryKey: ["admin", "events"],
     queryFn: getEvents,
   });
@@ -58,6 +58,19 @@ export default function AdminSettingsPage() {
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-500 mb-4" />
         <p className="font-sans text-sm text-zinc-500">Loading settings...</p>
+      </div>
+    );
+  }
+
+  if (isSettingsError || isEventsError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+          <p className="font-sans font-semibold text-sm">Failed to load settings</p>
+          <p className="font-sans text-xs mt-1 opacity-80">
+            {((isSettingsError ? settingsError : eventsError) as Error)?.message || "Permission denied or unknown error"}
+          </p>
+        </div>
       </div>
     );
   }

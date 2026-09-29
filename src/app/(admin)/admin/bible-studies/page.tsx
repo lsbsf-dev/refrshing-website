@@ -11,13 +11,13 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Loader2 } from "lucide-react";
 
 export default function BibleStudiesAdminPage() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: bibleStudies = [], isLoading } = useQuery({
+  const { data: bibleStudies = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "bibleStudies", selectedEventId],
     queryFn: () => getEventScopedDocs<BibleStudy>(selectedEventId, "bibleStudies"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,6 +108,17 @@ export default function BibleStudiesAdminPage() {
   ];
 
   if (!selectedEventId) return null;
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+          <p className="font-sans font-semibold text-sm">Failed to load Bible studies</p>
+          <p className="font-sans text-xs mt-1 opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-10">

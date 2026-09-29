@@ -5,7 +5,7 @@
 
 "use client";
 
-import React, { useState, use } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -29,24 +29,28 @@ export default function SearchPage() {
     queryKey: ["ministers", ACTIVE_EVENT_ID],
     queryFn: () => getMinisters(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const { data: sessions = [], isLoading: loadingSessions } = useQuery({
     queryKey: ["sessions", ACTIVE_EVENT_ID],
     queryFn: () => getSessions(ACTIVE_EVENT_ID),
     staleTime: 30 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const { data: resources = [], isLoading: loadingResources } = useQuery({
     queryKey: ["resources", ACTIVE_EVENT_ID],
     queryFn: () => getResources(ACTIVE_EVENT_ID),
     staleTime: 6 * 60 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const { data: announcements = [], isLoading: loadingAnnouncements } = useQuery({
     queryKey: ["announcements", ACTIVE_EVENT_ID],
     queryFn: () => getAnnouncements(ACTIVE_EVENT_ID),
     staleTime: 5 * 60 * 1000,
+    enabled: !!ACTIVE_EVENT_ID,
   });
 
   const filteredMinisters = ministers.filter(

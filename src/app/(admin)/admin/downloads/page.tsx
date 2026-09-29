@@ -10,13 +10,13 @@ import { useAdminEvent } from "@/hooks/useAdminEvent";
 import { Loader2, UploadCloud, FileText } from "lucide-react";
 
 export default function DownloadsAdminPage() {
-  const { eventId: selectedEventId } = useAdminEvent();
+  const { eventId: selectedEventId, isLoading: isEventLoading } = useAdminEvent();
   const queryClient = useQueryClient();
 
-  const { data: downloads = [], isLoading } = useQuery({
+  const { data: downloads = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "downloads", selectedEventId],
     queryFn: () => getEventScopedDocs<Download>(selectedEventId, "downloads"),
-    enabled: !!selectedEventId,
+    enabled: !isEventLoading && !!selectedEventId,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,6 +156,17 @@ export default function DownloadsAdminPage() {
   ];
 
   if (!selectedEventId) return null;
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+          <p className="font-sans font-semibold text-sm">Failed to load downloads</p>
+          <p className="font-sans text-xs mt-1 opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-10">

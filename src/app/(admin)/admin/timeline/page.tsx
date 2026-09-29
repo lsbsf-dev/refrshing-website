@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 export default function TimelineAdminPage() {
   const queryClient = useQueryClient();
 
-  const { data: timeline = [], isLoading } = useQuery({
+  const { data: timeline = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "timeline"],
     queryFn: () => getTimelineEntries(),
   });
@@ -102,6 +102,17 @@ export default function TimelineAdminPage() {
       )
     }
   ];
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-3xl text-center max-w-md">
+          <p className="font-sans font-semibold text-sm">Failed to load timeline entries</p>
+          <p className="font-sans text-xs mt-1 opacity-80">{(error as Error)?.message || "Permission denied or unknown error"}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-10">
