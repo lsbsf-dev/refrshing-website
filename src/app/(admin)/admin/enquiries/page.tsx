@@ -4,15 +4,22 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEnquiries, deleteEnquiry, EnquiryDoc } from "@/lib/firebase/enquiries";
 import { useAdminEvent } from "@/hooks/useAdminEvent";
-import { Loader2, Mailbox, Trash2 } from "lucide-react";
+import { useAuth } from "@/lib/contexts/AuthContext";
+import { Loader2, Mailbox, Trash2, AlertTriangle } from "lucide-react";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
 
 type FilterTab = "All" | "Enquiry" | "Testimony" | "Prayer Request";
 
 export default function EnquiriesAdminPage() {
   const { eventId: selectedEventId } = useAdminEvent();
+  const { profile } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<FilterTab>("All");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  // Deletion modal state
+  const [pendingDeleteEnquiry, setPendingDeleteEnquiry] = useState<EnquiryDoc | null>(null);
+  const [confirmInput, setConfirmInput] = useState("");
 
   const { data: enquiries = [], isLoading, isError, error } = useQuery({
     queryKey: ["admin", "enquiries", selectedEventId],
@@ -21,12 +28,24 @@ export default function EnquiriesAdminPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      setDeletingId(id);
-      await deleteEnquiry(id);
+    mutationFn: async (enquiry: EnquiryDoc) => {
+      setDeletingId(enquiry.id);
+      await deleteEnquiry(
+        enquiry.id,
+        {
+          type: enquiry.type,
+          name: enquiry.name,
+          email: enquiry.email,
+          submittedAt: enquiry.submittedAt,
+          eventId: enquiry.eventId,
+        },
+        profile ? { uid: profile.uid, email: profile.email || "unknown" } : undefined
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "enquiries", selectedEventId] });
+      setPendingDeleteEnquiry(null);
+      setConfirmInput("");
     },
     onSettled: () => {
       setDeletingId(null);
@@ -137,9 +156,8 @@ export default function EnquiriesAdminPage() {
                   </span>
                   <button
                     onClick={() => {
-                      if (window.confirm("Are you sure you want to delete this message?")) {
-                        deleteMutation.mutate(enquiry.id);
-                      }
+                      setPendingDeleteEnquiry(enquiry);
+                      setConfirmInput("");
                     }}
                     disabled={deletingId === enquiry.id}
                     className="text-zinc-400 hover:text-red-500 transition-colors p-1"
@@ -160,6 +178,46 @@ export default function EnquiriesAdminPage() {
           ))
         )}
       </div>
+
+      {/* Confirmation Modal for Message Deletion */}
+      {pendingDeleteEnquiry && (
+        <ConfirmModal
+          isOpen={!!pendingDeleteEnquiry}
+          title="Delete Message"
+          message={`Are you sure you want to permanently delete this ${pendingDeleteEnquiry.type.toLowerCase()}? This action will be recorded in the security audit logs.`}
+          confirmLabel="Delete Message"
+          variant="danger"
+          onCancel={() => {
+            setPendingDeleteEnquiry(null);
+            setConfirmInput("");
+          }}
+          onConfirm={() => {
+            if (confirmInput.trim().toUpperCase() === "DELETE") {
+              deleteMutation.mutate(pendingDeleteEnquiry);
+            }
+          }}
+        >
+          <div className="space-y-4 text-left">
+            <div className="p-4 bg-white/5 border border-white/10 rounded-xl space-y-1">
+              <p className="text-xs font-mono text-zinc-400">Sender: <span className="text-zinc-200">{pendingDeleteEnquiry.name || "Anonymous"} ({pendingDeleteEnquiry.email || "No email"})</span></p>
+              <p className="text-xs font-mono text-zinc-400 truncate">Preview: <span className="text-zinc-300 italic">"{pendingDeleteEnquiry.message}"</span></p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+                Type <span className="text-red-400 font-mono">DELETE</span> to confirm:
+              </label>
+              <input
+                type="text"
+                value={confirmInput}
+                onChange={(e) => setConfirmInput(e.target.value)}
+                placeholder="DELETE"
+                className="w-full px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl text-sm font-mono text-white focus:outline-none focus:border-red-500/50"
+              />
+            </div>
+          </div>
+        </ConfirmModal>
+      )}
     </div>
   );
 }

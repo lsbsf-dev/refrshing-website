@@ -24,7 +24,7 @@ export default function HomePage() {
 
   const { data: settingsDocs = [] } = useQuery({
     queryKey: ["public", "homepageSettings", ACTIVE_EVENT_ID],
-    queryFn: () => getEventScopedDocs<HomepageSettings>(ACTIVE_EVENT_ID, "homepageSettings"),
+    queryFn: () => getEventScopedDocs<HomepageSettings>(ACTIVE_EVENT_ID, "homepageSettings", null),
     staleTime: 5 * 60 * 1000,
     enabled: !!ACTIVE_EVENT_ID,
   });

@@ -27,7 +27,7 @@ export default function ContactPage() {
 
   const { data: settingsDocs = [] } = useQuery({
     queryKey: ["public", "contactSettings", ACTIVE_EVENT_ID],
-    queryFn: () => getEventScopedDocs<ContactSettings>(ACTIVE_EVENT_ID, "aboutSettings"),
+    queryFn: () => getEventScopedDocs<ContactSettings>(ACTIVE_EVENT_ID, "aboutSettings", null),
     enabled: !!ACTIVE_EVENT_ID,
   });
 
