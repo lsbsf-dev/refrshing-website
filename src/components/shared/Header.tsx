@@ -187,12 +187,12 @@ export function Header() {
 
         {/* Mobile menu trigger */}
         <div className="lg:hidden flex items-center gap-3 z-50">
-          <Link href="/search" className={`active-press p-2.5 ${iconColorClass}`}>
+          <Link href={`${basePath}/search`} className={`active-press p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center ${iconColorClass}`} aria-label="Search">
             <Search className="h-6 w-6" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`active-press p-2 ${iconColorClass}`}
+            className={`active-press p-2 min-h-[44px] min-w-[44px] flex items-center justify-center ${iconColorClass}`}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}

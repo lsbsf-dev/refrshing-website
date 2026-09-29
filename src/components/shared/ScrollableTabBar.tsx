@@ -83,7 +83,7 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
   const arrowDisabled = "opacity-0 pointer-events-none cursor-default";
 
   return (
-    <div className="relative flex items-center w-full">
+    <div className="relative flex items-center w-full min-w-0 max-w-full">
       {/* Left arrow — disabled attribute removes it from tab order and blocks
           Enter/Space keyboard activation entirely */}
       <button

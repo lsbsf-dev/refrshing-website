@@ -181,7 +181,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 </span>
               </div>
             )}
-            <button onClick={logout} title="Sign Out" className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer rounded-lg active-press">
+            <button onClick={logout} title="Sign Out" className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer rounded-lg active-press min-h-[44px] min-w-[44px] flex items-center justify-center">
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -199,10 +199,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           </span>
         </Link>
         <div className="flex items-center gap-2">
-          <button onClick={toggleTheme} className="p-2 text-zinc-400 hover:text-zinc-100 rounded-lg">
+          <button onClick={toggleTheme} className="p-2 text-zinc-400 hover:text-zinc-100 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle theme">
             {isDark ? <Sun className="h-5 w-5 text-[#DDB94E]" /> : <Moon className="h-5 w-5 text-zinc-700" />}
           </button>
-          <button onClick={() => setMobileOpen(!mobileOpen)} className={`p-2 ${isDark ? "text-white" : "text-zinc-900"}`}>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className={`p-2 min-h-[44px] min-w-[44px] flex items-center justify-center ${isDark ? "text-white" : "text-zinc-900"}`} aria-label="Toggle menu">
             {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -212,7 +212,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         <div className={`lg:hidden fixed inset-0 z-50 backdrop-blur-md flex flex-col p-6 animate-fade-in bg-background text-foreground`}>
           <div className="flex items-center justify-between pb-6 border-b border-border mb-6 shrink-0">
             <span className="font-serif text-lg font-bold uppercase">REFRESHING OS ADMIN</span>
-            <button onClick={() => setMobileOpen(false)} className="p-2">
+            <button onClick={() => setMobileOpen(false)} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close menu">
               <X className="h-6 w-6" />
             </button>
           </div>
@@ -225,7 +225,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold uppercase ${isActive ? "bg-[#C25627] text-white font-bold" : "text-foreground-muted hover:bg-surface-hover hover:text-foreground"}`}
+                  className={`flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-xl text-sm font-semibold uppercase ${isActive ? "bg-[#C25627] text-white font-bold" : "text-foreground-muted hover:bg-surface-hover hover:text-foreground"}`}
                 >
                   <Icon className="h-5 w-5" />
                   <span>{item.label}</span>
@@ -233,7 +233,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <button onClick={logout} className="py-3.5 bg-red-500/10 text-red-500 rounded-xl font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-6 shrink-0">
+          <button onClick={logout} className="py-3.5 min-h-[44px] bg-red-500/10 text-red-500 rounded-xl font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-6 shrink-0">
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
           </button>
@@ -244,7 +244,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <header className={`h-16 border-b backdrop-blur-md sticky top-0 z-20 px-3 sm:px-6 flex items-center justify-between transition-colors bg-surface border-border shadow-xs`}>
           <div className="flex items-center gap-3">
-            <button onClick={() => setIsCollapsed(!isCollapsed)} className={`hidden lg:flex p-2 rounded-xl transition-colors cursor-pointer text-foreground-muted hover:text-foreground hover:bg-surface-hover`} title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}>
+            <button onClick={() => setIsCollapsed(!isCollapsed)} className={`hidden lg:flex p-2 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl transition-colors cursor-pointer text-foreground-muted hover:text-foreground hover:bg-surface-hover`} title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}>
               {isCollapsed ? <PanelLeftOpen className="h-4 w-4 text-[#C25627]" /> : <PanelLeftClose className="h-4 w-4 text-[#C25627]" />}
             </button>
             <Sparkles className="h-4 w-4 text-[#DDB94E]" />
@@ -254,7 +254,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden"></div>
-            <button onClick={toggleTheme} className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-2 text-xs font-sans font-bold uppercase bg-surface-muted border-border text-foreground hover:bg-surface-hover`} title="Toggle Light / Dark Mode">
+            <button onClick={toggleTheme} className={`p-2 min-h-[44px] rounded-xl border transition-all cursor-pointer flex items-center gap-2 text-xs font-sans font-bold uppercase bg-surface-muted border-border text-foreground hover:bg-surface-hover`} title="Toggle Light / Dark Mode">
               {isDark ? (
                 <>
                   <Sun className="h-4 w-4 text-[#DDB94E]" />
@@ -267,7 +267,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 </>
               )}
             </button>
-            <Link href="/admin/seed" className="flex items-center gap-2 px-3.5 py-2 bg-[#DDB94E]/10 hover:bg-[#DDB94E]/20 border border-[#DDB94E]/30 text-[#DDB94E] rounded-full font-sans text-xs font-bold uppercase tracking-wider transition-all active-press">
+            <Link href="/admin/seed" className="flex items-center gap-2 px-3.5 py-2 min-h-[44px] bg-[#DDB94E]/10 hover:bg-[#DDB94E]/20 border border-[#DDB94E]/30 text-[#DDB94E] rounded-full font-sans text-xs font-bold uppercase tracking-wider transition-all active-press">
               <Database className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Seed Database</span>
             </Link>
