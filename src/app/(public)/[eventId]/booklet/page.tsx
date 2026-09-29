@@ -41,6 +41,7 @@ const categoryIcon: Record<string, React.ElementType> = {
 export default function BookletPage() {
   const params = useParams();
   const ACTIVE_EVENT_ID = params?.eventId as string;
+  const basePath = ACTIVE_EVENT_ID ? `/${ACTIVE_EVENT_ID}` : "";
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
   const [search, setSearch] = useState("");
 
@@ -175,8 +176,8 @@ export default function BookletPage() {
                 return (
                   <Link
                     key={resource.id}
-                    href={`/booklet/${resource.slug}`}
-                    className="group flex flex-col bg-white border border-black/10 rounded-2xl hover:border-[#C25627]/40 hover:shadow-lg transition-all duration-300 p-6 active-press"
+                    href={`${basePath}/booklet/${resource.slug}`}
+                    className="group flex flex-col bg-white border border-black/10 rounded-2xl hover:border-[#C25627]/40 hover:shadow-lg transition-all duration-300 p-6 active-press min-w-0"
                   >
                     {/* Index + category */}
                     <div className="flex items-center justify-between mb-4">
@@ -189,9 +190,9 @@ export default function BookletPage() {
                     </div>
 
                     {/* Icon + Title */}
-                    <div className="flex items-start gap-3 mb-3">
+                    <div className="flex items-start gap-3 mb-3 min-w-0">
                       <Icon className="h-5 w-5 text-[#C25627] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                      <h2 className="font-serif text-base font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300 leading-snug">
+                      <h2 className="font-serif text-base font-normal text-[#0B0907] group-hover:text-[#C25627] transition-colors duration-300 leading-snug break-words min-w-0">
                         {resource.title}
                       </h2>
                     </div>
