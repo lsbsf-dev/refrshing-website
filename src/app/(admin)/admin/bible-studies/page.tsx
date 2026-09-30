@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing conference bible study outlines and materials.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminDataTable, Column } from "@/components/admin/AdminDataTable";
@@ -23,7 +28,6 @@ export default function BibleStudiesAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<BibleStudy | null>(null);
   
-  // Form State
   const [title, setTitle] = useState("");
   const [theme, setTheme] = useState("");
   const [author, setAuthor] = useState("");

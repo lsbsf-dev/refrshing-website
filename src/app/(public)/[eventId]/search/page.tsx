@@ -1,6 +1,6 @@
 /**
- * Search Page Component
- * Implements client-side filter matching over Firestore-cached collections via React Query.
+ * @file page.tsx
+ * @description Public search page offering unified search across ministers, sessions, and resources.
  */
 
 "use client";

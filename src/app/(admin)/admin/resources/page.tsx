@@ -1,6 +1,6 @@
 /**
- * Admin Resources Page Component
- *  * Manages booklet resources and digital materials.
+ * @file page.tsx
+ * @description Admin page for managing downloadable resource library items.
  */
 
 "use client";
@@ -59,7 +59,6 @@ export default function AdminResourcesPage() {
     };
   }, [editingResource]);
 
-  // Mutations
   const updateMutation = useMutation({
     mutationFn: (data: Resource) => updateResource(ACTIVE_EVENT_ID, data.id || data.slug, data),
     onSuccess: () => {

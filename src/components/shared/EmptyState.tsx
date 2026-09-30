@@ -1,6 +1,6 @@
 /**
- * Empty State Component
- *  * Reusable UI placeholder for empty data views.
+ * @file EmptyState.tsx
+ * @description Reusable UI component for displaying empty content states with call-to-action buttons.
  */
 
 import React from "react";

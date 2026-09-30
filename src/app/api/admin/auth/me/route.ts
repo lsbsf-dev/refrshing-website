@@ -1,19 +1,21 @@
+/**
+ * @file route.ts
+ * @description API route handler for verifying admin authorization tokens and returning profile details.
+ */
+
 import { NextResponse } from "next/server";
 import { firestore, auth } from "@/lib/firebase/admin";
 
 export async function POST(req: Request) {
-  // Only allow POST
   if (req.method !== "POST") {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
 
-  // Verify Firebase services are initialized
   if (!firestore || !auth) {
     console.error("Firebase admin not initialized", { firestore: !!firestore, auth: !!auth });
     return NextResponse.json({ error: "Server configuration error: Firebase not initialized" }, { status: 500 });
   }
 
-  // Extract and verify Bearer token from Authorization header
   const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json({ error: "Missing or invalid Authorization header" }, { status: 401 });
@@ -29,7 +31,6 @@ export async function POST(req: Request) {
 
   const uid = decodedToken.uid;
 
-  // Fetch user document from Firestore
   let userDoc;
   try {
     userDoc = await firestore.collection("users").doc(uid).get();
@@ -47,7 +48,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Your access has been revoked" }, { status: 403 });
   }
 
-  // Fetch auth record for custom claims
   let authUser;
   try {
     authUser = await auth.getUser(uid);

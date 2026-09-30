@@ -1,192 +1,147 @@
-# Refreshing Digital Conference Management Platform
+# Refreshing Conference Website & Admin OS
 
-A multi-edition digital conference platform, content management system (CMS), and attendance-management solution for the annual "Refreshing" conference, built for the Lagos State Baptist Student Fellowship (LSBSF).
+A modern, high-performance web platform and administrative operating system for the annual **Refreshing Conference**. The application serves both public conference attendees—providing multi-edition event archives, interactive schedules, digital booklets, speaker directories, and resource downloads—and conference staff via a role-based administrative portal with offline-first check-in capabilities.
 
-Full requirements live in the project SRS document (*Refreshing Digital Conference Management Platform — SRS, v1.0, July 2026*). **AGENTS.md covers non-negotiable process rules, architectural invariants, and historical bug patterns that any developer or AI assistant must read before touching this repository.**
-
----
-
-## Overview & Role
-
-- **Project Name:** Refreshing Digital Conference Management Platform
-- **Organization:** Lagos State Baptist Student Fellowship (LSBSF)
-- **My Role:** [My Role / Contribution Placeholder]
-- **Repository Maintainer:** [Maintainer Placeholder]
+🔗 **Live Platform**: [https://refreshing.org.ng](https://refreshing.org.ng)
 
 ---
 
-## Technical Architecture & Stack
+## Tech Stack
 
-- **Frontend Framework:** Next.js 16 (App Router with Turbopack), React 19, TypeScript
-- **Styling & UI:** Tailwind CSS v4, Lucide React icons
-- **Data Persistence:** Firebase (Firestore database, Firebase Authentication, Cloud Functions v2)
-- **Media Assets:** Cloudinary (client-side unsigned uploads via `ImageUploader`)
-- **State & Data Fetching:** TanStack Query (React Query)
-- **Offline Sync & Storage:** Dexie.js (IndexedDB wrapper) for check-in desk offline resiliency
-- **Rich Text Editing:** Tiptap
-- **Form Management:** React Hook Form + Zod validation
-- **Hosting & Infrastructure:** Netlify (Frontend edge deployments), Firebase (Cloud Functions, Firestore, Auth)
+The technology stack is strictly aligned with the dependencies defined in `package.json`:
 
----
-
-## Core Features & Admin Functionality
-
-### Public Visitor Portal
-- **Edition-Scoped Pages:** Home, About, Ministers/Speakers, Programme Schedule, Resources & Conference Booklet, Gallery Albums, Announcements, FAQ, and Contact.
-- **Dynamic Routing:** All public pages route under `/[eventId]/` to ensure historical conference editions remain permanently browsable.
-- **Global Conference History:** Timeline feature spanning all 40+ years of conference history (`/timelineEntries`).
-
-### Admin Dashboard & Management System
-- **Authentication & Security:** Firebase email/password authentication with strict custom claims role verification (`superAdmin`, `eventAdmin`, `registrationStaff`, `checkinStaff`, `editor`, `viewer`).
-- **User Account Management:** Provisioning admin accounts (`/admin/users`), password resets, role assignment, and access control.
-- **Role Builder & Permissions:** Granular permission system (`/admin/users` -> Role Builder) for mapping actions across modules to user roles with server-side claim synchronization.
-- **Attendee Directory & Batch Import:** High-throughput attendee management (`/admin/attendees`) supporting `.xlsx` and `.csv` batch imports, full multi-stage dry-run validation, fuzzy duplicate detection, and manual conflict resolution.
-- **Check-In Desk:** Fast check-in interface (`/admin/checkin`) with barcode/QR scanning, online/offline synchronization via Dexie, and restricted PII access (`checkinView`).
-- **Content Management Systems (CMS):** Content editors for Ministers (`/admin/ministers`), Programme schedule (`/admin/programme`), Gallery albums & photos (`/admin/gallery`), FAQs (`/admin/faq`), Announcements (`/admin/announcements`), and Contact info (`/admin/settings/contact`).
-- **Audit Logging:** System-wide audit logs tracking administrative actions, user creation, and bulk operations.
-- **System Settings & Edition Management:** Global default event selection (`/admin/settings`), event metadata creation (`/admin/events`), and global configuration options.
+* **Core Framework**: [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
+* **Styling & UI**: [Tailwind CSS v4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/)
+* **Data & Backend Services**: 
+  * [Firebase Web SDK v12](https://firebase.google.com/) (Authentication, Firestore, Analytics)
+  * [Firebase Admin SDK v13](https://firebase.google.com/docs/admin/setup) (Server-side API routes & privileged operations)
+  * [TanStack React Query v5](https://tanstack.com/query) (Client data fetching, caching, and state synchronization)
+* **Offline Storage**: [Dexie.js v4](https://dexie.org/) (IndexedDB wrapper) & `dexie-react-hooks`
+* **Rich Text Editing**: [TipTap v3](https://tiptap.dev/) (`starter-kit`, `react`, `extension-link`, `tiptap-markdown`), Turndown, DOMPurify
+* **Forms & Validation**: React Hook Form, Zod, `@hookform/resolvers`
+* **Data Visualization**: Recharts
+* **Utilities**: `qrcode.react`, `xlsx` (Excel import/export), `browser-image-compression`
 
 ---
 
-## Getting Started
+## Features
+
+### Public Conference Portal (`/[eventId]`)
+* **Multi-Edition Event Switcher**: Access current and historical conference editions across 40+ years of archives.
+* **Interactive Schedule**: Day-by-day timetable filtering sessions, speaker outlines, and study materials.
+* **Minister Directory**: Speaker profiles with detailed biographies and linked conference sessions.
+* **Digital Booklet**: Interactive conference guide and session readings.
+* **Resource Library**: Downloadable audio, video, study guides, and document media.
+* **Announcements & Gallery**: Published news updates and photo albums.
+* **Unified Global Search**: Instant search across ministers, programme sessions, booklet articles, and resources.
+
+### Admin Operating System (`/admin`)
+* **Role-Based Access Control (RBAC)**: Fine-grained permission model supporting `superAdmin`, `eventAdmin`, `registrationStaff`, `checkinStaff`, `editor`, and `viewer` roles.
+* **Content Management System (CMS)**: Event-scoped collection managers for ministers, timetable sessions, announcements, gallery albums, and settings.
+* **Attendee Registration & Directory**: Searchable attendee table supporting CSV/JSON bulk import, Excel export, and registration badge generation.
+* **Offline-First Check-In Desk**: QR-scanner check-in interface backed by local IndexedDB caching to maintain operations during network outages.
+* **Contact Enquiry Inbox**: Inbox for managing public contact submissions, featuring audit logging and typed DELETE confirmation modals.
+* **Analytics & System Health**: Attendance charts, check-in stats, and system status monitors.
+
+---
+
+## Setup & Installation
 
 ### Prerequisites
-- Node.js 20.x or higher
-- npm 10.x or higher
+* **Node.js**: v20.x or higher
+* **Package Manager**: `npm` v10.x or higher
 
-### Local Installation
+### Steps
 
-1. **Clone the repository:**
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/thistechbabe1/refrshing-website.git
+   git clone https://github.com/lsbsf-dev/refrshing-website.git
    cd refrshing-website
    ```
 
-2. **Install dependencies:**
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Configure Environment Variables:**
-   Copy `.env.example` to `.env.local` and populate the necessary configuration values (see details below):
-   ```bash
-   cp .env.example .env.local
-   ```
+3. **Configure Environment Variables**:
+   Create a `.env.local` file in the root directory (refer to the Environment Variables section below).
 
-4. **Run Development Server:**
+4. **Run the Development Server**:
    ```bash
    npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
+5. **Build for Production**:
+   ```bash
+   npm run build
+   npm start
+   ```
 
-## Environment Variables Configuration
-
-> [!IMPORTANT]
-> Never commit actual credentials, private keys, or secret tokens to version control. Confirm `.env.local` is listed in `.gitignore`.
-
-### Client-Side Variables (`NEXT_PUBLIC_`)
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=YOUR_PROJECT.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=YOUR_PROJECT.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID
-NEXT_PUBLIC_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID
-
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=YOUR_CLOUDINARY_CLOUD_NAME
-NEXT_PUBLIC_CLOUDINARY_IMAGE_PRESET=YOUR_UNSIGNED_IMAGE_PRESET
-NEXT_PUBLIC_CLOUDINARY_DOWNLOAD_PRESET=YOUR_UNSIGNED_DOWNLOAD_PRESET
-
-NEXT_PUBLIC_DEFAULT_EVENT_ID=refreshing-2026
-```
-
-### Server-Side Variables (Cloud Functions & Server Routes)
-```env
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@YOUR_PROJECT.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----"
-```
+6. **Run Test Suite**:
+   ```bash
+   npm test
+   ```
 
 ---
 
-## Data Model Structure
+## Environment Variables
 
-Firestore data is hierarchically organized under edition scopes to support multi-edition browsing:
+The following environment variables are required to configure Firebase and Cloudinary integrations. Specify these in `.env.local`:
 
-```
-/events/{eventId}/
-  ├── ministers
-  ├── sessions
-  ├── bibleStudies
-  ├── articles
-  ├── advertisements
-  ├── downloads
-  ├── galleryAlbums
-  ├── mediaItems
-  ├── resources
-  ├── announcements
-  ├── faqs
-  ├── committeeMembers
-  ├── attendees
-  ├── checkinView
-  └── importBatches
+### Firebase Web Client
+* `NEXT_PUBLIC_FIREBASE_API_KEY`
+* `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+* `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+* `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+* `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+* `NEXT_PUBLIC_FIREBASE_APP_ID`
+* `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`
 
-/timelineEntries          <- Global collection (spans full 40-year history)
-/users                    <- System administrator user profiles
-/settings/global          <- Global configuration and default active edition
-/audit_logs               <- System-wide administrative action logs
-```
+### Firebase Admin SDK (Server Environment)
+* `FIREBASE_CLIENT_EMAIL`
+* `FIREBASE_PRIVATE_KEY`
+
+### Cloudinary Uploads
+* `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
+* `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`
+
+### System Utilities
+* `ADMIN_SEED_ENABLED`
 
 ---
 
-## Known Issues & Technical Debt
+## Architecture Overview
 
-1. **React Hook Effect Warnings (`react-hooks/set-state-in-effect`)**: Synchronous state updates inside `useEffect` exist in `AuthContext.tsx`, `admin/attendees/page.tsx`, `admin/login/page.tsx`, and `admin/checkin/page.tsx`. These require careful refactoring in a dedicated session to prevent cascading renders without altering auth timing.
-2. **Legacy Script CommonJS Imports (`@typescript-eslint/no-require-imports`)**: CLI scripts under `scripts/` use Node `require()` syntax.
-3. **Strict Type Annotations (`@typescript-eslint/no-explicit-any`)**: Remaining `any` type definitions exist in complex CMS/query hooks (`lib/firebase/cms.ts`, `hooks/useOfflineSync.ts`, `components/admin/AttendeeDirectory.tsx`).
+```
+src/
+├── app/                  # Next.js App Router routes & layouts
+│   ├── (admin)/admin/   # Protected administrative CMS & check-in routes
+│   ├── (public)/[eventId]/ # Dynamic public event routes
+│   └── api/              # Server-side API route handlers
+├── components/           # UI components (admin, public, shared)
+├── hooks/                # Custom React hooks & React Query data hooks
+├── lib/                  # Core utilities, Firebase SDK clients, auth & permissions
+│   ├── firebase/         # Firestore data access layer & queries
+│   ├── contexts/         # React AuthContext provider
+│   └── db.ts             # Dexie.js IndexedDB offline database configuration
+└── types/                # TypeScript interface contracts
+```
+
+* **Next.js App Router**: Route groups separate `(public)` attendee views from protected `(admin)` CMS management views. Dynamic route parameters (`[eventId]`) scope all data queries to the active conference edition.
+* **Firestore Data Model**: Event-scoped collections are stored under `/events/{eventId}/` (e.g. `/events/refreshing-2026/ministers`), isolating event content. Global collections (`events`, `users`, `settings`, `audit_logs`, `timelineEntries`) persist cross-edition metadata.
+* **Cloudinary Media Storage**: Unsigned client-side uploads handle minister photos, gallery media, and banner images via `ImageUploader.tsx`.
 
 ---
 
-## Deployment & Build Guidelines
+## Known Issues
 
-### Frontend Deployment (Netlify)
-The frontend automatically builds and deploys on Netlify from target branch commits:
-```bash
-npm run build
-```
-
-### Cloud Functions Deployment
-Cloud Functions reside in the `functions/` subfolder:
-```bash
-cd functions
-npm install
-npm run build
-firebase deploy --only functions
-```
-*Note: Deploying Cloud Functions requires the GCP Firebase project to be on the Blaze plan.*
-
-### Security Rules Deployment
-```bash
-firebase deploy --only firestore:rules
-```
+* **React Hooks Linter Warnings**: Legacy `react-hooks/set-state-in-effect` warnings exist in pre-existing form-initialization `useEffect` hooks across legacy admin pages (`settings/contact/page.tsx`, `AuthContext.tsx`). These are non-blocking and preserved for stability.
+* **Storage Migration**: Background migration script (`scripts/migrate-images.js`) handles legacy `firebasestorage.googleapis.com` URLs to Cloudinary CDN URLs.
 
 ---
 
-## Development Verification Commands
+## My Role
 
-Before submitting pull requests or merging changes, execute the full verification suite:
-
-```bash
-# 1. Typecheck
-npx tsc --noEmit
-
-# 2. Code Linting
-npx eslint .
-
-# 3. Security Unit Tests
-npm test
-
-# 4. Production Build Verification
-npm run build
-```
+*(Placeholder — add your custom role description, key architectural contributions, and project lead highlights here).*

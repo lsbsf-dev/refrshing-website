@@ -1,7 +1,6 @@
 /**
- * Camp Guide — Table of Contents Page
- * Replaces the old /resources page. Renders an editorial booklet-style index
- * of all camp articles: rules, hymns, devotionals, study guides, and publications.
+ * @file page.tsx
+ * @description Public digital booklet view presenting conference schedule and guide material.
  */
 
 "use client";
@@ -93,7 +92,6 @@ export default function BookletPage() {
     return ms;
   });
 
-  // Sort resources so that Worship Lyrics (Hymns/Songs) and rules come first in "All" view
   const sortedResources = [...filteredResources].sort((a, b) => {
     const aIsPriority = a.category === "Worship Lyrics" || a.slug === "camp-rules-and-regulations";
     const bIsPriority = b.category === "Worship Lyrics" || b.slug === "camp-rules-and-regulations";

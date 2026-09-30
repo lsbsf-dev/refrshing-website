@@ -1,6 +1,6 @@
 /**
- * Resources Query Module
- * Handlers for retrieving publications, outlines, devotionals, and downloads.
+ * @file resources.ts
+ * @description Firestore queries for downloadable resource library items.
  */
 
 import { collection, doc, getDoc, getDocs, query, where, FirestoreDataConverter, setDoc, updateDoc } from "firebase/firestore";
@@ -73,7 +73,6 @@ export async function getResourceBySlug(eventId: string, slug: string): Promise<
 
 export async function updateResource(eventId: string, resourceId: string, data: Partial<Resource>): Promise<void> {
   const ref = doc(db, "events", eventId, "resources", resourceId).withConverter(resourceConverter);
-  // Ensure publishedAt field exists for Firestore conversion
   const safeData: Resource = {
     ...data as any,
     publishedAt: (data as any).publishedAt || "",

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file MultiImageUploader.tsx
+ * @description Client component for uploading multiple images to Cloudinary in bulk.
+ */
+
 import React, { useState, useRef } from "react";
 import { Upload, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import imageCompression from "browser-image-compression";
@@ -42,7 +47,6 @@ export function MultiImageUploader({
 
     const uploadedUrls: string[] = [];
 
-    // Process sequentially to avoid overwhelming browser/network
     for (const fileObj of newFiles) {
       await uploadFile(fileObj.id, fileObj.file, (url) => {
         uploadedUrls.push(url);

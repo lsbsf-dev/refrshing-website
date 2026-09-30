@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file AttendeeDirectory.tsx
+ * @description Admin component for searching and managing attendee check-in records.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAttendees, Attendee, getAttendeePayment, AttendeePayment } from "@/lib/firebase/attendees";
@@ -24,14 +29,12 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
 
   const [selectedAttendee, setSelectedAttendee] = useState<Attendee | null>(null);
 
-  // Fetch associations based on conference
   const { data: associations = [] } = useQuery({
     queryKey: ["admin", "associations", conference],
     queryFn: () => getAssociationsByConference(conference),
     enabled: conference !== "all" && conference !== "other",
   });
 
-  // Fetch churches based on association or campus
   const { data: churches = [] } = useQuery({
     queryKey: ["admin", "churches", conference, association],
     queryFn: () => {
@@ -43,7 +46,6 @@ export function AttendeeDirectory({ eventId }: { eventId: string }) {
     enabled: association !== "all",
   });
 
-  // Reset dependent filters when parent changes
   useEffect(() => {
     setAssociation("all");
     setChurch("all");

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing photo albums and gallery collections.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAlbums, createAlbum, deleteAlbum, getVideos, addVideo, deleteVideo } from "@/lib/firebase/gallery";

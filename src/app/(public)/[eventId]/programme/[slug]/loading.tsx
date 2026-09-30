@@ -1,6 +1,6 @@
 /**
- * Session Details Loading Component
- * Premium shimmer loader skeleton.
+ * @file loading.tsx
+ * @description Public detail view displaying complete details for a conference session.
  */
 
 import React from "react";

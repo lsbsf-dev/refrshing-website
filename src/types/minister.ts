@@ -1,6 +1,6 @@
 /**
- * Minister Type Model
- * Schema mapping details for conference speakers.
+ * @file minister.ts
+ * @description TypeScript type definitions for speakers and ministers.
  */
 
 export interface Minister {

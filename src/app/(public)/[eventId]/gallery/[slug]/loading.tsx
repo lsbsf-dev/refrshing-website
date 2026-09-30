@@ -1,6 +1,6 @@
 /**
- * Album Loading Component
- * Shimmer layout for individual gallery albums.
+ * @file loading.tsx
+ * @description Public detail view for viewing photos inside a specific event album.
  */
 
 import React from "react";

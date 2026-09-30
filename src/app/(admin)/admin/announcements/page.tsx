@@ -1,6 +1,6 @@
 /**
- * Admin Announcements Page Component
- *  * Manages announcements for the event.
+ * @file page.tsx
+ * @description Admin page for publishing and editing conference announcements.
  */
 
 "use client";
@@ -58,7 +58,6 @@ export default function AdminAnnouncementsPage() {
     return matchesSearch && matchesCategory;
   });
 
-  // Mutations
   const updateMutation = useMutation({
     mutationFn: (data: Announcement) => updateAnnouncement(ACTIVE_EVENT_ID, data.id, data),
     onSuccess: () => {

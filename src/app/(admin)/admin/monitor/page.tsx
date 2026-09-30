@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin system monitoring page displaying real-time database and service health.
+ */
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getSystemSettings } from "@/lib/firebase/settings";
@@ -23,19 +28,16 @@ export default function AdminMonitorPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
   const [conference, setConference] = useState("all");
   const [association, setAssociation] = useState("all");
   const [church, setChurch] = useState("all");
 
-  // Fetch associations based on conference
   const { data: associations = [] } = useQuery({
     queryKey: ["admin", "associations", conference],
     queryFn: () => getAssociationsByConference(conference),
     enabled: conference !== "all" && conference !== "other",
   });
 
-  // Fetch churches based on association or campus
   const { data: churches = [] } = useQuery({
     queryKey: ["admin", "churches", conference, association],
     queryFn: () => {
@@ -47,7 +49,6 @@ export default function AdminMonitorPage() {
     enabled: association !== "all",
   });
 
-  // Reset dependent filters when parent changes
   useEffect(() => {
     setAssociation("all");
     setChurch("all");
@@ -57,11 +58,9 @@ export default function AdminMonitorPage() {
     setChurch("all");
   }, [association]);
 
-  // Live listener for real-time monitoring
   useEffect(() => {
     if (!eventId) return;
     
-    // In a real huge app, we might use aggregation queries, but for < 10k attendees, a direct listener on the collection is manageable for an admin dashboard
     const q = query(collection(db, "events", eventId, "attendees"));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -91,7 +90,6 @@ export default function AdminMonitorPage() {
   
   const getCheckInDate = (val: any) => val?.toDate ? val.toDate() : new Date(val);
 
-  // Recent check-ins
   const recentCheckIns = [...filteredAttendees]
     .filter(a => a.checkIn?.checkedIn && a.checkIn?.checkedInAt)
     .sort((a, b) => getCheckInDate(b.checkIn!.checkedInAt).getTime() - getCheckInDate(a.checkIn!.checkedInAt).getTime())

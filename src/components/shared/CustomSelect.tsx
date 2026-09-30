@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file CustomSelect.tsx
+ * @description Custom styled dropdown select component for form inputs.
+ */
+
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 

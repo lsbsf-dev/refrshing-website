@@ -1,6 +1,6 @@
 /**
- * Logos Component
- *  * Brand logo assets and SVG components.
+ * @file Logos.tsx
+ * @description Brand logo assets component rendering conference emblems and badges.
  */
 
 import React from "react";

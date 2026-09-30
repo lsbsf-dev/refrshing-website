@@ -1,3 +1,8 @@
+/**
+ * @file analytics.ts
+ * @description Client-side Firebase Analytics integration.
+ */
+
 import { collection, doc, getDoc, getDocs, query, FirestoreDataConverter, Timestamp } from "firebase/firestore";
 import { db } from "./app";
 
@@ -54,18 +59,12 @@ export const associationAnalyticsConverter: FirestoreDataConverter<AssociationAn
   }
 };
 
-/**
- * Fetch the main analytics summary document containing global and conference-level stats.
- */
 export async function getAnalyticsSummary(eventId: string): Promise<AnalyticsSummary | null> {
   const ref = doc(db, "events", eventId, "analyticsSummary", "main").withConverter(analyticsSummaryConverter);
   const snap = await getDoc(ref);
   return snap.exists() ? snap.data() : null;
 }
 
-/**
- * Fetch the byAssociation breakdown for all associations across all conferences.
- */
 export async function getAssociationAnalytics(eventId: string): Promise<AssociationAnalytics[]> {
   const ref = collection(db, "events", eventId, "analyticsSummary", "main", "byAssociation").withConverter(associationAnalyticsConverter);
   const snap = await getDocs(query(ref));

@@ -1,6 +1,6 @@
 /**
- * Album Error Component
- * Fallback boundary for rendering dynamic gallery albums.
+ * @file error.tsx
+ * @description Public detail view for viewing photos inside a specific event album.
  */
 
 "use client";

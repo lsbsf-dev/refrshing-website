@@ -1,6 +1,6 @@
 /**
- * Form Field Component
- *  * Reusable form input wrapper with label and error handling.
+ * @file FormField.tsx
+ * @description Form field container component wrapping labels, inputs, and error messages.
  */
 
 import React from "react";

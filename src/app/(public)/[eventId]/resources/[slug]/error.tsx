@@ -1,6 +1,6 @@
 /**
- * Resource Details Error Component
- * Fallback display.
+ * @file error.tsx
+ * @description Public detail page for previewing and downloading a specific resource.
  */
 
 "use client";

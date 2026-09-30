@@ -1,3 +1,8 @@
+/**
+ * @file settings.ts
+ * @description Firestore queries for global website settings and themes.
+ */
+
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./app";
 

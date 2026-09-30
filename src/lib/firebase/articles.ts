@@ -1,3 +1,8 @@
+/**
+ * @file articles.ts
+ * @description Firestore queries for conference articles.
+ */
+
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./app";
 import { Resource } from "@/types/resource";

@@ -1,6 +1,6 @@
 /**
- * Gallery Type Models
- * Schema mapping for albums and nested photo lists.
+ * @file gallery.ts
+ * @description TypeScript type definitions for gallery albums and media.
  */
 
 export interface GalleryAlbum {

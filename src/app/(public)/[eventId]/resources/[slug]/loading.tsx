@@ -1,6 +1,6 @@
 /**
- * Resource Details Loading Component
- * Premium shimmer loading state.
+ * @file loading.tsx
+ * @description Public detail page for previewing and downloading a specific resource.
  */
 
 import React from "react";

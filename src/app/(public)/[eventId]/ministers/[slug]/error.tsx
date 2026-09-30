@@ -1,6 +1,6 @@
 /**
- * Minister Details Error Component
- * Error boundary for dynamic profile views.
+ * @file error.tsx
+ * @description Public detail view displaying full bio and sessions for a speaker.
  */
 
 "use client";

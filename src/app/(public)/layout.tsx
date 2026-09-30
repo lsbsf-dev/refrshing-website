@@ -1,6 +1,6 @@
 /**
- * Public Layout Component
- *  * Shared layout wrapper for public-facing pages.
+ * @file layout.tsx
+ * @description Public section layout providing header, navigation tabs, and footer wrappers.
  */
 
 import React from "react";

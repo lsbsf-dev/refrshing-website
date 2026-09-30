@@ -1,10 +1,6 @@
 /**
- * useMinisters Hook
- *
- * Custom React Query hook for fetching published ministers data for the active event.
- * Falls back to offline JSON seed data when Firebase is unavailable or offline.
- *
- * Key exports: useMinisters
+ * @file useMinisters.ts
+ * @description React Query hook for fetching featured speakers and minister profiles.
  */
 
 import { useQuery } from "@tanstack/react-query";

@@ -1,3 +1,8 @@
+/**
+ * @file instrumentation.ts
+ * @description Next.js server initialization script for boot-time setup.
+ */
+
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
@@ -6,7 +11,6 @@ export async function register() {
       try {
         const port = process.env.PORT || '3000';
         const url = process.env.NEXT_PUBLIC_SITE_URL || `http://localhost:${port}`;
-        // Skip pinging in dev mode if it's pointing to localhost, to avoid hitting other local services like MySQL.
         if (url.includes('localhost') && process.env.NODE_ENV !== 'production') {
           return;
         }

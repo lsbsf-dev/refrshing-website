@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file ScrollObserver.tsx
+ * @description Scroll detection component updating navigation state on window scroll.
+ */
+
 import { useEffect } from "react";
 
 export function ScrollObserver() {

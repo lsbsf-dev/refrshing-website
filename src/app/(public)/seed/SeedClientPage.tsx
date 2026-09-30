@@ -1,6 +1,6 @@
 /**
- * Seed Client Page Component
- * Public data seeding interactive UI.
+ * @file SeedClientPage.tsx
+ * @description Public utility page for triggering sample content seeding.
  */
 
 "use client";

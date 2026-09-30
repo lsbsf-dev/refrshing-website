@@ -1,7 +1,6 @@
 /**
- * FAQ Page Component
- * Renders a list of frequently asked questions loaded from Firestore with React Query caching.
- * Employs a single-expand accordion layout.
+ * @file page.tsx
+ * @description Public page rendering categorized frequently asked questions.
  */
 
 "use client";

@@ -1,6 +1,6 @@
 /**
- * Enquiries Submission & Validation Module
- * Provides Zod schema validation and Firestore persistence functions for user contact forms.
+ * @file enquiries.ts
+ * @description Firestore queries and audit functions for contact form enquiries.
  */
 
 import { collection, addDoc, query, where, getDocs, doc, deleteDoc, FirestoreDataConverter } from "firebase/firestore";

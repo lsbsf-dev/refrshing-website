@@ -1,3 +1,8 @@
+/**
+ * @file master-data.ts
+ * @description Firestore helper functions for retrieving global lookup data.
+ */
+
 import { collection, doc, getDocs, setDoc, query, where, Timestamp, FirestoreDataConverter } from "firebase/firestore";
 import { db } from "./app";
 
@@ -65,9 +70,6 @@ export const churchConverter: FirestoreDataConverter<ChurchMaster> = {
   },
 };
 
-/**
- * Fetch all active associations for a specific conference
- */
 export async function getAssociationsByConference(conferenceId: string): Promise<AssociationMaster[]> {
   const ref = collection(db, "associations").withConverter(associationConverter);
   const q = query(ref, where("conferenceId", "==", conferenceId), where("active", "==", true));
@@ -75,9 +77,6 @@ export async function getAssociationsByConference(conferenceId: string): Promise
   return snap.docs.map(d => d.data());
 }
 
-/**
- * Fetch all active churches for a specific association
- */
 export async function getChurchesByAssociation(associationId: string): Promise<ChurchMaster[]> {
   const ref = collection(db, "churches").withConverter(churchConverter);
   const q = query(ref, where("associationId", "==", associationId), where("active", "==", true));
@@ -85,9 +84,6 @@ export async function getChurchesByAssociation(associationId: string): Promise<C
   return snap.docs.map(d => d.data());
 }
 
-/**
- * Fetch all active churches for a specific campus fellowship
- */
 export async function getChurchesByCampus(campusId: string): Promise<ChurchMaster[]> {
   const ref = collection(db, "churches").withConverter(churchConverter);
   const q = query(ref, where("campusFellowshipId", "==", campusId), where("active", "==", true));

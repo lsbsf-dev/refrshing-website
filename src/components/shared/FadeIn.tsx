@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file FadeIn.tsx
+ * @description Animation wrapper component animating children on scroll using Tailwind transitions.
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 
 interface FadeInProps {

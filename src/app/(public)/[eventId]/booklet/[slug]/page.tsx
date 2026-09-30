@@ -1,7 +1,6 @@
 /**
- * Camp Guide — Article/Hymn Reader Page
- * Renders the full content of a booklet section (hymn, rules, devotional, study guide)
- * with contextual cross-links to related sessions and ministers.
+ * @file page.tsx
+ * @description Public detail view displaying an individual booklet chapter or article.
  */
 
 "use client";
@@ -17,33 +16,26 @@ import { getMinisters } from "@/lib/firebase/ministers";
 import { useParams } from "next/navigation";
 import { logAnalyticsEvent } from "@/lib/analytics";
 
-/* ── Simple markdown-to-HTML renderer ─────────────────────────── */
 function renderMarkdown(text: string): string {
   let html = text;
 
-  // Headers
   html = html.replace(/^### (.+)$/gm, '<h3 class="font-serif text-xl font-normal text-[#0B0907] mt-8 mb-3">$1</h3>');
   html = html.replace(/^## (.+)$/gm, '<h2 class="font-serif text-2xl font-normal text-[#0B0907] mt-10 mb-4">$1</h2>');
   html = html.replace(/^# (.+)$/gm, '<h1 class="font-serif text-3xl font-light text-[#0B0907] mt-12 mb-5">$1</h1>');
 
-  // Bold + italic
   html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-[#0B0907]">$1</strong>');
   html = html.replace(/\*(.+?)\*/g, '<em class="italic">$1</em>');
 
-  // Horizontal rules
   html = html.replace(/^---$/gm, '<hr class="border-black/10 my-8" />');
 
-  // Unordered list items and wrapping
   html = html.replace(/^- (.+)$/gm, '<li class="ml-4 list-disc leading-relaxed">$1</li>');
   html = html.replace(/(<li[^>]*>[\s\S]*?<\/li>)(\n<li[^>]*>[\s\S]*?<\/li>)*/g, (m) =>
     `<ul class="space-y-1 my-4 font-sans text-sm text-[#3D3530]">${m}</ul>`
   );
 
-  // Italic chorus lines
   html = html.replace(/^_(.+)_$/gm, '<p class="font-sans text-sm italic text-[#7A7062] my-1">$1</p>');
 
-  // Paragraph blocks (double newline separation)
   const blocks = html.split(/\n{2,}/);
   const wrapped = blocks.map((block) => {
     if (
@@ -122,12 +114,10 @@ export default function BookletSlugPage({
 
   if (error || !resource) return notFound();
 
-  // Related sessions that reference this resource's slug in hymnIds or readingIds
   const relatedSessions = sessions.filter((s: any) =>
     s.hymnIds?.includes(resource.id) || s.readingIds?.includes(resource.id)
   );
 
-  // Related ministers referenced in the resource
   const relatedMinisters = ministers.filter((m) =>
     resource.ministerIds?.includes(m.id)
   );

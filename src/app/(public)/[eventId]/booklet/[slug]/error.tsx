@@ -1,6 +1,6 @@
 /**
- * Booklet Error Component
- *  * Error boundary for booklet detail pages.
+ * @file error.tsx
+ * @description Public detail view displaying an individual booklet chapter or article.
  */
 
 "use client";

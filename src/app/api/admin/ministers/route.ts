@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler for managing minister profiles with server-side validation.
+ */
+
 import { NextResponse } from "next/server";
 import { firestore } from "@/lib/firebase/admin";
 import { verifyApiRequest } from "@/lib/api-auth";

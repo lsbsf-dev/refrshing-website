@@ -1,3 +1,8 @@
+/**
+ * @file db.ts
+ * @description IndexedDB storage utility for offline attendee check-in records.
+ */
+
 import Dexie, { type EntityTable } from 'dexie';
 
 export interface LocalAttendee {
@@ -49,8 +54,6 @@ const getDb = () => {
   if (process.env.NODE_ENV === "production") {
     return new RefreshingDB();
   } else {
-    // In dev, HMR can cause stale connections that report as open but throw UnknownError on queries.
-    // So we close the old one and always create a fresh instance on module reload.
     if (globalThis._dexieDb) {
       try {
         globalThis._dexieDb.close();
@@ -82,6 +85,5 @@ if (typeof window !== "undefined") {
   db.on("versionchange", () => {
     db.close();
     console.warn("A new version of the database is available. Please refresh the page.");
-    // Optionally: window.location.reload();
   });
 }

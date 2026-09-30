@@ -1,6 +1,6 @@
 /**
- * Seed Actions
- *  * Server actions for public data seeding.
+ * @file actions.ts
+ * @description Public utility page for triggering sample content seeding.
  */
 
 "use server";
@@ -43,7 +43,6 @@ export async function seedDatabase(
   try {
     console.log("Starting server-side database seeding...");
 
-    // Seed ministers
     let ministerCount = 0;
     for (const m of ministers) {
       const docRef = adminDb.collection("ministers").doc(m.id);
@@ -60,7 +59,6 @@ export async function seedDatabase(
     }
     console.log(`Seeded ${ministerCount} ministers.`);
 
-    // Seed sessions
     let sessionCount = 0;
     for (const s of sessions) {
       const docRef = adminDb.collection("sessions").doc(s.id);
@@ -80,7 +78,6 @@ export async function seedDatabase(
     }
     console.log(`Seeded ${sessionCount} sessions.`);
 
-    // Seed resources
     let resourceCount = 0;
     for (const r of resources) {
       const docRef = adminDb.collection("resources").doc(r.id);

@@ -1,3 +1,8 @@
+/**
+ * @file users.ts
+ * @description Firestore queries and mutations for admin user account management.
+ */
+
 import { auth } from "./app";
 
 export interface UserMetadata {

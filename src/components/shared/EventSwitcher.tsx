@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file EventSwitcher.tsx
+ * @description Dropdown component allowing users to switch between conference editions.
+ */
+
 import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "@/lib/firebase/events";
 import { useParams, useRouter } from "next/navigation";
@@ -25,7 +30,6 @@ export function EventSwitcher() {
   }));
 
   const handleSwitch = (newId: string) => {
-    // Save preference to cookie so middleware knows what the user prefers on bare URLs
     document.cookie = `currentEventId=${newId}; path=/; max-age=31536000`;
     router.push(`/${newId}`);
   };

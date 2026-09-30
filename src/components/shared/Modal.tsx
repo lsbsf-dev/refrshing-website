@@ -1,14 +1,12 @@
 /**
- * Modal Component
- *  * Reusable modal dialog overlay with focus trap and scroll lock.
+ * @file Modal.tsx
+ * @description Reusable accessible modal dialog overlay component.
  */
 
 import React, { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 
-// SSR-safe global modal counter to prevent overlapping modals from clearing locks early
 let activeModals = 0;
-// Module-level stack to track active modal close wrappers for topmost Escape close
 const modalStack: (() => void)[] = [];
 
 interface ModalProps {
@@ -23,7 +21,6 @@ export function Modal({ onClose, title, children, maxWidthClass = "max-w-xl" }: 
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const onCloseRef = useRef(onClose);
 
-  // Sync the latest onClose callback to keep it fresh without re-running mount effect
   useEffect(() => {
     onCloseRef.current = onClose;
   });
@@ -35,7 +32,6 @@ export function Modal({ onClose, title, children, maxWidthClass = "max-w-xl" }: 
         document.body.style.overflow = "hidden";
       }
       
-      // Focus Trap mount: store active element and focus container
       previousActiveElement.current = document.activeElement as HTMLElement;
       containerRef.current?.focus();
     }
@@ -46,13 +42,11 @@ export function Modal({ onClose, title, children, maxWidthClass = "max-w-xl" }: 
           document.body.style.overflow = "";
         }
         
-        // Focus Trap unmount: restore focus
         previousActiveElement.current?.focus();
       }
     };
   }, []);
 
-  // Handle Escape keypress (topmost modal only)
   useEffect(() => {
     const entry = () => {
       onCloseRef.current();
@@ -77,7 +71,6 @@ export function Modal({ onClose, title, children, maxWidthClass = "max-w-xl" }: 
     };
   }, []);
 
-  // Handle Tab keypress to cycle focus within modal (focus trap)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Tab") {
       if (!containerRef.current) return;

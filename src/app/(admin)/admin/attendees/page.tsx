@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing attendee registrations, CSV exports, and badge data.
+ */
+
 import React, { useState, useRef } from "react";
 import { Users, Search, Download, AlertCircle, FileSpreadsheet, Loader2, Sparkles, AlertTriangle, X, Info, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -43,7 +48,6 @@ export default function AdminAttendeesPage() {
   const [fileError, setFileError] = useState("");
   const [importing, setImporting] = useState(false);
   
-  // New V3 State
   const [importSession, setImportSession] = useState<ProcessedRow[] | null>(null);
   const [importStats, setImportStats] = useState<{ processed: number, imported: number, skipped: number, rejected: number } | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -51,7 +55,6 @@ export default function AdminAttendeesPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Clear attendees state
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearConfirmText, setClearConfirmText] = useState("");
   const [isClearing, setIsClearing] = useState(false);
@@ -138,7 +141,6 @@ export default function AdminAttendeesPage() {
         const email = getVal(['email', 'email address']);
         const phoneNumber = getVal(['phone', 'phone number', 'contact']);
         
-        // Custom fields from form
         const memberStatusRaw = getVal(['member or executive', 'status', 'membership']);
         const memberStatus = (memberStatusRaw || "").toLowerCase().includes('exec') ? 'Executive' : 'Member';
         
@@ -235,7 +237,6 @@ export default function AdminAttendeesPage() {
     setImporting(true);
     
     try {
-      // Split into chunks of 500 for the API
       const chunkSize = 500;
       let totalImported = 0;
       let allErrors: string[] = [];

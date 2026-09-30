@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin home dashboard displaying quick stats and event overview.
+ */
+
 import React from "react";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,7 +36,6 @@ export default function AdminDashboardHome() {
   const role = profile?.role || "viewer";
   const permissions = profile?.permissions || [];
 
-  // Check permissions
   const canReadMinisters = hasPermission(permissions, Permissions.Ministers.Read);
   const canReadProgramme = hasPermission(permissions, Permissions.Programme.Read);
   const canReadAnnouncements = hasPermission(permissions, Permissions.Announcements.Read);
@@ -39,7 +43,6 @@ export default function AdminDashboardHome() {
   const canReadHomepage = hasPermission(permissions, Permissions.Homepage.Read);
   const canReadUsers = hasPermission(permissions, Permissions.Users.Read);
 
-  // Queries (fetch-on-load, no realtime listeners)
   const { data: ministers = [], isFetching: isFetchingMinisters, isError: isMinistersError } = useQuery({
     queryKey: ["dashboard", "ministers", eventId],
     queryFn: () => getMinisters(eventId),

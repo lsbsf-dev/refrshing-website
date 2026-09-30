@@ -1,13 +1,6 @@
 /**
- * Handler-Level Security Unit Tests
- * Located in src/__tests__/hotfix_security.test.js
- * 
- * Imports actual route handlers for:
- * 1. /api/import/attendees (GET, POST, DELETE)
- * 2. /api/admin/auth/me (POST)
- * 3. /seed actions (seedDatabase)
- * 
- * Mocks firebase-admin, api-auth, and audit modules.
+ * @file hotfix_security.test.js
+ * @description Handler-level security unit tests verifying API authentication and permission guards.
  */
 
 const assert = require("assert");
@@ -16,7 +9,6 @@ const fs = require("fs");
 const Module = require("module");
 const ts = require("typescript");
 
-// Standard TypeScript loader for .ts files using repository's typescript compiler
 require.extensions[".ts"] = function (module, filename) {
   const content = fs.readFileSync(filename, "utf8");
   const result = ts.transpileModule(content, {
@@ -29,7 +21,6 @@ require.extensions[".ts"] = function (module, filename) {
   module._compile(result.outputText, filename);
 };
 
-// --- Setup Module Interception Mocks ---
 const originalLoad = Module._load;
 
 let mockCallerProfile = null;
@@ -41,12 +32,10 @@ let batchCommitted = false;
 let batchDeletedDocs = [];
 
 Module._load = function (request, parent, isMain) {
-  // Alias resolution for @/
   if (request.startsWith("@/")) {
     const relativePath = request.slice(2);
     const resolvedPath = path.resolve(__dirname, "..", relativePath);
 
-    // Intercept specific module aliases
     if (relativePath.includes("lib/api-auth")) {
       return {
         verifyApiRequest: async (req, requiredPermission) => {
@@ -136,7 +125,6 @@ Module._load = function (request, parent, isMain) {
       };
     }
 
-    // Try resolving .ts / .tsx / /index.ts
     const possibleExts = ["", ".ts", ".tsx", "/index.ts", "/index.tsx"];
     for (const ext of possibleExts) {
       const fullPath = resolvedPath + ext;
@@ -165,7 +153,6 @@ Module._load = function (request, parent, isMain) {
   return originalLoad.apply(this, arguments);
 };
 
-// Import ACTUAL route handlers from source files
 const importAttendeesRoute = require("../app/api/import/attendees/route.ts");
 const authMeRoute = require("../app/api/admin/auth/me/route.ts");
 const seedActions = require("../app/(public)/seed/actions.ts");
@@ -198,7 +185,6 @@ async function runAllTests() {
   console.log("Running Handler-Level Security Unit Tests");
   console.log("==========================================\n");
 
-  // 1. /api/import/attendees GET without token -> 401
   await test("/api/import/attendees GET: missing token returns 401", async () => {
     mockCallerProfile = null;
     const req = new Request("http://localhost/api/import/attendees");
@@ -206,7 +192,6 @@ async function runAllTests() {
     assert.strictEqual(res.status, 401);
   });
 
-  // 2. /api/import/attendees GET with invalid token -> 401
   await test("/api/import/attendees GET: invalid token returns 401", async () => {
     mockCallerProfile = { errorStatus: 401 };
     const req = new Request("http://localhost/api/import/attendees", {
@@ -216,7 +201,6 @@ async function runAllTests() {
     assert.strictEqual(res.status, 401);
   });
 
-  // 3. /api/import/attendees POST with wrong permission -> 403
   await test("/api/import/attendees POST: wrong permission returns 403", async () => {
     mockCallerProfile = { errorStatus: 403 };
     const req = new Request("http://localhost/api/import/attendees", {
@@ -228,7 +212,6 @@ async function runAllTests() {
     assert.strictEqual(res.status, 403);
   });
 
-  // 4. /api/import/attendees DELETE: non-superAdmin cannot bulk delete -> 403
   await test("/api/import/attendees DELETE: non-superAdmin role returns 403", async () => {
     mockCallerProfile = { id: "user-1", email: "admin@example.com", role: "eventAdmin" };
     const req = new Request("http://localhost/api/import/attendees?eventId=refreshing-2026&confirmationText=refreshing-2026", {
@@ -241,7 +224,6 @@ async function runAllTests() {
     assert.strictEqual(body.error.includes("Super Administrator"), true);
   });
 
-  // 5. /api/import/attendees DELETE: wrong confirmation text -> 400
   await test("/api/import/attendees DELETE: mismatched confirmation text returns 400", async () => {
     mockCallerProfile = { id: "super-1", email: "super@example.com", role: "superAdmin" };
     const req = new Request("http://localhost/api/import/attendees?eventId=refreshing-2026&confirmationText=wrong-text", {
@@ -254,7 +236,6 @@ async function runAllTests() {
     assert.strictEqual(body.error.includes("Confirmation text mismatch"), true);
   });
 
-  // 6. /api/import/attendees DELETE: valid superAdmin + correct confirmation works & writes audit log
   await test("/api/import/attendees DELETE: valid superAdmin with correct confirmation succeeds & logs audit with action DELETE", async () => {
     mockCallerProfile = { id: "super-1", email: "super@example.com", role: "superAdmin" };
     const req = new Request("http://localhost/api/import/attendees?eventId=refreshing-2026&confirmationText=refreshing-2026", {
@@ -270,7 +251,6 @@ async function runAllTests() {
     assert.strictEqual(auditLogsWritten[0].userId, "super-1");
   });
 
-  // 7. /api/admin/auth/me: missing Bearer token -> 401
   await test("/api/admin/auth/me POST: missing Bearer header returns 401", async () => {
     const req = new Request("http://localhost/api/admin/auth/me", {
       method: "POST",
@@ -309,7 +289,6 @@ async function runAllTests() {
     assert.strictEqual(body.email, "token@example.com");
   });
 
-  // 9. /seed action: disabled when ADMIN_SEED_ENABLED is not true
   await test("Seed action: disabled by default when ADMIN_SEED_ENABLED is not true", async () => {
     delete process.env.ADMIN_SEED_ENABLED;
     const res = await seedActions.seedDatabase("secret-passkey");

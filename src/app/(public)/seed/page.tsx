@@ -1,6 +1,6 @@
 /**
- * Seed Page Component
- *  * Public data seeding page.
+ * @file page.tsx
+ * @description Public utility page for triggering sample content seeding.
  */
 
 import { notFound } from "next/navigation";

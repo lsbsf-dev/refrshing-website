@@ -1,6 +1,6 @@
 /**
- * Custom 404 Not Found Page Component
- * Renders consistent editorial layout with hero backdrop.
+ * @file not-found.tsx
+ * @description Root 404 page component for handling missing routes.
  */
 
 import React from "react";

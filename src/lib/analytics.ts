@@ -1,6 +1,6 @@
 /**
- * Custom Interaction Analytics Logger Module
- * Logs user interaction events, downloads, and newsletters signups.
+ * @file analytics.ts
+ * @description Client analytics logging helper.
  */
 
 export interface AnalyticsEvent {
@@ -14,7 +14,6 @@ export function logAnalyticsEvent(event: AnalyticsEvent) {
   // Safe console logger fallback for local environment debugging
   console.log(`[ANALYTICS EVENT] Category: ${event.category} | Action: ${event.action} | Label: ${event.label || "N/A"} | Value: ${event.value || 0}`);
 
-  // Integrate standard GA / Google Tag Manager hooks if initialized
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("event", event.action, {
       event_category: event.category,

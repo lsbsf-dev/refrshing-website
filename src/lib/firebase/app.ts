@@ -1,7 +1,6 @@
 /**
- * Firebase Client SDK Initialization Module
- * Exports initialized instances of Firestore, Authentication, and Cloud Storage,
- * along with the environment-driven active event identifier.
+ * @file app.ts
+ * @description Firebase web client initialization.
  */
 
 import { initializeApp, getApps, getApp } from "firebase/app";

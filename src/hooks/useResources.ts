@@ -1,10 +1,6 @@
 /**
- * useResources Hook
- *
- * Custom React Query hook for fetching resources and booklet articles.
- * Falls back to offline JSON seed data when Firebase is offline.
- *
- * Key exports: useResources
+ * @file useResources.ts
+ * @description React Query hook for fetching downloadable resource library items.
  */
 
 import { useQuery } from "@tanstack/react-query";

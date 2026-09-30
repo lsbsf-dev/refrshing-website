@@ -1,5 +1,8 @@
-// All available permissions in the system.
-// These correspond directly to module/screen access or actions.
+/**
+ * @file permissions.ts
+ * @description Role-based access control matrix and permission checking utilities.
+ */
+
 export const Permissions = {
   Users: { Read: "users.read", Write: "users.write" },
   Programme: { Read: "programme.read", Write: "programme.write", Publish: "programme.publish" },
@@ -20,9 +23,6 @@ export const Permissions = {
 
 export type Permission = string;
 
-/**
- * Helper to check if a permissions array contains a specific required permission.
- */
 export function hasPermission(
   userPermissions: string[] | undefined,
   requiredPermission: Permission

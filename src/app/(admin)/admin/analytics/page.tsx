@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin dashboard page displaying attendance metrics and usage analytics.
+ */
+
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getSystemSettings } from "@/lib/firebase/settings";
@@ -21,7 +26,6 @@ export default function AdminAnalyticsPage() {
     staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes, avoids auto-refetching constantly
   });
 
-  // Calculate breakdowns
   const conferenceCounts: Record<string, number> = {};
   const associationCounts: Record<string, number> = {};
   const churchCounts: Record<string, number> = {};
@@ -31,11 +35,9 @@ export default function AdminAnalyticsPage() {
   let totalExecutives = 0;
 
   attendees.forEach(a => {
-    // Conference
     const confName = a.conferenceName || a.conferenceId.replace('_', ' ');
     conferenceCounts[confName] = (conferenceCounts[confName] || 0) + 1;
 
-    // Association / Campus
     if (a.conferenceId === 'campus_fellowship') {
       const campName = a.campusFellowshipName || 'Unknown Campus';
       campusCounts[campName] = (campusCounts[campName] || 0) + 1;

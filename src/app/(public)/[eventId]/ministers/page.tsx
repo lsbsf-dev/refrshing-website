@@ -1,7 +1,6 @@
 /**
- * Ministers Directory Page Component
- * Queries and displays the list of featured speakers from Firestore with React Query caching.
- * Features category filter tabs: All Ministers, Speakers, Gospel Music.
+ * @file page.tsx
+ * @description Public page presenting featured ministers and guest speakers.
  */
 
 "use client";
@@ -37,7 +36,6 @@ export default function MinistersPage() {
     enabled: !!ACTIVE_EVENT_ID,
   });
 
-  // Sort ministers: Speakers first, Music at the end
   const sortedMinisters = [...ministers].sort((a, b) => {
     if (a.category === "music" && b.category !== "music") return 1;
     if (a.category !== "music" && b.category === "music") return -1;

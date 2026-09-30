@@ -1,6 +1,6 @@
 /**
- * Search Loading Component
- * Minimalist shimmer skeleton for search page layout.
+ * @file loading.tsx
+ * @description Public search page offering unified search across ministers, sessions, and resources.
  */
 
 import React from "react";

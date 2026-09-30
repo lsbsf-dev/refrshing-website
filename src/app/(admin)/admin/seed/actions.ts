@@ -1,11 +1,15 @@
 "use server";
 
+/**
+ * @file actions.ts
+ * @description Server actions for triggering initial database seed migrations.
+ */
+
 import fs from "fs";
 import path from "path";
 import { firestore } from "@/lib/firebase/admin";
 import { FieldValue } from "firebase-admin/firestore";
 
-// Helper to normalize strings for comparison
 function normalizeString(str: string): string {
   return String(str || "")
     .toLowerCase()
@@ -29,17 +33,14 @@ export async function runDatabaseSeedAction() {
   };
 
   try {
-    // 1. Sessions
     if (fs.existsSync(path.join(seedFilesDir, "seed_sessions.json"))) {
       const sessions = JSON.parse(fs.readFileSync(path.join(seedFilesDir, "seed_sessions.json"), "utf8"));
       const batch = firestore.batch();
       for (const item of sessions) {
-        // use slugify logic to mimic import-content.js ID generation
         const slug = String(`${item.day || "day"}-${item.title || "session"}-${item.startTime || "time"}`)
           .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         const docRef = firestore.collection("events").doc(eventId).collection("sessions").doc(slug);
         
-        // build payload same as import-content.js
         const descriptionParts = [];
         if (item.moderator) descriptionParts.push(`Moderator: ${item.moderator}`);
         if (item.minister) descriptionParts.push(`Assigned minister: ${item.minister}`);
@@ -66,7 +67,6 @@ export async function runDatabaseSeedAction() {
       if (results.sessions > 0) await batch.commit();
     }
 
-    // 2. Bible Studies
     if (fs.existsSync(path.join(seedFilesDir, "seed_bibleStudy.json"))) {
       const bibleStudies = JSON.parse(fs.readFileSync(path.join(seedFilesDir, "seed_bibleStudy.json"), "utf8"));
       const batch = firestore.batch();
@@ -90,7 +90,6 @@ export async function runDatabaseSeedAction() {
       if (results.bibleStudies > 0) await batch.commit();
     }
 
-    // 3. Articles
     if (fs.existsSync(path.join(seedFilesDir, "seed_articles.json"))) {
       const articles = JSON.parse(fs.readFileSync(path.join(seedFilesDir, "seed_articles.json"), "utf8"));
       const batch = firestore.batch();
@@ -98,7 +97,6 @@ export async function runDatabaseSeedAction() {
         const slug = String(item.title || "article").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         const docRef = firestore.collection("events").doc(eventId).collection("articles").doc(slug);
         
-        // create summary
         const raw = String(item.content || "").replace(/<[^>]*>/g, " ");
         const plain = raw.replace(/\s+/g, " ").trim();
         const summary = plain.length > 200 ? `${plain.slice(0, 197).trim()}...` : plain;
@@ -122,11 +120,9 @@ export async function runDatabaseSeedAction() {
       if (results.articles > 0) await batch.commit();
     }
 
-    // 4. Ministers (Update existing by matchName)
     if (fs.existsSync(path.join(seedFilesDir, "seed_ministerBios.json"))) {
       const ministersData = JSON.parse(fs.readFileSync(path.join(seedFilesDir, "seed_ministerBios.json"), "utf8"));
       
-      // Fetch all existing ministers first to match against
       const existingDocs = await firestore.collection("events").doc(eventId).collection("ministers").get();
       
       const batch = firestore.batch();
@@ -143,7 +139,6 @@ export async function runDatabaseSeedAction() {
           const docNameNorm = normalizeString(mData.name || mDoc.id);
           
           if (docNameNorm === targetNorm || docNameNorm.includes(targetNorm) || targetNorm.includes(docNameNorm)) {
-            // Found a match
             batch.update(mDoc.ref, { 
               biography: item.biography,
               updatedAt: FieldValue.serverTimestamp()
@@ -163,7 +158,6 @@ export async function runDatabaseSeedAction() {
       if (updatesInBatch > 0) await batch.commit();
     }
 
-    // 5. About Content
     if (fs.existsSync(path.join(seedFilesDir, "seed_aboutContent.json"))) {
       const aboutContent = JSON.parse(fs.readFileSync(path.join(seedFilesDir, "seed_aboutContent.json"), "utf8"));
       

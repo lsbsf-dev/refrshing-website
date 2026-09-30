@@ -1,10 +1,6 @@
 /**
- * useAnnouncements Hook
- *
- * Custom React Query hook for fetching announcements and broadcasts.
- * Falls back to offline JSON seed data when Firebase is offline.
- *
- * Key exports: useAnnouncements
+ * @file useAnnouncements.ts
+ * @description React Query hook for retrieving published announcements.
  */
 
 import { useQuery } from "@tanstack/react-query";

@@ -1,6 +1,6 @@
 /**
- * FAQ Type Model
- * Schema mapping for frequently asked questions list.
+ * @file faq.ts
+ * @description TypeScript type definitions for FAQ items.
  */
 
 export interface FAQ {

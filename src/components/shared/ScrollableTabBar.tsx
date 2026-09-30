@@ -1,34 +1,17 @@
 /**
- * Scrollable Tab Bar Component
- *  * Reusable horizontally scrollable tab navigation.
+ * @file ScrollableTabBar.tsx
+ * @description Horizontal scrollable tab bar component for category navigation.
  */
 
 "use client";
 
-/**
- * ScrollableTabBar
- * Wraps a horizontal strip of tab/filter buttons with left/right arrow affordance.
- * Arrows appear only when there is scrollable content in that direction.
- * Arrows are fully inert (disabled + opacity-0 + pointer-events-none) at scroll edges
- * — they are invisible, unreachable by Tab, and cannot be activated by keyboard or mouse.
- *
- * Usage:
- *   <ScrollableTabBar className="gap-3">
- *     <button>Tab A</button>
- *     <button>Tab B</button>
- *   </ScrollableTabBar>
- *
- * For the admin portal dark theme, pass isDark={true}.
- */
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ScrollableTabBarProps {
   children: React.ReactNode;
-  /** Additional className applied to the inner scrollable flex container (e.g. "gap-3") */
   className?: string;
-  /** Set to true for admin portal dark theme compatibility */
   isDark?: boolean;
 }
 
@@ -40,7 +23,6 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
   const updateScrollState = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
-    // A 2px threshold avoids false-positives from sub-pixel rounding
     setCanScrollLeft(el.scrollLeft > 2);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
   }, []);
@@ -49,12 +31,10 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
     const el = containerRef.current;
     if (!el) return;
 
-    // Initial check
     updateScrollState();
 
     el.addEventListener("scroll", updateScrollState, { passive: true });
 
-    // Recalculate when the container or its children resize
     const observer = new ResizeObserver(updateScrollState);
     observer.observe(el);
 
@@ -72,14 +52,10 @@ export function ScrollableTabBar({ children, className = "", isDark = false }: S
     containerRef.current?.scrollBy({ left: containerRef.current.offsetWidth * 0.75, behavior: "smooth" });
   };
 
-  // Arrow button shared base styles — always reserve layout space so the
-  // inner content doesn't shift when arrows appear/disappear.
   const arrowBase = "shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C25627]";
 
-  // Active (scrollable) state colours (Supports both Light and Dark mode)
   const arrowActive = "bg-black/[0.08] hover:bg-black/[0.15] text-[#7A7062] hover:text-[#0B0907] dark:bg-white/5 dark:hover:bg-white/10 dark:text-white/60 dark:hover:text-white/90 cursor-pointer";
 
-  // Disabled (at edge) state — visually gone, pointer and keyboard inert
   const arrowDisabled = "opacity-0 pointer-events-none cursor-default";
 
   return (

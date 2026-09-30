@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin user management view for assigning roles and creating staff accounts.
+ */
+
 import React, { useState } from "react";
 import { Plus, Search, Shield, UserX, Loader2, Sparkles, X, Key, ShieldAlert, Pencil } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -26,9 +31,6 @@ export default function AdminUsersPage() {
   const { data: rolesList = [] } = useQuery({
     queryKey: ["admin", "roles"],
     queryFn: async () => {
-      // Import dynamically or just rely on the same queryKey
-      // RoleBuilder handles fetching too, but we need it here for the filter options and custom role dropdowns
-      // Actually we can just fetch it here too since react-query will dedup
       const { collection, getDocs } = await import("firebase/firestore");
       const { db } = await import("@/lib/firebase/app");
       const snap = await getDocs(collection(db, "settings", "global", "roles"));

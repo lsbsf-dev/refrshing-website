@@ -1,6 +1,6 @@
 /**
- * Session Details Error Component
- * Fallback error layout for dynamic sessions views.
+ * @file error.tsx
+ * @description Public detail view displaying complete details for a conference session.
  */
 
 "use client";

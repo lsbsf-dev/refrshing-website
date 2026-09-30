@@ -1,6 +1,6 @@
 /**
- * Gallery Index Page Component
- * Queries and displays the list of photo albums from Firestore via TanStack Query.
+ * @file page.tsx
+ * @description Public gallery page showcasing photo albums and event media.
  */
 
 "use client";

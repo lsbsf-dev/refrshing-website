@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file AdminDataTable.tsx
+ * @description Reusable admin data table component with sorting, pagination, and search.
+ */
+
 import React, { useState } from "react";
 import { Search, Plus, Edit2, Trash2, Loader2, AlertCircle } from "lucide-react";
 

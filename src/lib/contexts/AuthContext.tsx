@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file AuthContext.tsx
+ * @description React authentication context provider managing user sessions and permissions.
+ */
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -58,10 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const token = await user.getIdToken();
           headers["Authorization"] = `Bearer ${token}`;
         } else if (stored) {
-          // If Firebase client auth has not loaded user yet, wait or handle gracefully
           const sessionData = JSON.parse(stored);
           if (sessionData.uid) {
-            // Note: If no token available, /api/admin/auth/me will return 401 and redirect to login
           }
         }
 
@@ -77,7 +80,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const freshProfile = await res.json();
         setProfile(freshProfile);
         
-        // Restore active event from localStorage or default to their first allowed event
         const savedEvent = localStorage.getItem("lsbsf_active_event");
         if (savedEvent && freshProfile.allowedEvents?.includes(savedEvent)) {
           setActiveEventState(savedEvent);

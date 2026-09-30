@@ -1,11 +1,15 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Experimental admin test page for prototyping upcoming layout features.
+ */
+
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import DOMPurify from 'isomorphic-dompurify';
 import 'react-quill-new/dist/quill.snow.css';
 
-// Load ReactQuill dynamically to avoid SSR document is not defined errors
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export default function SpikePage() {

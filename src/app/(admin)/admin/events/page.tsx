@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for creating and configuring conference editions.
+ */
+
 import React, { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, Save, X, Sparkles, Loader2, Calendar } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -33,7 +38,6 @@ export default function AdminEventsPage() {
     isMilestone: false,
   });
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (editingEvent || isNewModalOpen) {
       document.body.style.overflow = "hidden";

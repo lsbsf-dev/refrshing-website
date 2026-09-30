@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API route handler for serving secure file downloads with custom attachment headers.
+ */
+
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -14,21 +19,18 @@ export async function GET(request: Request) {
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
     
-    // Try to guess filename from URL
     let filename = 'Refreshing-Resource';
     try {
       const parsedUrl = new URL(fileUrl);
       const parts = parsedUrl.pathname.split('/');
       const lastPart = parts[parts.length - 1];
       if (lastPart) {
-        // Remove query parameters if any are accidentally included in the pathname part
         filename = decodeURIComponent(lastPart).split('?')[0];
       }
     } catch (e) {
       // fallback
     }
 
-    // Force attachment
     const headers = new Headers();
     headers.set('Content-Type', contentType);
     headers.set('Content-Disposition', `attachment; filename="${filename}"`);

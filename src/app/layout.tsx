@@ -1,6 +1,6 @@
 /**
- * Root Layout Component
- *  * Global application layout and provider wrapper.
+ * @file layout.tsx
+ * @description Root layout component establishing HTML structure, fonts, and global providers.
  */
 
 import type { Metadata } from "next";

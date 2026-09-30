@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file useAdminEvent.ts
+ * @description React hook for managing active event selection state in admin interfaces.
+ */
+
 import { useQuery } from "@tanstack/react-query";
 import { getSystemSettings } from "@/lib/firebase/settings";
 

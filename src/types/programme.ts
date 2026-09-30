@@ -1,6 +1,6 @@
 /**
- * Programme Session Type Model
- * Schema mapping for schedule blocks.
+ * @file programme.ts
+ * @description TypeScript type definitions for timetable sessions and articles.
  */
 
 export interface Session {

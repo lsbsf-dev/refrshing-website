@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file page.tsx
+ * @description Admin page for managing historical timeline entries covering conference history.
+ */
+
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminDataTable, Column } from "@/components/admin/AdminDataTable";
@@ -20,7 +25,6 @@ export default function TimelineAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<TimelineEntry | null>(null);
   
-  // Form State
   const [year, setYear] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file CommitteeSection.tsx
+ * @description Public component rendering planning committee member grids.
+ */
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getEventScopedDocs, CommitteeMember } from "@/lib/firebase/cms";

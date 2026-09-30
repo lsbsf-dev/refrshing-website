@@ -1,6 +1,6 @@
 /**
- * Programme Page Component
- * Renders the static Refreshing 2026 Programme Outline using the tabbed day design.
+ * @file page.tsx
+ * @description Public conference schedule page displaying timetable events filtered by day.
  */
 
 "use client";

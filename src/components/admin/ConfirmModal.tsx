@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file ConfirmModal.tsx
+ * @description Reusable confirmation modal dialog with optional typed security verification.
+ */
+
 import React from "react";
 import { AlertTriangle, X } from "lucide-react";
 

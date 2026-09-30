@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @file TimelineSection.tsx
+ * @description Public interactive timeline component presenting conference history.
+ */
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTimelineEntries, TimelineEntry } from "@/lib/firebase/cms";

@@ -1,6 +1,6 @@
 /**
- * Badge Component
- *  * Reusable UI badge element for status or category display.
+ * @file Badge.tsx
+ * @description Reusable UI badge component for status indicators and category pills.
  */
 
 import React from "react";
